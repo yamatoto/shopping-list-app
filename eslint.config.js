@@ -49,7 +49,7 @@ export default [
                     endOfLine: 'auto',
                     semi: true,
                     singleQuote: true,
-                    tabWidth: 4, // PrettierのtabWidthをここに適用
+                    tabWidth: 4,
                 },
             ],
             'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
