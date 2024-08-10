@@ -1,70 +1,118 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, TextInput, FlatList } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+interface Item {
+    id: number;
+    text: string;
+    completed: boolean;
+}
+export default function ShoppingListScreen() {
+    const [items, setItems] = useState<Item[]>([]);
+    const [newItem, setNewItem] = useState<string>('');
+
+    const addItem = () => {
+        if (newItem) {
+            setItems([...items, { id: Date.now(), text: newItem, completed: false }]);
+            setNewItem('');
+        }
+    };
+
+    const toggleItem = (id: number) => {
+        setItems(items.map(item =>
+            item.id === id ? { ...item, completed: !item.completed } : item
+        ));
+    };
+
+    const deleteItem = (id: number) => {
+        setItems(items.filter(item => item.id !== id));
+    };
+
+    const renderItem = ({ item }: { item: Item }) => (
+        <View style={styles.item}>
+            <TouchableOpacity onPress={() => toggleItem(item.id)}>
+                <Text style={item.completed ? styles.completedItem : undefined}>{item.text}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteItem(item.id)}>
+                <Text style={styles.deleteButton}>削除</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>買い物リスト</Text>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    value={newItem}
+                    onChangeText={setNewItem}
+                    placeholder="新しいアイテムを追加"
+                />
+                <TouchableOpacity style={styles.addButton} onPress={addItem}>
+                    <Text style={styles.addButtonText}>追加</Text>
+                </TouchableOpacity>
+            </View>
+            <FlatList
+                data={items}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#f0f0f0',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    input: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        marginRight: 10,
+        borderRadius: 5,
+        backgroundColor: '#fff',
+    },
+    addButton: {
+        backgroundColor: '#5cb85c',
+        padding: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+    },
+    addButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    item: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        marginBottom: 10,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#ddd',
+    },
+    completedItem: {
+        textDecorationLine: 'line-through',
+        color: '#888',
+    },
+    deleteButton: {
+        color: '#d9534f',
+    },
 });

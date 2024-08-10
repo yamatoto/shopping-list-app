@@ -7,7 +7,7 @@ import { type PropsWithChildren } from 'react';
  */
 export default function Root({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -21,7 +21,8 @@ export default function Root({ children }: PropsWithChildren) {
 
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
-        {/* Add any additional <head> elements that you want globally available on web... */}
+        <title>買い物リストアプリ</title>
+          {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>{children}</body>
     </html>
