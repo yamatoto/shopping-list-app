@@ -5,8 +5,8 @@ import { FrequentItem, Item } from '@/models/item';
 interface ShoppingListContextType {
     currentItems: Item[];
     frequentItems: FrequentItem[];
-    addCurrentItem: (text: string) => void;
-    addFrequentItem: (text: string) => void;
+    addCurrentItem: (name: string) => string | null;
+    addFrequentItem: (name: string) => string | null;
     toggleCurrentItem: (id: number) => void;
     deleteCurrentItem: (id: number) => void;
     addToCurrentFromFrequent: (id: number) => void;
@@ -22,35 +22,51 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const [currentItems, setCurrentItems] = useState<Item[]>([]);
     const [frequentItems, setFrequentItems] = useState<FrequentItem[]>([]);
 
-    const addCurrentItem = (text: string) => {
+    const addCurrentItem = (inputValue: string) => {
+        const trimmedValue = inputValue.trim();
+
+        if (currentItems.some(item => item.name === trimmedValue)) {
+            return '登録済です。';
+        }
+
         setCurrentItems([
             ...currentItems,
-            { id: Date.now(), text, completed: false },
+            { id: Date.now(), name: trimmedValue, completed: false },
         ]);
 
-        // 定番アイテムリストの対応するアイテムを「追加済み」に更新
+        // 定番リストにあれば「追加済み」に更新
         setFrequentItems(prevFrequentItems =>
             prevFrequentItems.map(item =>
-                item.text === text ? { ...item, isAdded: true } : item,
+                item.name === trimmedValue ? { ...item, isAdded: true } : item,
             ),
         );
+
+        return null;
     };
 
-    const addFrequentItem = (text: string) => {
+    const addFrequentItem = (inputValue: string) => {
+        const trimmedValue = inputValue.trim();
+
+        if (frequentItems.some(item => item.name === trimmedValue)) {
+            return '登録済です。';
+        }
+
         // 既に直近の買い物リストに存在するかチェック
         const isAlreadyInCurrentList = currentItems.some(
-            item => item.text === text,
+            item => item.name === trimmedValue,
         );
 
         setFrequentItems([
             ...frequentItems,
             {
                 id: Date.now(),
-                text,
+                name: trimmedValue,
                 completed: false,
                 isAdded: isAlreadyInCurrentList,
             },
         ]);
+
+        return null;
     };
 
     const toggleCurrentItem = (id: number) => {
@@ -68,7 +84,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         if (deletedItem) {
             setFrequentItems(
                 frequentItems.map(item => {
-                    if (item.text === deletedItem.text) {
+                    if (item.name === deletedItem.name) {
                         console.log('Matching frequent item found:', item);
                         return { ...item, isAdded: false };
                     }
@@ -81,7 +97,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const addToCurrentFromFrequent = (id: number) => {
         const itemToAdd = frequentItems.find(item => item.id === id);
         if (itemToAdd && !itemToAdd.isAdded) {
-            addCurrentItem(itemToAdd.text);
+            addCurrentItem(itemToAdd.name);
             setFrequentItems(
                 frequentItems.map(item =>
                     item.id === id ? { ...item, isAdded: true } : item,

@@ -5,6 +5,7 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
+    Alert,
 } from 'react-native';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
@@ -17,15 +18,21 @@ export default function FrequentShoppingListScreen() {
     const [newItem, setNewItem] = React.useState('');
 
     const handleAddItem = () => {
-        if (newItem.trim()) {
-            addFrequentItem(newItem.trim());
-            setNewItem('');
+        const trimmedItem = newItem.trim();
+        if (!trimmedItem) return;
+        const result = addFrequentItem(trimmedItem);
+
+        if (result) {
+            Alert.alert('追加エラー', result);
+            return;
         }
+
+        setNewItem('');
     };
 
     const renderItem = ({ item }: { item: FrequentItem }) => (
         <View style={sharedStyles.item}>
-            <Text>{item.text}</Text>
+            <Text>{item.name}</Text>
             <TouchableOpacity
                 onPress={() => addToCurrentFromFrequent(item.id)}
                 disabled={item.isAdded}

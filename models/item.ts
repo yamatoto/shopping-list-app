@@ -1,6 +1,6 @@
 export interface Item {
     id: number;
-    text: string;
+    name: string;
     completed: boolean;
 }
 

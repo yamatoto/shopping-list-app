@@ -5,6 +5,7 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
+    Alert,
 } from 'react-native';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
@@ -21,6 +22,15 @@ export default function CurrentShoppingListScreen() {
     const [newItem, setNewItem] = React.useState('');
 
     const handleAddItem = () => {
+        const trimmedItem = newItem.trim();
+        if (!trimmedItem) return;
+        const result = addCurrentItem(trimmedItem);
+
+        if (result) {
+            Alert.alert('追加エラー', result);
+            return;
+        }
+
         if (newItem.trim()) {
             addCurrentItem(newItem.trim());
             setNewItem('');
@@ -35,7 +45,7 @@ export default function CurrentShoppingListScreen() {
                         item.completed ? sharedStyles.completedItem : undefined
                     }
                 >
-                    {item.text}
+                    {item.name}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
