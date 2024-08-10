@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { ShoppingListProvider } from '@/context/ShoppingListContext';
+
 export default function TabsLayout() {
     return (
         <ShoppingListProvider>

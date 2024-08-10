@@ -10,6 +10,8 @@ interface ShoppingListContextType {
     toggleCurrentItem: (id: number) => void;
     deleteCurrentItem: (id: number) => void;
     addToCurrentFromFrequent: (id: number) => void;
+    reorderCurrentItems: (newOrder: Item[]) => void;
+    reorderFrequentItems: (newOrder: FrequentItem[]) => void;
 }
 
 const ShoppingListContext = createContext<ShoppingListContextType | undefined>(
@@ -106,6 +108,14 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
+    const reorderCurrentItems = (newOrder: Item[]) => {
+        setCurrentItems(newOrder);
+    };
+
+    const reorderFrequentItems = (newOrder: FrequentItem[]) => {
+        setFrequentItems(newOrder);
+    };
+
     return (
         <ShoppingListContext.Provider
             value={{
@@ -116,6 +126,8 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
                 toggleCurrentItem,
                 deleteCurrentItem,
                 addToCurrentFromFrequent,
+                reorderCurrentItems,
+                reorderFrequentItems,
             }}
         >
             {children}

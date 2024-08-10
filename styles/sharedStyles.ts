@@ -6,6 +6,20 @@ export const sharedStyles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f0f0f0',
     },
+    itemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        marginBottom: 10,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#ddd',
+    },
+    activeItem: {
+        backgroundColor: '#e0e0e0', // ドラッグ中のアイテムのスタイル
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',

@@ -1,12 +1,9 @@
 import React from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    FlatList,
-    Alert,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import DraggableFlatList, {
+    RenderItemParams,
+} from 'react-native-draggable-flatlist';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
 import { Item } from '@/models/item';
@@ -18,6 +15,7 @@ export default function CurrentShoppingListScreen() {
         addCurrentItem,
         toggleCurrentItem,
         deleteCurrentItem,
+        reorderCurrentItems,
     } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
 
@@ -37,8 +35,14 @@ export default function CurrentShoppingListScreen() {
         }
     };
 
-    const renderItem = ({ item }: { item: Item }) => (
-        <View style={sharedStyles.item}>
+    const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => (
+        <TouchableOpacity
+            style={[
+                sharedStyles.itemContainer,
+                isActive && sharedStyles.activeItem,
+            ]}
+            onLongPress={drag}
+        >
             <TouchableOpacity onPress={() => toggleCurrentItem(item.id)}>
                 <Text
                     style={
@@ -51,31 +55,34 @@ export default function CurrentShoppingListScreen() {
             <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
                 <Text style={sharedStyles.deleteButton}>削除</Text>
             </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
     );
 
     return (
-        <View style={sharedStyles.container}>
-            <Text style={sharedStyles.title}>直近の買い物リスト</Text>
-            <View style={sharedStyles.inputContainer}>
-                <TextInput
-                    style={sharedStyles.input}
-                    value={newItem}
-                    onChangeText={setNewItem}
-                    placeholder="新しいアイテムを追加"
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <View style={sharedStyles.container}>
+                <Text style={sharedStyles.title}>直近の買い物リスト</Text>
+                <View style={sharedStyles.inputContainer}>
+                    <TextInput
+                        style={sharedStyles.input}
+                        value={newItem}
+                        onChangeText={setNewItem}
+                        placeholder="新しいアイテムを追加"
+                    />
+                    <TouchableOpacity
+                        style={sharedStyles.addButton}
+                        onPress={handleAddItem}
+                    >
+                        <Text style={sharedStyles.addButtonText}>追加</Text>
+                    </TouchableOpacity>
+                </View>
+                <DraggableFlatList
+                    data={currentItems}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    onDragEnd={({ data }) => reorderCurrentItems(data)}
                 />
-                <TouchableOpacity
-                    style={sharedStyles.addButton}
-                    onPress={handleAddItem}
-                >
-                    <Text style={sharedStyles.addButtonText}>追加</Text>
-                </TouchableOpacity>
             </View>
-            <FlatList
-                data={currentItems}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-            />
-        </View>
+        </GestureHandlerRootView>
     );
 }
