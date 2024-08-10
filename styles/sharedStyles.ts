@@ -31,6 +31,9 @@ export const sharedStyles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
     },
+    addedButton: {
+        backgroundColor: '#cccccc',
+    },
     addButtonText: {
         color: '#fff',
         fontWeight: 'bold',

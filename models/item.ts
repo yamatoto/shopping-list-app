@@ -3,3 +3,7 @@ export interface Item {
     text: string;
     completed: boolean;
 }
+
+export interface FrequentItem extends Item {
+    isAdded: boolean;
+}

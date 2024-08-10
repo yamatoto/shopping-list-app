@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
-import { Item } from '@/models/item';
+import { FrequentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function FrequentShoppingListScreen() {
@@ -23,11 +23,20 @@ export default function FrequentShoppingListScreen() {
         }
     };
 
-    const renderItem = ({ item }: { item: Item }) => (
+    const renderItem = ({ item }: { item: FrequentItem }) => (
         <View style={sharedStyles.item}>
             <Text>{item.text}</Text>
-            <TouchableOpacity onPress={() => addToCurrentFromFrequent(item.id)}>
-                <Text style={sharedStyles.addButton}>買い物リストに追加</Text>
+            <TouchableOpacity
+                onPress={() => addToCurrentFromFrequent(item.id)}
+                disabled={item.isAdded}
+                style={[
+                    sharedStyles.addButton,
+                    item.isAdded && sharedStyles.addedButton,
+                ]}
+            >
+                <Text style={sharedStyles.addButtonText}>
+                    {item.isAdded ? '追加済み' : '買い物リストに追加'}
+                </Text>
             </TouchableOpacity>
         </View>
     );

@@ -1,14 +1,10 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-interface Item {
-    id: number;
-    text: string;
-    completed: boolean;
-}
+import { FrequentItem, Item } from '@/models/item';
 
 interface ShoppingListContextType {
     currentItems: Item[];
-    frequentItems: Item[];
+    frequentItems: FrequentItem[];
     addCurrentItem: (text: string) => void;
     addFrequentItem: (text: string) => void;
     toggleCurrentItem: (id: number) => void;
@@ -24,7 +20,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
     const [currentItems, setCurrentItems] = useState<Item[]>([]);
-    const [frequentItems, setFrequentItems] = useState<Item[]>([]);
+    const [frequentItems, setFrequentItems] = useState<FrequentItem[]>([]);
 
     const addCurrentItem = (text: string) => {
         setCurrentItems([
@@ -36,7 +32,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const addFrequentItem = (text: string) => {
         setFrequentItems([
             ...frequentItems,
-            { id: Date.now(), text, completed: false },
+            { id: Date.now(), text, completed: false, isAdded: false },
         ]);
     };
 
@@ -49,13 +45,31 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const deleteCurrentItem = (id: number) => {
+        const deletedItem = currentItems.find(item => item.id === id);
         setCurrentItems(currentItems.filter(item => item.id !== id));
+
+        if (deletedItem) {
+            setFrequentItems(
+                frequentItems.map(item => {
+                    if (item.text === deletedItem.text) {
+                        console.log('Matching frequent item found:', item);
+                        return { ...item, isAdded: false };
+                    }
+                    return item;
+                }),
+            );
+        }
     };
 
     const addToCurrentFromFrequent = (id: number) => {
         const itemToAdd = frequentItems.find(item => item.id === id);
-        if (itemToAdd) {
+        if (itemToAdd && !itemToAdd.isAdded) {
             addCurrentItem(itemToAdd.text);
+            setFrequentItems(
+                frequentItems.map(item =>
+                    item.id === id ? { ...item, isAdded: true } : item,
+                ),
+            );
         }
     };
 
