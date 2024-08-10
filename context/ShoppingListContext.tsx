@@ -27,12 +27,29 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             ...currentItems,
             { id: Date.now(), text, completed: false },
         ]);
+
+        // 定番アイテムリストの対応するアイテムを「追加済み」に更新
+        setFrequentItems(prevFrequentItems =>
+            prevFrequentItems.map(item =>
+                item.text === text ? { ...item, isAdded: true } : item,
+            ),
+        );
     };
 
     const addFrequentItem = (text: string) => {
+        // 既に直近の買い物リストに存在するかチェック
+        const isAlreadyInCurrentList = currentItems.some(
+            item => item.text === text,
+        );
+
         setFrequentItems([
             ...frequentItems,
-            { id: Date.now(), text, completed: false, isAdded: false },
+            {
+                id: Date.now(),
+                text,
+                completed: false,
+                isAdded: isAlreadyInCurrentList,
+            },
         ]);
     };
 
