@@ -1,17 +1,12 @@
-import { fileURLToPath } from 'url';
-import path from 'path';
-import eslintPluginTypeScript from '@typescript-eslint/eslint-plugin';
-import eslintPluginReact from 'eslint-plugin-react';
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
-import eslintPluginReactNative from 'eslint-plugin-react-native';
-import eslintPluginImport from 'eslint-plugin-import';
-import eslintPluginPrettier from 'eslint-plugin-prettier';
-import eslintParser from '@typescript-eslint/parser';
+const eslintPluginTypeScript = require('@typescript-eslint/eslint-plugin');
+const eslintPluginReact = require('eslint-plugin-react');
+const eslintPluginReactHooks = require('eslint-plugin-react-hooks');
+const eslintPluginReactNative = require('eslint-plugin-react-native');
+const eslintPluginImport = require('eslint-plugin-import');
+const eslintPluginPrettier = require('eslint-plugin-prettier');
+const eslintParser = require('@typescript-eslint/parser');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default [
+module.exports = [
     {
         ignores: ['node_modules', 'build'],
     },
