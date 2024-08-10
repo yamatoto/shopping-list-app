@@ -1,11 +1,23 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    FlatList,
+} from 'react-native';
+
 import { useShoppingList } from '@/context/ShoppingListContext';
-import { Item } from "@/models/item";
-import { sharedStyles } from "@/styles/sharedStyles";
+import { Item } from '@/models/item';
+import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function CurrentShoppingListScreen() {
-    const { currentItems, addCurrentItem, toggleCurrentItem, deleteCurrentItem } = useShoppingList();
+    const {
+        currentItems,
+        addCurrentItem,
+        toggleCurrentItem,
+        deleteCurrentItem,
+    } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
 
     const handleAddItem = () => {
@@ -18,7 +30,13 @@ export default function CurrentShoppingListScreen() {
     const renderItem = ({ item }: { item: Item }) => (
         <View style={sharedStyles.item}>
             <TouchableOpacity onPress={() => toggleCurrentItem(item.id)}>
-                <Text style={item.completed ? sharedStyles.completedItem : undefined}>{item.text}</Text>
+                <Text
+                    style={
+                        item.completed ? sharedStyles.completedItem : undefined
+                    }
+                >
+                    {item.text}
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
                 <Text style={sharedStyles.deleteButton}>削除</Text>
@@ -36,14 +54,17 @@ export default function CurrentShoppingListScreen() {
                     onChangeText={setNewItem}
                     placeholder="新しいアイテムを追加"
                 />
-                <TouchableOpacity style={sharedStyles.addButton} onPress={handleAddItem}>
+                <TouchableOpacity
+                    style={sharedStyles.addButton}
+                    onPress={handleAddItem}
+                >
                     <Text style={sharedStyles.addButtonText}>追加</Text>
                 </TouchableOpacity>
             </View>
             <FlatList
                 data={currentItems}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={item => item.id.toString()}
             />
         </View>
     );

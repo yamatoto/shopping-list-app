@@ -16,24 +16,36 @@ interface ShoppingListContextType {
     addToCurrentFromFrequent: (id: number) => void;
 }
 
-const ShoppingListContext = createContext<ShoppingListContextType | undefined>(undefined);
+const ShoppingListContext = createContext<ShoppingListContextType | undefined>(
+    undefined,
+);
 
-export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
     const [currentItems, setCurrentItems] = useState<Item[]>([]);
     const [frequentItems, setFrequentItems] = useState<Item[]>([]);
 
     const addCurrentItem = (text: string) => {
-        setCurrentItems([...currentItems, { id: Date.now(), text, completed: false }]);
+        setCurrentItems([
+            ...currentItems,
+            { id: Date.now(), text, completed: false },
+        ]);
     };
 
     const addFrequentItem = (text: string) => {
-        setFrequentItems([...frequentItems, { id: Date.now(), text, completed: false }]);
+        setFrequentItems([
+            ...frequentItems,
+            { id: Date.now(), text, completed: false },
+        ]);
     };
 
     const toggleCurrentItem = (id: number) => {
-        setCurrentItems(currentItems.map(item =>
-            item.id === id ? { ...item, completed: !item.completed } : item
-        ));
+        setCurrentItems(
+            currentItems.map(item =>
+                item.id === id ? { ...item, completed: !item.completed } : item,
+            ),
+        );
     };
 
     const deleteCurrentItem = (id: number) => {
@@ -48,15 +60,17 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({ childr
     };
 
     return (
-        <ShoppingListContext.Provider value={{
-            currentItems,
-            frequentItems,
-            addCurrentItem,
-            addFrequentItem,
-            toggleCurrentItem,
-            deleteCurrentItem,
-            addToCurrentFromFrequent
-        }}>
+        <ShoppingListContext.Provider
+            value={{
+                currentItems,
+                frequentItems,
+                addCurrentItem,
+                addFrequentItem,
+                toggleCurrentItem,
+                deleteCurrentItem,
+                addToCurrentFromFrequent,
+            }}
+        >
             {children}
         </ShoppingListContext.Provider>
     );
@@ -65,7 +79,9 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({ childr
 export const useShoppingList = () => {
     const context = useContext(ShoppingListContext);
     if (context === undefined) {
-        throw new Error('useShoppingList must be used within a ShoppingListProvider');
+        throw new Error(
+            'useShoppingList must be used within a ShoppingListProvider',
+        );
     }
     return context;
 };
