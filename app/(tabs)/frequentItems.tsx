@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Alert,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
     RenderItemParams,
@@ -14,6 +21,7 @@ export default function FrequentShoppingListScreen() {
         frequentItems,
         addFrequentItem,
         addToCurrentFromFrequent,
+        deleteFrequentItem,
         reorderFrequentItems,
     } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
@@ -44,18 +52,26 @@ export default function FrequentShoppingListScreen() {
             onLongPress={drag}
         >
             <Text>{item.name}</Text>
-            <TouchableOpacity
-                onPress={() => addToCurrentFromFrequent(item.id)}
-                disabled={item.isAdded}
-                style={[
-                    sharedStyles.addButton,
-                    item.isAdded && sharedStyles.addedButton,
-                ]}
-            >
-                <Text style={sharedStyles.addButtonText}>
-                    {item.isAdded ? '追加済み' : '買い物リストに追加'}
-                </Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={() => addToCurrentFromFrequent(item.id)}
+                    disabled={item.isAdded}
+                    style={[
+                        styles.button,
+                        item.isAdded ? styles.addedButton : styles.addButton,
+                    ]}
+                >
+                    <Text style={styles.buttonText}>
+                        {item.isAdded ? '追加済み' : '追加'}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => deleteFrequentItem(item.id)}
+                    style={[styles.button, styles.deleteButton]}
+                >
+                    <Text style={styles.buttonText}>削除</Text>
+                </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     );
 
@@ -87,3 +103,27 @@ export default function FrequentShoppingListScreen() {
         </GestureHandlerRootView>
     );
 }
+
+const styles = StyleSheet.create({
+    buttonContainer: {
+        flexDirection: 'row',
+    },
+    button: {
+        padding: 5,
+        marginLeft: 5,
+        borderRadius: 3,
+    },
+    addButton: {
+        backgroundColor: '#5cb85c',
+    },
+    addedButton: {
+        backgroundColor: '#cccccc',
+    },
+    deleteButton: {
+        backgroundColor: '#ff6b6b',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 12,
+    },
+});

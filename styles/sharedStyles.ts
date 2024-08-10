@@ -6,20 +6,6 @@ export const sharedStyles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f0f0f0',
     },
-    itemContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        marginBottom: 10,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: '#ddd',
-    },
-    activeItem: {
-        backgroundColor: '#e0e0e0', // ドラッグ中のアイテムのスタイル
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -45,14 +31,11 @@ export const sharedStyles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
     },
-    addedButton: {
-        backgroundColor: '#cccccc',
-    },
     addButtonText: {
         color: '#fff',
         fontWeight: 'bold',
     },
-    item: {
+    itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -63,11 +46,7 @@ export const sharedStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ddd',
     },
-    completedItem: {
-        textDecorationLine: 'line-through',
-        color: '#888',
-    },
-    deleteButton: {
-        color: '#d9534f',
+    activeItem: {
+        backgroundColor: '#e0e0e0',
     },
 });

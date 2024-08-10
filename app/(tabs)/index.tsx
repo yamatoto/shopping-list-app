@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Alert,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
     RenderItemParams,
@@ -44,16 +51,12 @@ export default function CurrentShoppingListScreen() {
             onLongPress={drag}
         >
             <TouchableOpacity onPress={() => toggleCurrentItem(item.id)}>
-                <Text
-                    style={
-                        item.completed ? sharedStyles.completedItem : undefined
-                    }
-                >
+                <Text style={item.completed ? styles.completedItem : undefined}>
                     {item.name}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
-                <Text style={sharedStyles.deleteButton}>削除</Text>
+                <Text style={styles.deleteButton}>削除</Text>
             </TouchableOpacity>
         </TouchableOpacity>
     );
@@ -86,3 +89,12 @@ export default function CurrentShoppingListScreen() {
         </GestureHandlerRootView>
     );
 }
+const styles = StyleSheet.create({
+    completedItem: {
+        textDecorationLine: 'line-through',
+        color: '#888',
+    },
+    deleteButton: {
+        color: '#d9534f',
+    },
+});

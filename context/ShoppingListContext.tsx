@@ -9,6 +9,7 @@ interface ShoppingListContextType {
     addFrequentItem: (name: string) => string | null;
     toggleCurrentItem: (id: number) => void;
     deleteCurrentItem: (id: number) => void;
+    deleteFrequentItem: (id: number) => void;
     addToCurrentFromFrequent: (id: number) => void;
     reorderCurrentItems: (newOrder: Item[]) => void;
     reorderFrequentItems: (newOrder: FrequentItem[]) => void;
@@ -96,6 +97,10 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
+    const deleteFrequentItem = (id: number) => {
+        setFrequentItems(prevItems => prevItems.filter(item => item.id !== id));
+    };
+
     const addToCurrentFromFrequent = (id: number) => {
         const itemToAdd = frequentItems.find(item => item.id === id);
         if (itemToAdd && !itemToAdd.isAdded) {
@@ -125,6 +130,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
                 addFrequentItem,
                 toggleCurrentItem,
                 deleteCurrentItem,
+                deleteFrequentItem,
                 addToCurrentFromFrequent,
                 reorderCurrentItems,
                 reorderFrequentItems,
