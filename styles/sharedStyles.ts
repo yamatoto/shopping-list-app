@@ -6,12 +6,6 @@ export const sharedStyles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f0f0f0',
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
     inputContainer: {
         flexDirection: 'row',
         marginBottom: 20,

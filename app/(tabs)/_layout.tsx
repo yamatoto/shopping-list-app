@@ -10,7 +10,8 @@ export default function TabsLayout() {
                 <Tabs.Screen
                     name="index"
                     options={{
-                        title: '直近の買い物',
+                        headerTitle: '直近の買い物リスト',
+                        tabBarLabel: '直近の買い物',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="list" size={size} color={color} />
                         ),
@@ -19,7 +20,8 @@ export default function TabsLayout() {
                 <Tabs.Screen
                     name="frequentItems"
                     options={{
-                        title: '定番アイテム',
+                        headerTitle: '定番アイテムリスト',
+                        tabBarLabel: '定番アイテム',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="star" size={size} color={color} />
                         ),

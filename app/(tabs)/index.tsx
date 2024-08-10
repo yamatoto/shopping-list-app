@@ -64,7 +64,6 @@ export default function CurrentShoppingListScreen() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <Text style={sharedStyles.title}>直近の買い物リスト</Text>
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}

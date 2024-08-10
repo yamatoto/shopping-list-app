@@ -78,7 +78,6 @@ export default function FrequentShoppingListScreen() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <Text style={sharedStyles.title}>定番アイテムリスト</Text>
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}
