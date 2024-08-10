@@ -1,37 +1,13 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { ShoppingListProvider } from '@/context/ShoppingListContext';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+export default function TabsLayout() {
+    return (
+        <ShoppingListProvider>
+            <Tabs>
+                <Tabs.Screen name="index" options={{ title: '直近の買い物' }} />
+                <Tabs.Screen name="frequentItems" options={{ title: '定番アイテム' }} />
+            </Tabs>
+        </ShoppingListProvider>
+    );
 }
