@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -13,12 +13,13 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
-import { Item } from '@/models/item';
+import { CurrentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function CurrentShoppingListScreen() {
     const {
         currentItems,
+        fetchCurrentItems,
         addCurrentItem,
         toggleCurrentItem,
         deleteCurrentItem,
@@ -26,10 +27,14 @@ export default function CurrentShoppingListScreen() {
     } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
 
-    const handleAddItem = () => {
+    useEffect(() => {
+        fetchCurrentItems().then();
+    }, [fetchCurrentItems]);
+
+    const handleAddItem = async () => {
         const trimmedItem = newItem.trim();
         if (!trimmedItem) return;
-        const result = addCurrentItem(trimmedItem);
+        const result = await addCurrentItem(trimmedItem);
 
         if (result) {
             Alert.alert('追加エラー', result);
@@ -37,12 +42,16 @@ export default function CurrentShoppingListScreen() {
         }
 
         if (newItem.trim()) {
-            addCurrentItem(newItem.trim());
             setNewItem('');
+            await addCurrentItem(newItem.trim());
         }
     };
 
-    const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => (
+    const renderItem = ({
+        item,
+        drag,
+        isActive,
+    }: RenderItemParams<CurrentItem>) => (
         <TouchableOpacity
             style={[
                 sharedStyles.itemContainer,
@@ -50,7 +59,7 @@ export default function CurrentShoppingListScreen() {
             ]}
             onLongPress={drag}
         >
-            <TouchableOpacity onPress={() => toggleCurrentItem(item.id)}>
+            <TouchableOpacity onPress={() => toggleCurrentItem(item)}>
                 <Text style={item.completed ? styles.completedItem : undefined}>
                     {item.name}
                 </Text>

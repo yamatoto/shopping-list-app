@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -19,6 +19,7 @@ import { sharedStyles } from '@/styles/sharedStyles';
 export default function FrequentShoppingListScreen() {
     const {
         frequentItems,
+        fetchFrequentItems,
         addFrequentItem,
         addToCurrentFromFrequent,
         deleteFrequentItem,
@@ -26,10 +27,14 @@ export default function FrequentShoppingListScreen() {
     } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
 
-    const handleAddItem = () => {
+    useEffect(() => {
+        fetchFrequentItems().then();
+    }, []);
+
+    const handleAddItem = async () => {
         const trimmedItem = newItem.trim();
         if (!trimmedItem) return;
-        const result = addFrequentItem(trimmedItem);
+        const result = await addFrequentItem(trimmedItem);
 
         if (result) {
             Alert.alert('追加エラー', result);

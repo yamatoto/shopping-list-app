@@ -59,7 +59,10 @@ export default [
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/no-unused-vars': [
                 'error',
-                { argsIgnorePattern: '^_' },
+                {
+                    argsIgnorePattern: '^_+$',
+                    varsIgnorePattern: '^_+$'
+                },
             ],
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',

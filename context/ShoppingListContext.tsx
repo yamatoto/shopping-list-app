@@ -1,17 +1,24 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-import { FrequentItem, Item } from '@/models/item';
+import { FrequentItem, CurrentItem } from '@/models/item';
+import * as CurrentItemsRepository from '@/api/currentItems';
+import * as FrequentItemsRepository from '@/api/frequentItems';
+import useFirebaseAuth from '@/hooks/useFirebaseAuth';
 
 interface ShoppingListContextType {
-    currentItems: Item[];
+    currentItems: CurrentItem[];
     frequentItems: FrequentItem[];
-    addCurrentItem: (name: string) => string | null;
-    addFrequentItem: (name: string) => string | null;
-    toggleCurrentItem: (id: number) => void;
-    deleteCurrentItem: (id: number) => void;
-    deleteFrequentItem: (id: number) => void;
-    addToCurrentFromFrequent: (id: number) => void;
-    reorderCurrentItems: (newOrder: Item[]) => void;
+    loading: boolean;
+    error: string | null;
+    fetchCurrentItems: () => Promise<CurrentItem[] | undefined>;
+    fetchFrequentItems: () => Promise<FrequentItem[] | undefined>;
+    addCurrentItem: (name: string) => Promise<string | null>;
+    addFrequentItem: (name: string) => Promise<string | null>;
+    toggleCurrentItem: (currentItem: CurrentItem) => void;
+    deleteCurrentItem: (id: string) => void;
+    deleteFrequentItem: (id: string) => void;
+    addToCurrentFromFrequent: (id: string) => void;
+    reorderCurrentItems: (newOrder: CurrentItem[]) => void;
     reorderFrequentItems: (newOrder: FrequentItem[]) => void;
 }
 
@@ -22,69 +29,127 @@ const ShoppingListContext = createContext<ShoppingListContextType | undefined>(
 export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [currentItems, setCurrentItems] = useState<Item[]>([]);
+    const [currentItems, setCurrentItems] = useState<CurrentItem[]>([]);
     const [frequentItems, setFrequentItems] = useState<FrequentItem[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const { currentUserEmail } = useFirebaseAuth();
 
-    const addCurrentItem = (inputValue: string) => {
-        const trimmedValue = inputValue.trim();
+    const fetchCurrentItems = async () => {
+        setLoading(true);
+        try {
+            const currentItems =
+                await CurrentItemsRepository.fetchAllCurrentItems();
+            setCurrentItems(currentItems);
+            return currentItems;
+        } catch (error: any) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        if (currentItems.some(item => item.name === trimmedValue)) {
+    const fetchFrequentItems = async () => {
+        const frequentItems =
+            await FrequentItemsRepository.fetchAllFrequentItems();
+        setFrequentItems(frequentItems);
+        return frequentItems;
+    };
+
+    const addCurrentItem = async (inputName: string) => {
+        const trimmedName = inputName.trim();
+
+        // TODO: api取得してチェック
+        if (currentItems.some(item => item.name === trimmedName)) {
             return '登録済です。';
         }
 
-        setCurrentItems([
-            ...currentItems,
-            { id: Date.now(), name: trimmedValue, completed: false },
-        ]);
+        try {
+            const currentItem = await CurrentItemsRepository.addCurrentItem(
+                trimmedName,
+                currentUserEmail!,
+            );
+            setCurrentItems([...currentItems, currentItem]);
+        } catch (error) {
+            console.error(error);
+        }
 
-        // 定番リストにあれば「追加済み」に更新
+        // TODO: 定番リストにあれば「追加済み」に更新 api
         setFrequentItems(prevFrequentItems =>
             prevFrequentItems.map(item =>
-                item.name === trimmedValue ? { ...item, isAdded: true } : item,
+                item.name === trimmedName ? { ...item, isAdded: true } : item,
             ),
         );
 
         return null;
     };
 
-    const addFrequentItem = (inputValue: string) => {
-        const trimmedValue = inputValue.trim();
+    const addFrequentItem = async (inputName: string) => {
+        const trimmedName = inputName.trim();
 
-        if (frequentItems.some(item => item.name === trimmedValue)) {
+        // TODO: api取得してチェック
+        if (frequentItems.some(item => item.name === trimmedName)) {
             return '登録済です。';
         }
 
-        // 既に直近の買い物リストに存在するかチェック
+        // TODO: apiで既に直近の買い物リストに存在するかチェック
         const isAlreadyInCurrentList = currentItems.some(
-            item => item.name === trimmedValue,
+            item => item.name === trimmedName,
         );
 
-        setFrequentItems([
-            ...frequentItems,
-            {
-                id: Date.now(),
-                name: trimmedValue,
-                completed: false,
-                isAdded: isAlreadyInCurrentList,
-            },
-        ]);
+        try {
+            const frequentItem = await FrequentItemsRepository.addFrequentItem(
+                trimmedName,
+                isAlreadyInCurrentList,
+                currentUserEmail!,
+            );
+            setFrequentItems([...frequentItems, frequentItem]);
+        } catch (error) {
+            console.error(error);
+        }
 
         return null;
     };
 
-    const toggleCurrentItem = (id: number) => {
-        setCurrentItems(
-            currentItems.map(item =>
-                item.id === id ? { ...item, completed: !item.completed } : item,
-            ),
-        );
+    const toggleCurrentItem = async (currentItem: CurrentItem) => {
+        try {
+            const updated = await CurrentItemsRepository.updateCurrentItem(
+                {
+                    ...currentItem,
+                    completed: !currentItem.completed,
+                },
+                currentUserEmail!,
+            );
+
+            setCurrentItems(
+                currentItems.map(item =>
+                    item.id === updated.id
+                        ? { ...item, completed: updated.completed }
+                        : item,
+                ),
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const deleteCurrentItem = (id: number) => {
-        const deletedItem = currentItems.find(item => item.id === id);
-        setCurrentItems(currentItems.filter(item => item.id !== id));
+    const deleteCurrentItem = async (id: string) => {
+        try {
+            await CurrentItemsRepository.deleteCurrentItem(id);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setCurrentItems(currentItems.filter(item => item.id !== id));
+        }
 
-        if (deletedItem) {
+        const deletedItem = currentItems.find(item => item.id === id);
+        if (!deletedItem) return;
+
+        try {
+            await deleteFrequentItem(id);
+        } catch (error) {
+            console.error(error);
+        } finally {
             setFrequentItems(
                 frequentItems.map(item => {
                     if (item.name === deletedItem.name) {
@@ -97,23 +162,39 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
-    const deleteFrequentItem = (id: number) => {
-        setFrequentItems(prevItems => prevItems.filter(item => item.id !== id));
-    };
-
-    const addToCurrentFromFrequent = (id: number) => {
-        const itemToAdd = frequentItems.find(item => item.id === id);
-        if (itemToAdd && !itemToAdd.isAdded) {
-            addCurrentItem(itemToAdd.name);
-            setFrequentItems(
-                frequentItems.map(item =>
-                    item.id === id ? { ...item, isAdded: true } : item,
-                ),
+    const deleteFrequentItem = async (id: string) => {
+        try {
+            await FrequentItemsRepository.deleteFrequentItem(id);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setFrequentItems(prevItems =>
+                prevItems.filter(item => item.id !== id),
             );
         }
     };
 
-    const reorderCurrentItems = (newOrder: Item[]) => {
+    const addToCurrentFromFrequent = async (id: string) => {
+        const itemToAdd = frequentItems.find(item => item.id === id);
+        if (itemToAdd && !itemToAdd.isAdded) {
+            await addCurrentItem(itemToAdd.name);
+            let updated;
+            const updatedList = frequentItems.map(item => {
+                if (item.id === id) {
+                    updated = { ...item, isAdded: true };
+                    return updated;
+                }
+                return item;
+            });
+            setFrequentItems(updatedList);
+            await FrequentItemsRepository.updateFrequentItem(
+                updated!,
+                currentUserEmail!,
+            );
+        }
+    };
+
+    const reorderCurrentItems = (newOrder: CurrentItem[]) => {
         setCurrentItems(newOrder);
     };
 
@@ -126,6 +207,10 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             value={{
                 currentItems,
                 frequentItems,
+                loading,
+                error,
+                fetchCurrentItems,
+                fetchFrequentItems,
                 addCurrentItem,
                 addFrequentItem,
                 toggleCurrentItem,
