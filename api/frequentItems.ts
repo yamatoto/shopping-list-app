@@ -6,6 +6,7 @@ const collectionName = 'frequent-items';
 
 export const fetchAllFrequentItems = async (): Promise<FrequentItem[]> => {
     try {
+        console.log('api fetchAllFrequentItems');
         const { docs } = await firestore().collection(collectionName).get();
         return docs.map(doc => {
             const data = doc.data();
@@ -30,6 +31,7 @@ export const addFrequentItem = async (
     isAdded: boolean,
     userEmail: string,
 ): Promise<FrequentItem> => {
+    console.log('api requentItem');
     const serverTimestamp = firestore.FieldValue.serverTimestamp();
     const newItem = {
         name,
@@ -62,6 +64,7 @@ export const updateFrequentItem = async (
     frequentItem: FrequentItem,
     userEmail: string,
 ): Promise<FrequentItem> => {
+    console.log('api teFrequentItem');
     const {
         id,
         updatedBy: _,
@@ -93,6 +96,7 @@ export const updateFrequentItem = async (
 };
 
 export const deleteFrequentItem = async (id: string): Promise<void> => {
+    console.log('api teFrequentItem');
     try {
         await firestore().collection(collectionName).doc(id).delete();
     } catch (error: any) {

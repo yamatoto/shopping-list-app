@@ -36,6 +36,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const { currentUserEmail } = useFirebaseAuth();
 
     const fetchCurrentItems = async () => {
+        console.log('fetchCurrentItems');
         setLoading(true);
         try {
             const currentItems =
@@ -50,6 +51,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const fetchFrequentItems = async () => {
+        console.log('fetchFrequentItems');
         const frequentItems =
             await FrequentItemsRepository.fetchAllFrequentItems();
         setFrequentItems(frequentItems);
@@ -57,6 +59,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const addCurrentItem = async (inputName: string) => {
+        console.log('addCurrentItem');
         const trimmedName = inputName.trim();
 
         // TODO: api取得してチェック
@@ -85,6 +88,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const addFrequentItem = async (inputName: string) => {
+        console.log('addFrequentItem');
         const trimmedName = inputName.trim();
 
         // TODO: api取得してチェック
@@ -112,6 +116,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const toggleCurrentItem = async (currentItem: CurrentItem) => {
+        console.log('toggleCurrentItem');
         try {
             const updated = await CurrentItemsRepository.updateCurrentItem(
                 {
@@ -134,6 +139,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const deleteCurrentItem = async (id: string) => {
+        console.log('deleteCurrentItem');
         try {
             await CurrentItemsRepository.deleteCurrentItem(id);
         } catch (error) {
@@ -163,6 +169,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const deleteFrequentItem = async (id: string) => {
+        console.log('deleteFrequentItem');
         try {
             await FrequentItemsRepository.deleteFrequentItem(id);
         } catch (error) {
@@ -175,6 +182,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const addToCurrentFromFrequent = async (id: string) => {
+        console.log('addToCurrentFromFrequent');
         const itemToAdd = frequentItems.find(item => item.id === id);
         if (itemToAdd && !itemToAdd.isAdded) {
             await addCurrentItem(itemToAdd.name);
@@ -195,10 +203,12 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const reorderCurrentItems = (newOrder: CurrentItem[]) => {
+        console.log('reorderCurrentItems');
         setCurrentItems(newOrder);
     };
 
     const reorderFrequentItems = (newOrder: FrequentItem[]) => {
+        console.log('reorderFrequentItems');
         setFrequentItems(newOrder);
     };
 

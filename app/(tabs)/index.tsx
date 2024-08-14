@@ -17,6 +17,7 @@ import { CurrentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function CurrentShoppingListScreen() {
+    console.log('CurrentShoppingListScreen');
     const {
         currentItems,
         fetchCurrentItems,
@@ -28,22 +29,21 @@ export default function CurrentShoppingListScreen() {
     const [newItem, setNewItem] = React.useState('');
 
     useEffect(() => {
+        console.log('CurrentShoppingListScreen useEffect');
         fetchCurrentItems().then();
-    }, [fetchCurrentItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleAddItem = async () => {
         const trimmedItem = newItem.trim();
+        console.log('CurrentShoppingListScreen handleAddItem', trimmedItem);
         if (!trimmedItem) return;
         const result = await addCurrentItem(trimmedItem);
+        setNewItem('');
 
         if (result) {
             Alert.alert('追加エラー', result);
             return;
-        }
-
-        if (newItem.trim()) {
-            setNewItem('');
-            await addCurrentItem(newItem.trim());
         }
     };
 
@@ -51,24 +51,31 @@ export default function CurrentShoppingListScreen() {
         item,
         drag,
         isActive,
-    }: RenderItemParams<CurrentItem>) => (
-        <TouchableOpacity
-            style={[
-                sharedStyles.itemContainer,
-                isActive && sharedStyles.activeItem,
-            ]}
-            onLongPress={drag}
-        >
-            <TouchableOpacity onPress={() => toggleCurrentItem(item)}>
-                <Text style={item.completed ? styles.completedItem : undefined}>
-                    {item.name}
-                </Text>
+    }: RenderItemParams<CurrentItem>) => {
+        console.log('CurrentShoppingListScreen renderItem');
+        return (
+            <TouchableOpacity
+                style={[
+                    sharedStyles.itemContainer,
+                    isActive && sharedStyles.activeItem,
+                ]}
+                onLongPress={drag}
+            >
+                <TouchableOpacity onPress={() => toggleCurrentItem(item)}>
+                    <Text
+                        style={
+                            item.completed ? styles.completedItem : undefined
+                        }
+                    >
+                        {item.name}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
+                    <Text style={styles.deleteButton}>削除</Text>
+                </TouchableOpacity>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
-                <Text style={styles.deleteButton}>削除</Text>
-            </TouchableOpacity>
-        </TouchableOpacity>
-    );
+        );
+    };
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

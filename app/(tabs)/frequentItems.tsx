@@ -17,6 +17,7 @@ import { FrequentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function FrequentShoppingListScreen() {
+    console.log('FrequentShoppingListScreen');
     const {
         frequentItems,
         fetchFrequentItems,
@@ -28,10 +29,13 @@ export default function FrequentShoppingListScreen() {
     const [newItem, setNewItem] = React.useState('');
 
     useEffect(() => {
+        console.log('FrequentShoppingListScreen useEffect');
         fetchFrequentItems().then();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleAddItem = async () => {
+        console.log('FrequentShoppingListScreen handleAddItem');
         const trimmedItem = newItem.trim();
         if (!trimmedItem) return;
         const result = await addFrequentItem(trimmedItem);
@@ -48,37 +52,42 @@ export default function FrequentShoppingListScreen() {
         item,
         drag,
         isActive,
-    }: RenderItemParams<FrequentItem>) => (
-        <TouchableOpacity
-            style={[
-                sharedStyles.itemContainer,
-                isActive && sharedStyles.activeItem,
-            ]}
-            onLongPress={drag}
-        >
-            <Text>{item.name}</Text>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={() => addToCurrentFromFrequent(item.id)}
-                    disabled={item.isAdded}
-                    style={[
-                        styles.button,
-                        item.isAdded ? styles.addedButton : styles.addButton,
-                    ]}
-                >
-                    <Text style={styles.buttonText}>
-                        {item.isAdded ? '追加済み' : '追加'}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => deleteFrequentItem(item.id)}
-                    style={[styles.button, styles.deleteButton]}
-                >
-                    <Text style={styles.buttonText}>削除</Text>
-                </TouchableOpacity>
-            </View>
-        </TouchableOpacity>
-    );
+    }: RenderItemParams<FrequentItem>) => {
+        console.log('FrequentShoppingListScreen renderItem');
+        return (
+            <TouchableOpacity
+                style={[
+                    sharedStyles.itemContainer,
+                    isActive && sharedStyles.activeItem,
+                ]}
+                onLongPress={drag}
+            >
+                <Text>{item.name}</Text>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => addToCurrentFromFrequent(item.id)}
+                        disabled={item.isAdded}
+                        style={[
+                            styles.button,
+                            item.isAdded
+                                ? styles.addedButton
+                                : styles.addButton,
+                        ]}
+                    >
+                        <Text style={styles.buttonText}>
+                            {item.isAdded ? '追加済み' : '追加'}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => deleteFrequentItem(item.id)}
+                        style={[styles.button, styles.deleteButton]}
+                    >
+                        <Text style={styles.buttonText}>削除</Text>
+                    </TouchableOpacity>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

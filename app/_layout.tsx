@@ -10,7 +10,6 @@ import 'react-native-reanimated';
 import { useEffect } from 'react';
 import { Button, View, Text } from 'react-native';
 
-import { firebaseApp } from '@/config/firabase';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
 
@@ -18,6 +17,8 @@ import useFirebaseAuth from '@/hooks/useFirebaseAuth';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+    console.log('RootLayout');
+
     const colorScheme = useColorScheme();
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -25,12 +26,7 @@ export default function RootLayout() {
     const { currentUserEmail, signInWithGoogle } = useFirebaseAuth();
 
     useEffect(() => {
-        console.log(
-            firebaseApp.name ? 'Firebase initialized' : 'Firebase not working',
-        );
-    }, []);
-
-    useEffect(() => {
+        console.log('RootLayout useEffect');
         if (loaded) {
             SplashScreen.hideAsync();
         }
@@ -39,6 +35,7 @@ export default function RootLayout() {
     if (!loaded) {
         return null;
     }
+
     if (!currentUserEmail) {
         return (
             <View
