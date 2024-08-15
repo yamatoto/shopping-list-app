@@ -5,6 +5,7 @@ import { CurrentItem } from '@/models/item';
 const collectionName = 'current-items';
 
 export const fetchAllCurrentItems = async (): Promise<CurrentItem[]> => {
+    console.log('api fetchAllCurrentItems');
     try {
         const { docs } = await firestore().collection(collectionName).get();
         return docs.map(doc => {
@@ -12,6 +13,7 @@ export const fetchAllCurrentItems = async (): Promise<CurrentItem[]> => {
             return {
                 id: doc.id,
                 name: data.name,
+                isAddedToFrequent: data.isAddedToFrequent,
                 completed: data.completed,
                 createdBy: data.createdBy,
                 updatedBy: data.updatedBy,
@@ -27,11 +29,14 @@ export const fetchAllCurrentItems = async (): Promise<CurrentItem[]> => {
 
 export const addCurrentItem = async (
     name: string,
+    isAddedToFrequent: boolean,
     userEmail: string,
 ): Promise<CurrentItem> => {
+    console.log(`api addCurrentItem: ${name} ${isAddedToFrequent}`);
     const serverTimestamp = firestore.FieldValue.serverTimestamp();
     const newItem = {
         name,
+        isAddedToFrequent,
         completed: false,
         createdBy: userEmail,
         updatedBy: userEmail,
@@ -61,6 +66,7 @@ export const updateCurrentItem = async (
     currentItem: CurrentItem,
     userEmail: string,
 ): Promise<CurrentItem> => {
+    console.log(`api updateCurrentItem: ${JSON.stringify(currentItem)}`);
     const {
         id,
         updatedBy: _,

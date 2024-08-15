@@ -5,15 +5,15 @@ import { FrequentItem } from '@/models/item';
 const collectionName = 'frequent-items';
 
 export const fetchAllFrequentItems = async (): Promise<FrequentItem[]> => {
+    console.log('api fetchAllFrequentItems');
     try {
-        console.log('api fetchAllFrequentItems');
         const { docs } = await firestore().collection(collectionName).get();
         return docs.map(doc => {
             const data = doc.data();
             return {
                 id: doc.id,
                 name: data.name,
-                isAdded: data.isAdded,
+                isAddedToCurrent: data.isAddedToCurrent,
                 createdBy: data.createdBy,
                 updatedBy: data.updatedBy,
                 createdAt: data.createdAt.toDate(),
@@ -28,14 +28,14 @@ export const fetchAllFrequentItems = async (): Promise<FrequentItem[]> => {
 
 export const addFrequentItem = async (
     name: string,
-    isAdded: boolean,
+    isAddedToCurrent: boolean,
     userEmail: string,
 ): Promise<FrequentItem> => {
-    console.log('api requentItem');
+    console.log(`api addFrequentItem: ${name} ${isAddedToCurrent}`);
     const serverTimestamp = firestore.FieldValue.serverTimestamp();
     const newItem = {
         name,
-        isAdded,
+        isAddedToCurrent,
         createdBy: userEmail,
         updatedBy: userEmail,
         createdAt: serverTimestamp,
@@ -64,7 +64,7 @@ export const updateFrequentItem = async (
     frequentItem: FrequentItem,
     userEmail: string,
 ): Promise<FrequentItem> => {
-    console.log('api teFrequentItem');
+    console.log(`api updateFrequentItem: ${JSON.stringify(frequentItem)}`);
     const {
         id,
         updatedBy: _,

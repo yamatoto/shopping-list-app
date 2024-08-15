@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Alert,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
     RenderItemParams,
@@ -20,9 +13,10 @@ export default function CurrentShoppingListScreen() {
     console.log('CurrentShoppingListScreen');
     const {
         currentItems,
-        fetchCurrentItems,
+        fetchAllCurrentItems,
         addCurrentItem,
-        toggleCurrentItem,
+        addToFrequentFromCurrent,
+        // toggleCurrentItem,
         deleteCurrentItem,
         reorderCurrentItems,
     } = useShoppingList();
@@ -30,7 +24,7 @@ export default function CurrentShoppingListScreen() {
 
     useEffect(() => {
         console.log('CurrentShoppingListScreen useEffect');
-        fetchCurrentItems().then();
+        fetchAllCurrentItems().then();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -61,18 +55,31 @@ export default function CurrentShoppingListScreen() {
                 ]}
                 onLongPress={drag}
             >
-                <TouchableOpacity onPress={() => toggleCurrentItem(item)}>
-                    <Text
-                        style={
-                            item.completed ? styles.completedItem : undefined
-                        }
+                <Text>{item.name}</Text>
+                <View style={sharedStyles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => addToFrequentFromCurrent(item.id)}
+                        disabled={item.isAddedToFrequent}
+                        style={[
+                            sharedStyles.button,
+                            item.isAddedToFrequent
+                                ? sharedStyles.addedButton
+                                : sharedStyles.addButton,
+                        ]}
                     >
-                        {item.name}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => deleteCurrentItem(item.id)}>
-                    <Text style={styles.deleteButton}>削除</Text>
-                </TouchableOpacity>
+                        <Text style={sharedStyles.buttonText}>
+                            {item.isAddedToFrequent
+                                ? '定番に追加済'
+                                : '定番に追加'}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => deleteCurrentItem(item)}
+                        style={[sharedStyles.button, sharedStyles.deleteButton]}
+                    >
+                        <Text style={sharedStyles.buttonText}>削除</Text>
+                    </TouchableOpacity>
+                </View>
             </TouchableOpacity>
         );
     };
@@ -85,7 +92,7 @@ export default function CurrentShoppingListScreen() {
                         style={sharedStyles.input}
                         value={newItem}
                         onChangeText={setNewItem}
-                        placeholder="新しいアイテムを追加"
+                        placeholder="新しい直近の買い物を追加"
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
@@ -104,12 +111,3 @@ export default function CurrentShoppingListScreen() {
         </GestureHandlerRootView>
     );
 }
-const styles = StyleSheet.create({
-    completedItem: {
-        textDecorationLine: 'line-through',
-        color: '#888',
-    },
-    deleteButton: {
-        color: '#d9534f',
-    },
-});

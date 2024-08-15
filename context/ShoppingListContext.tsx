@@ -10,14 +10,19 @@ interface ShoppingListContextType {
     frequentItems: FrequentItem[];
     loading: boolean;
     error: string | null;
-    fetchCurrentItems: () => Promise<CurrentItem[] | undefined>;
-    fetchFrequentItems: () => Promise<FrequentItem[] | undefined>;
+    fetchAllCurrentItems: () => Promise<CurrentItem[] | undefined>;
+    fetchAllFrequentItems: () => Promise<FrequentItem[] | undefined>;
     addCurrentItem: (name: string) => Promise<string | null>;
     addFrequentItem: (name: string) => Promise<string | null>;
     toggleCurrentItem: (currentItem: CurrentItem) => void;
-    deleteCurrentItem: (id: string) => void;
-    deleteFrequentItem: (id: string) => void;
-    addToCurrentFromFrequent: (id: string) => void;
+    deleteCurrentItem: (
+        iItem: Pick<CurrentItem, 'id' | 'name'>,
+    ) => Promise<void>;
+    deleteFrequentItem: (
+        iItem: Pick<FrequentItem, 'id' | 'name'>,
+    ) => Promise<void>;
+    addToFrequentFromCurrent: (id: string) => Promise<void>;
+    addToCurrentFromFrequent: (id: string) => Promise<void>;
     reorderCurrentItems: (newOrder: CurrentItem[]) => void;
     reorderFrequentItems: (newOrder: FrequentItem[]) => void;
 }
@@ -35,8 +40,8 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const [error, setError] = useState<string | null>(null);
     const { currentUserEmail } = useFirebaseAuth();
 
-    const fetchCurrentItems = async () => {
-        console.log('fetchCurrentItems');
+    const fetchAllCurrentItems = async () => {
+        console.log('fetchAllCurrentItems');
         setLoading(true);
         try {
             const currentItems =
@@ -50,12 +55,67 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
-    const fetchFrequentItems = async () => {
-        console.log('fetchFrequentItems');
-        const frequentItems =
-            await FrequentItemsRepository.fetchAllFrequentItems();
-        setFrequentItems(frequentItems);
-        return frequentItems;
+    const fetchAllFrequentItems = async () => {
+        console.log('fetchAllFrequentItems');
+        setLoading(true);
+        try {
+            const frequentItems =
+                await FrequentItemsRepository.fetchAllFrequentItems();
+            setFrequentItems(frequentItems);
+            return frequentItems;
+        } catch (error: any) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateCurrentItem = async (updatedItem: CurrentItem) => {
+        console.log('updateCurrentItem');
+
+        try {
+            await CurrentItemsRepository.updateCurrentItem(
+                updatedItem,
+                currentUserEmail!,
+            );
+            setCurrentItems(prevItems =>
+                prevItems.map(item =>
+                    item.id === updatedItem.id
+                        ? {
+                              ...updatedItem,
+                              updatedBy: currentUserEmail!,
+                              updatedAt: new Date(),
+                          }
+                        : item,
+                ),
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const updateFrequentItem = async (updatedItem: FrequentItem) => {
+        console.log('updateFrequentItem');
+
+        try {
+            await FrequentItemsRepository.updateFrequentItem(
+                updatedItem,
+                currentUserEmail!,
+            );
+            setFrequentItems(prevItems =>
+                prevItems.map(item =>
+                    item.id === updatedItem.id
+                        ? {
+                              ...updatedItem,
+                              updatedBy: currentUserEmail!,
+                              updatedAt: new Date(),
+                          }
+                        : item,
+                ),
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const addCurrentItem = async (inputName: string) => {
@@ -64,26 +124,37 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
 
         // TODO: api取得してチェック
         if (currentItems.some(item => item.name === trimmedName)) {
+            // TODO: フロントのリストになければ追加
             return '登録済です。';
         }
+
+        // TODO: apiで既に定番の買い物リストに存在するかチェック
+        const isAlreadyInFrequentList = frequentItems.some(
+            item => item.name === trimmedName,
+        );
 
         try {
             const currentItem = await CurrentItemsRepository.addCurrentItem(
                 trimmedName,
+                isAlreadyInFrequentList,
                 currentUserEmail!,
             );
             setCurrentItems([...currentItems, currentItem]);
         } catch (error) {
             console.error(error);
+            return null;
         }
 
-        // TODO: 定番リストにあれば「追加済み」に更新 api
-        setFrequentItems(prevFrequentItems =>
-            prevFrequentItems.map(item =>
-                item.name === trimmedName ? { ...item, isAdded: true } : item,
-            ),
+        // 追加した直近アイテムが定番リストにあれば、定番リストの方を「追加済み」に更新
+        const frequentItem = frequentItems.find(
+            item => item.name === trimmedName,
         );
+        if (!frequentItem) return null;
 
+        await updateFrequentItem({
+            ...frequentItem,
+            isAddedToCurrent: true,
+        });
         return null;
     };
 
@@ -93,6 +164,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
 
         // TODO: api取得してチェック
         if (frequentItems.some(item => item.name === trimmedName)) {
+            // TODO: フロントのリストになければ追加
             return '登録済です。';
         }
 
@@ -110,8 +182,19 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             setFrequentItems([...frequentItems, frequentItem]);
         } catch (error) {
             console.error(error);
+            return null;
         }
 
+        // 追加した定番アイテムが直近リストにあれば、直近リストの方を「追加済み」に更新
+        const currentItem = currentItems.find(
+            item => item.name === trimmedName,
+        );
+        if (!currentItem) return null;
+
+        await updateCurrentItem({
+            ...currentItem,
+            isAddedToFrequent: true,
+        });
         return null;
     };
 
@@ -138,7 +221,10 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
-    const deleteCurrentItem = async (id: string) => {
+    const deleteCurrentItem = async ({
+        id,
+        name,
+    }: Pick<CurrentItem, 'id' | 'name'>) => {
         console.log('deleteCurrentItem');
         try {
             await CurrentItemsRepository.deleteCurrentItem(id);
@@ -148,58 +234,53 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             setCurrentItems(currentItems.filter(item => item.id !== id));
         }
 
-        const deletedItem = currentItems.find(item => item.id === id);
-        if (!deletedItem) return;
-
-        try {
-            await deleteFrequentItem(id);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setFrequentItems(
-                frequentItems.map(item => {
-                    if (item.name === deletedItem.name) {
-                        console.log('Matching frequent item found:', item);
-                        return { ...item, isAdded: false };
-                    }
-                    return item;
-                }),
-            );
-        }
+        // 削除した直近アイテムが定番リストにあれば、定番リストの方を未追加にする
+        const frequentItem = frequentItems.find(item => item.name === name);
+        if (!frequentItem || !frequentItem.isAddedToCurrent) return;
+        await updateFrequentItem({ ...frequentItem, isAddedToCurrent: false });
     };
 
-    const deleteFrequentItem = async (id: string) => {
+    const deleteFrequentItem = async ({
+        id,
+        name,
+    }: Pick<FrequentItem, 'id' | 'name'>) => {
         console.log('deleteFrequentItem');
         try {
             await FrequentItemsRepository.deleteFrequentItem(id);
         } catch (error) {
             console.error(error);
         } finally {
-            setFrequentItems(prevItems =>
-                prevItems.filter(item => item.id !== id),
-            );
+            setFrequentItems(frequentItems.filter(item => item.id !== id));
         }
+
+        // 削除した直近アイテムが定番リストにあれば、定番リストの方を未追加にする
+        const currentItem = currentItems.find(item => item.name === name);
+        if (!currentItem || !currentItem.isAddedToFrequent) return;
+        await updateCurrentItem({ ...currentItem, isAddedToFrequent: false });
+    };
+
+    const addToFrequentFromCurrent = async (id: string) => {
+        console.log('addToFrequentFromCurrent');
+        const itemToAdd = currentItems.find(item => item.id === id);
+        if (!itemToAdd) return; // ありえない
+        if (itemToAdd.isAddedToFrequent) return; // ありえない
+
+        await Promise.all([
+            updateCurrentItem({ ...itemToAdd, isAddedToFrequent: true }),
+            addFrequentItem(itemToAdd.name),
+        ]);
     };
 
     const addToCurrentFromFrequent = async (id: string) => {
         console.log('addToCurrentFromFrequent');
         const itemToAdd = frequentItems.find(item => item.id === id);
-        if (itemToAdd && !itemToAdd.isAdded) {
-            await addCurrentItem(itemToAdd.name);
-            let updated;
-            const updatedList = frequentItems.map(item => {
-                if (item.id === id) {
-                    updated = { ...item, isAdded: true };
-                    return updated;
-                }
-                return item;
-            });
-            setFrequentItems(updatedList);
-            await FrequentItemsRepository.updateFrequentItem(
-                updated!,
-                currentUserEmail!,
-            );
-        }
+        if (!itemToAdd) return; // ありえない
+        if (itemToAdd.isAddedToCurrent) return; // ありえない
+
+        await Promise.all([
+            updateFrequentItem({ ...itemToAdd, isAddedToCurrent: true }),
+            addCurrentItem(itemToAdd.name),
+        ]);
     };
 
     const reorderCurrentItems = (newOrder: CurrentItem[]) => {
@@ -219,13 +300,14 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
                 frequentItems,
                 loading,
                 error,
-                fetchCurrentItems,
-                fetchFrequentItems,
+                fetchAllCurrentItems,
+                fetchAllFrequentItems,
                 addCurrentItem,
                 addFrequentItem,
                 toggleCurrentItem,
                 deleteCurrentItem,
                 deleteFrequentItem,
+                addToFrequentFromCurrent,
                 addToCurrentFromFrequent,
                 reorderCurrentItems,
                 reorderFrequentItems,

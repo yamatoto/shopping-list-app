@@ -43,4 +43,22 @@ export const sharedStyles = StyleSheet.create({
     activeItem: {
         backgroundColor: '#e0e0e0',
     },
+    buttonContainer: {
+        flexDirection: 'row',
+    },
+    button: {
+        padding: 5,
+        marginLeft: 5,
+        borderRadius: 3,
+    },
+    addedButton: {
+        backgroundColor: '#cccccc',
+    },
+    deleteButton: {
+        backgroundColor: '#ff6b6b',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 12,
+    },
 });

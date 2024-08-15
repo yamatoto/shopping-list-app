@@ -20,8 +20,8 @@ export default function TabsLayout() {
                 <Tabs.Screen
                     name="frequentItems"
                     options={{
-                        headerTitle: '定番アイテムリスト',
-                        tabBarLabel: '定番アイテム',
+                        headerTitle: '定番の買い物リスト',
+                        tabBarLabel: '定番の買い物',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="star" size={size} color={color} />
                         ),

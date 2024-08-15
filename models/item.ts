@@ -8,9 +8,10 @@ interface ItemBase {
 }
 
 export interface CurrentItem extends ItemBase {
+    isAddedToFrequent: boolean;
     completed: boolean;
 }
 
 export interface FrequentItem extends ItemBase {
-    isAdded: boolean;
+    isAddedToCurrent: boolean;
 }
