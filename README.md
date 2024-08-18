@@ -49,3 +49,31 @@ $ cd ios
 $ rm Podfile.lock
 $ pod install
 ```
+
+# publish
+
+参考: https://fig.io/manual/eas/secret:create
+
+## Android
+
+```shell
+$ eas secret:create --scope project --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json
+
+$ eas build --platform android
+
+```
+
+Build detailsのURLにアクセスして、APKをダウンロードする。
+
+## iOS
+AppleのApp Store Connectにアクセスし、アプリを登録。
+
+```shell
+
+$ eas secret:create --scope project --name GOOGLE_SERVICE_INFO_PLIST --type file --value ./GoogleService-Info.plist
+
+
+$ eas build --platform ios
+```
+
+ビルド後、TestFlightにIPAファイルをアップロードし、iosユーザーのデバイスをテスターとして招待する。

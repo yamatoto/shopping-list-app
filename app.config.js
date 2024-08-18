@@ -1,9 +1,15 @@
 module.exports = ({ config }) => {
     return {
         ...config,
+        updates: {
+            url: 'https://u.expo.dev/90b6f1a0-eade-4388-9c0b-5b600c552c97',
+        },
+        runtimeVersion: {
+            policy: 'appVersion',
+        },
         android: {
             package: 'com.yamato.shoppinglistapp',
-            googleServicesFile: './google-services.json',
+            googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
             config: {
                 googleSignIn: {
                     apiKey: process.env.EXPO_PUBLIC_ANDROID_API_KEY,
@@ -15,6 +21,11 @@ module.exports = ({ config }) => {
                 foregroundImage: './assets/images/adaptive-icon.png',
                 backgroundColor: '#ffffff',
             },
+        },
+        ios: {
+            supportsTablet: true,
+            bundleIdentifier: 'com.yamato.shoppinglistapp',
+            googleServicesFile: process.env.GOOGLE_SERVICE_INFO_JSON,
         },
         extra: {
             googleClientIdAndroid:

@@ -12,11 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.yamato.shoppinglistapp",
-      "googleServicesFile": "./GoogleService-Info.plist"
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
