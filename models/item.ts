@@ -1,17 +1,19 @@
-interface ItemBase {
-    id: string;
+import { ClientDataBase } from '@/models/base';
+
+export interface ItemBase {
     name: string;
+    sortOrder: number;
     createdBy: string;
     updatedBy: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
-export interface CurrentItem extends ItemBase {
+export interface CurrentItemBase {
     isAddedToFrequent: boolean;
-    completed: boolean;
 }
 
-export interface FrequentItem extends ItemBase {
+export interface FrequentItemBase {
     isAddedToCurrent: boolean;
 }
+
+export type CurrentItem = CurrentItemBase & ItemBase & ClientDataBase;
+export type FrequentItem = FrequentItemBase & ItemBase & ClientDataBase;

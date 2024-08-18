@@ -16,7 +16,6 @@ export default function CurrentShoppingListScreen() {
         fetchAllCurrentItems,
         addCurrentItem,
         addToFrequentFromCurrent,
-        // toggleCurrentItem,
         deleteCurrentItem,
         reorderCurrentItems,
     } = useShoppingList();
@@ -32,12 +31,11 @@ export default function CurrentShoppingListScreen() {
         const trimmedItem = newItem.trim();
         console.log('CurrentShoppingListScreen handleAddItem', trimmedItem);
         if (!trimmedItem) return;
-        const result = await addCurrentItem(trimmedItem);
-        setNewItem('');
-
-        if (result) {
-            Alert.alert('追加エラー', result);
-            return;
+        try {
+            await addCurrentItem(trimmedItem);
+            setNewItem('');
+        } catch (error: any) {
+            Alert.alert('追加エラー', error);
         }
     };
 
@@ -58,7 +56,7 @@ export default function CurrentShoppingListScreen() {
                 <Text>{item.name}</Text>
                 <View style={sharedStyles.buttonContainer}>
                     <TouchableOpacity
-                        onPress={() => addToFrequentFromCurrent(item.id)}
+                        onPress={() => addToFrequentFromCurrent(item)}
                         disabled={item.isAddedToFrequent}
                         style={[
                             sharedStyles.button,

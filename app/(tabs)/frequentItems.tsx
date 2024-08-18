@@ -31,14 +31,12 @@ export default function FrequentShoppingListScreen() {
         console.log('FrequentShoppingListScreen handleAddItem');
         const trimmedItem = newItem.trim();
         if (!trimmedItem) return;
-        const result = await addFrequentItem(trimmedItem);
-
-        if (result) {
-            Alert.alert('追加エラー', result);
-            return;
+        try {
+            await addFrequentItem(trimmedItem);
+            setNewItem('');
+        } catch (error: any) {
+            Alert.alert('追加エラー', error);
         }
-
-        setNewItem('');
     };
 
     const renderItem = ({
@@ -58,7 +56,7 @@ export default function FrequentShoppingListScreen() {
                 <Text>{item.name}</Text>
                 <View style={sharedStyles.buttonContainer}>
                     <TouchableOpacity
-                        onPress={() => addToCurrentFromFrequent(item.id)}
+                        onPress={() => addToCurrentFromFrequent(item)}
                         disabled={item.isAddedToCurrent}
                         style={[
                             sharedStyles.button,
