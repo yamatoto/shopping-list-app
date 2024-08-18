@@ -3,6 +3,7 @@ module.exports = ({ config }) => {
         ...config,
         updates: {
             url: 'https://u.expo.dev/90b6f1a0-eade-4388-9c0b-5b600c552c97',
+            fallbackToCacheTimeout: 0,
         },
         runtimeVersion: {
             policy: 'appVersion',
@@ -15,6 +16,7 @@ module.exports = ({ config }) => {
                     apiKey: process.env.EXPO_PUBLIC_ANDROID_API_KEY,
                     certificateHash:
                         process.env.EXPO_PUBLIC_GOOGLE_CERTIFICATE_HASH,
+                    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
                 },
             },
             adaptiveIcon: {
