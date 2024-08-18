@@ -19,7 +19,12 @@
     },
     "plugins": [
       "expo-router",
-      "@react-native-firebase/app",
+      [
+        "@react-native-firebase/app",
+        {
+          "ios_google_services_file": "./GoogleService-Info.plist"
+        }
+      ],
       "@react-native-firebase/auth",
       "@react-native-google-signin/google-signin",
       [

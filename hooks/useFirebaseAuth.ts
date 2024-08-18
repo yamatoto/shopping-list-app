@@ -2,12 +2,14 @@ import FirebaseAuth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
-import { GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
+import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
 
 const auth = FirebaseAuth();
 
 GoogleSignin.configure({
+    offlineAccess: true,
     webClientId: GOOGLE_WEB_CLIENT_ID,
+    iosClientId: GOOGLE_IOS_CLIENT_ID,
 });
 
 const useFirebaseAuth = () => {

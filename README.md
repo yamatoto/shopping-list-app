@@ -58,7 +58,9 @@ $ pod install
 
 ```shell
 $ eas secret:create --scope project --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json
+$ GOOGLE_SERVICES_JSON=./google-services.json
 
+# コミットしてから
 $ eas build --platform android
 
 ```
@@ -71,8 +73,9 @@ AppleのApp Store Connectにアクセスし、アプリを登録。
 ```shell
 
 $ eas secret:create --scope project --name GOOGLE_SERVICE_INFO_PLIST --type file --value ./GoogleService-Info.plist
+$ GOOGLE_SERVICE_INFO_PLIST=./GoogleService-Info.plist
 
-
+# コミットしてから
 $ eas build --platform ios
 ```
 

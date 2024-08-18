@@ -25,7 +25,7 @@ module.exports = ({ config }) => {
         ios: {
             supportsTablet: true,
             bundleIdentifier: 'com.yamato.shoppinglistapp',
-            googleServicesFile: process.env.GOOGLE_SERVICE_INFO_JSON,
+            googleServicesFile: process.env.GOOGLE_SERVICE_INFO_PLIST,
         },
         extra: {
             googleClientIdAndroid:

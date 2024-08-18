@@ -12,7 +12,19 @@
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "credentialsSource": "remote",
+        "image": "latest",
+        "env": {
+          "GOOGLE_SERVICE_INFO_PLIST": "{{GOOGLE_SERVICES_JSON}}"
+        }
+      },
+      "ios": {
+        "credentialsSource": "remote",
+        "image": "latest",
+        "env": {
+          "GOOGLE_SERVICE_INFO_PLIST": "{{GOOGLE_SERVICE_INFO_PLIST}}"
+        }
       }
     }
   },
