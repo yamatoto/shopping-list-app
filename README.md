@@ -61,7 +61,7 @@ $ eas secret:create --scope project --name GOOGLE_SERVICES_JSON --type file --va
 $ GOOGLE_SERVICES_JSON=./google-services.json
 
 # コミットしてから
-$ eas build --platform android
+$ eas build --platform android --profile production
 
 ```
 
@@ -80,3 +80,9 @@ $ eas build --platform ios
 ```
 
 ビルド後、TestFlightにIPAファイルをアップロードし、iosユーザーのデバイスをテスターとして招待する。
+
+## 本番エラーログ
+
+```shell
+adb logcat '*:E'  
+```
