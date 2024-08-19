@@ -22,15 +22,8 @@
           "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}",
           "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "{{EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}}"
         }
-      },
-      "ios": {
-        "credentialsSource": "remote",
-        "image": "latest",
-        "env": {
-          "GOOGLE_SERVICE_INFO_PLIST": "{{GOOGLE_SERVICE_INFO_PLIST}}",
-          "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "{{EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}}"
-        }
       }
+
     }
   },
   "submit": {
