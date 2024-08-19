@@ -29,6 +29,7 @@ const useFirebaseAuth = () => {
 
     const signInWithGoogle = async () => {
         try {
+            await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
             const idToken = user.idToken;
             if (idToken === null) return;
