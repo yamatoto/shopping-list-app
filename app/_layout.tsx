@@ -23,7 +23,7 @@ export default function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-    const { currentUserEmail, signInWithGoogle } = useFirebaseAuth();
+    const { currentUserEmail, signInWithGoogle, signOut } = useFirebaseAuth();
 
     useEffect(() => {
         console.log('RootLayout useEffect');
@@ -38,21 +38,38 @@ export default function RootLayout() {
 
     if (!currentUserEmail) {
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Text>Sign in with Google</Text>
-                <Button
-                    title="Sign in with Google"
-                    onPress={() => {
-                        signInWithGoogle().then();
+            <>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
-                />
-            </View>
+                >
+                    <Text>Sign in with Google</Text>
+                    <Button
+                        title="Sign in with Google"
+                        onPress={() => {
+                            signInWithGoogle().then();
+                        }}
+                    />
+                </View>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Text>Sign Out</Text>
+                    <Button
+                        title="Sign Out"
+                        onPress={() => {
+                            signOut().then();
+                        }}
+                    />
+                </View>
+            </>
         );
     }
 

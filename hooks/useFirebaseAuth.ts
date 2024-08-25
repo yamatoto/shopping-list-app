@@ -48,8 +48,12 @@ const useFirebaseAuth = () => {
 
         try {
             const user = await GoogleSignin.signIn();
+
+            console.log(`user:::${JSON.stringify(user)}`);
             const idToken = user.idToken;
-            if (idToken === null) return;
+            if (idToken === null) {
+                throw new Error(`idToken is null. user: ${user}`);
+            }
             console.log('idToken:::', idToken);
 
             const credential =
