@@ -95,6 +95,14 @@ $ eas secret:list
 $ eas secret::delete --id xxx
 ```
 
+# 環境変数
+
+```shell
+$ eas secret:push --scope project --env-file .env
+```
+
+https://docs.expo.dev/build-reference/variables/
+
 # 身内アプリ配布
 
 ```shell
