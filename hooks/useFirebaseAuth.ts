@@ -1,5 +1,8 @@
 import FirebaseAuth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
@@ -29,6 +32,22 @@ const useFirebaseAuth = () => {
 
     const signInWithGoogle = async () => {
         try {
+            await GoogleSignin.hasPlayServices({
+                showPlayServicesUpdateDialog: true,
+            });
+        } catch (error: any) {
+            console.error('hasPlayServices error:', error);
+
+            if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                alert(
+                    `Play Services が利用できません. ${JSON.stringify(error)}`,
+                );
+            }
+            alert(`hasPlayServicesでエラー. ${JSON.stringify(error)}`);
+            return;
+        }
+
+        try {
             const user = await GoogleSignin.signIn();
             const idToken = user.idToken;
             if (idToken === null) return;
@@ -39,6 +58,7 @@ const useFirebaseAuth = () => {
             await auth.signInWithCredential(credential);
         } catch (error) {
             console.error('signInWithGoogle error:', error);
+            alert(`signInWithGoogleでエラー. ${JSON.stringify(error)}`);
         }
     };
 

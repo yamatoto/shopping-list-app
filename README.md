@@ -57,6 +57,7 @@ $ pod install
 ## Android
 
 ```shell
+$ eas secret:list
 $ eas secret:create --scope project --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json
 $ GOOGLE_SERVICES_JSON=./google-services.json
 
