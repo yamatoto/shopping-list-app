@@ -1,6 +1,8 @@
 # 概要
 
-買い物リストアプリです。
+買い物リストアプリです。  
+身内しか公開していません。  
+Google認証は高価なAppleデベロッパーに登録しないといけないのでやめました。
 
 # 実装予定
 
@@ -27,57 +29,20 @@
 実機で開発者モードを有効にしておく。
 
 ```shell
-$ expo run:android --device
-$ expo run:ios --device
+$ yarn start
 ```
 
-# ios開発
+Expo GoアプリでQRコードを読み込む。
+
+# 身内アプリ配布
 
 ```shell
-Command `pod install` failed.
-└─ Cause: Failed to load 'hermes-engine' podspec: 
-[!] Invalid `hermes-engine.podspec` file: undefined method `visionos' for #<Pod::Specification name="hermes-engine/Pre-built">.
+$ eas update
 ```
 
-このエラーになったら
+https://expo.dev/accounts/yamato1987/projects/shopping-list-app/updates  
+最新のビルドを選択して、Previewをクリックすると、QRコードが表示されるので共有
 
-```shell
-$ sudo gem install cocoapods
-$ npx expo install --fix
-$ cd ios
-$ rm Podfile.lock
-$ pod install
-```
-
-# 設定変えたら
-
-```shell
-$ npx expo prebuild
-$ npx expo run:android
-```
-
-# Google認証
-
-```typescript
-await GoogleSignin.configure({
-    webClientId: `./google-services.jsonのoauth_clientの"client_type": 3のclient_idを設定`,
-});
-```
-
-## SHA 証明書フィンガープリント
-
-デバッグ用
-```shell
-$ find . -name "*.keystore"
-$ keytool -list -v -keystore ./android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android
-```
-
-ビルドしたapkファイルのSHA 証明書フィンガープリント確認  
-ビルドしたapkファイルをローカルにダウンロード
-
-```shell
-$ keytool -printcert -jarfile {ダウンロードしたファイルのパス}.apk
-```
 
 # 機密ファイル
 
@@ -100,16 +65,6 @@ $ eas secret:push --scope project --env-file .env
 ```
 
 https://docs.expo.dev/build-reference/variables/
-
-# 身内アプリ配布
-
-```shell
-$ eas update
-```
-
-## android
-
-Build detailsのURLにアクセスして、APKをダウンロードする。
 
 ## その他
 
