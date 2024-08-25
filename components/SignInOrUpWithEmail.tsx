@@ -8,10 +8,18 @@ export default function SignInOrUpWithEmail() {
     const [password, setPassword] = useState('');
     const { signUpWithEmail, signInWithEmail } = useFirebaseAuth();
 
+    const isInvalidInput = () => {
+        if (!!email && !!password) return false;
+        alert('メールアドレスとパスワードを入力してください');
+        return true;
+    };
+
     const handleSignUp = async () => {
+        if (isInvalidInput()) return;
         await signUpWithEmail(email, password);
     };
     const handleSignIn = async () => {
+        if (isInvalidInput()) return;
         await signInWithEmail(email, password);
     };
 
@@ -57,9 +65,9 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 8,
         borderRadius: 4,
-        backgroundColor: '#fff', // 背景色を白に設定
+        backgroundColor: '#fff',
         color: '#000',
-        opacity: 1, // 不透明に設定
+        opacity: 1,
     },
     buttonContainer: {
         marginVertical: 8,

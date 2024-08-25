@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
 
 import {
     auth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signOut as signOutFromFirebase,
 } from '@/config/firabase';
 
 const useFirebaseAuth = () => {
+    const router = useRouter();
     const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(
         null,
     );
@@ -15,7 +18,9 @@ const useFirebaseAuth = () => {
         const unsubscribe = auth.onAuthStateChanged(() => {
             if (auth.currentUser) {
                 setCurrentUserEmail(auth.currentUser.email);
+                return;
             }
+            setCurrentUserEmail(null);
         });
 
         return () => unsubscribe();
@@ -42,7 +47,8 @@ const useFirebaseAuth = () => {
     };
 
     const signOut = async () => {
-        await auth.signOut();
+        await signOutFromFirebase(auth);
+        router.replace('/');
     };
 
     return {
