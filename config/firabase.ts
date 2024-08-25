@@ -5,8 +5,10 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from '@firebase/auth';
+import * as firebaseAuth from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { Platform } from 'react-native';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const IOS_API_KEY = process.env.EXPO_PUBLIC_IOS_API_KEY ?? '';
 const ANDROID_API_KEY = process.env.EXPO_PUBLIC_ANDROID_API_KEY ?? '';
@@ -33,11 +35,14 @@ const firebaseConfig: FirebaseOptions = {
     messagingSenderId: MESSAGING_SENDER_ID,
     measurementId: MEASUREMENT_ID,
 };
+const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
 
 const firebaseApp = initializeApp(firebaseConfig);
-initializeAuth(firebaseApp);
-
+initializeAuth(firebaseApp, {
+    persistence: reactNativePersistence(ReactNativeAsyncStorage),
+});
 const auth = getAuth();
+
 const db = getFirestore(firebaseApp);
 
 export { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db };

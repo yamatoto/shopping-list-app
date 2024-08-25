@@ -18,6 +18,7 @@ export default function SignInOrUpWithEmail() {
     return (
         <View style={styles.container}>
             <TextInput
+                placeholderTextColor="#888"
                 style={styles.input}
                 placeholder="Email"
                 value={email}
@@ -26,14 +27,19 @@ export default function SignInOrUpWithEmail() {
                 autoCapitalize="none"
             />
             <TextInput
+                placeholderTextColor="#888"
                 style={styles.input}
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
             />
-            <Button title="ログイン" onPress={handleSignIn} />
-            <Button title="新規登録" onPress={handleSignUp} />
+            <View style={styles.buttonContainer}>
+                <Button title="ログイン" onPress={handleSignIn} />
+            </View>
+            <View style={styles.buttonContainer}>
+                <Button title="アカウント新規登録" onPress={handleSignUp} />
+            </View>
         </View>
     );
 }
@@ -47,10 +53,15 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: '#ccc',
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
         borderRadius: 4,
+        backgroundColor: '#fff', // 背景色を白に設定
+        color: '#000',
+        opacity: 1, // 不透明に設定
+    },
+    buttonContainer: {
+        marginVertical: 8,
     },
 });

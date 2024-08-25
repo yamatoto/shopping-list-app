@@ -90,6 +90,7 @@ export default function FrequentShoppingListScreen() {
                         style={sharedStyles.input}
                         value={newItem}
                         onChangeText={setNewItem}
+                        placeholderTextColor="#888"
                         placeholder="新しい定番の買い物を追加"
                     />
                     <TouchableOpacity

@@ -90,6 +90,7 @@ export default function CurrentShoppingListScreen() {
                         style={sharedStyles.input}
                         value={newItem}
                         onChangeText={setNewItem}
+                        placeholderTextColor="#888"
                         placeholder="新しい直近の買い物を追加"
                     />
                     <TouchableOpacity
