@@ -47,7 +47,10 @@ const useFirebaseAuth = () => {
         }
 
         try {
-            console.error(`GOOGLE_WEB_CLIENT_ID: ${GOOGLE_WEB_CLIENT_ID}`);
+            alert(`GOOGLE_WEB_CLIENT_ID: ${GOOGLE_WEB_CLIENT_ID}`);
+            alert(
+                `process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: ${process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}`,
+            );
             const user = await GoogleSignin.signIn();
 
             console.log(`user:::${JSON.stringify(user)}`);
