@@ -36,7 +36,7 @@ Expo GoアプリでQRコードを読み込む。
 # 身内アプリ配布
 
 ```shell
-$ yarn release
+$ yarn pub
 ```
 
 https://expo.dev/accounts/yamato1987/projects/shopping-list-app/updates  
