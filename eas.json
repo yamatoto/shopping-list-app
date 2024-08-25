@@ -10,13 +10,28 @@
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview"
+      "channel": "preview",
+      "android": {
+        "credentialsSource": "remote",
+        "image": "latest",
+        "env": {
+          "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}",
+          "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "{{EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}}"
+        }
+      },
+      "ios": {
+        "credentialsSource": "remote",
+        "image": "latest",
+        "env": {
+          "GOOGLE_SERVICE_INFO_PLIST": "{{GOOGLE_SERVICE_INFO_PLIST}}",
+          "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "{{EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID}}"
+        }
+      }
     },
     "production": {
       "distribution": "internal",
       "channel": "production",
       "android": {
-        "buildType": "apk",
         "credentialsSource": "remote",
         "image": "latest",
         "env": {
