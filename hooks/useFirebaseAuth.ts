@@ -10,7 +10,6 @@ import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
 const auth = FirebaseAuth();
 
 GoogleSignin.configure({
-    offlineAccess: true,
     webClientId: GOOGLE_WEB_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID,
 });
