@@ -6,7 +6,6 @@
 
 | 機能                    | 重要度 | コスト | 備考                         |
 |-----------------------|-----|-----|----------------------------|
-| 開発・本番モード切替            | 高   | 中   |                            |
 | リアルタイム通知、push通知       | 高   | 高   |                            |
 | レンダリング見直し・修正          | 中   | 高   |                            |
 | 数量設定                  | 高   | 少   |                            |
@@ -105,10 +104,7 @@ https://docs.expo.dev/build-reference/variables/
 # 身内アプリ配布
 
 ```shell
-$ yarn android:pre
-
-# iosはexpoで公開。ネイティブモジュールは使えない
-$ expo publish
+$ eas update
 ```
 
 ## android
@@ -119,6 +115,5 @@ Build detailsのURLにアクセスして、APKをダウンロードする。
 
 ```shell
 # 実機エラーログ表示
-adb logcat '*:E'
-
+$ adb logcat 'ReactNativeJS:E *:S'
 ```

@@ -35,7 +35,7 @@ export default function FrequentShoppingListScreen() {
             await addFrequentItem(trimmedItem);
             setNewItem('');
         } catch (error: any) {
-            Alert.alert('追加エラー', error);
+            Alert.alert(error.message);
         }
     };
 

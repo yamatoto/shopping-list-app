@@ -1,20 +1,34 @@
-import firestore, {
-    FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore';
+import {
+    serverTimestamp,
+    collection,
+    query,
+    orderBy,
+    getDocs,
+    where,
+    addDoc,
+    doc,
+    updateDoc,
+    deleteDoc,
+    writeBatch,
+    limit,
+    QueryDocumentSnapshot,
+    DocumentReference,
+    DocumentData,
+} from 'firebase/firestore';
 
 import { CurrentItem, CurrentItemBase, ItemBase } from '@/models/item';
 import { ServerCreateBase, ServerResponseBase } from '@/models/base';
-
+import { db } from '@/config/firabase';
 const collectionName = 'current-items';
 
 type ServerCurrentItem = CurrentItemBase & ItemBase & ServerResponseBase;
 
 const convertToClientItemFromServer = (
-    doc: FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>,
+    docSnapshot: QueryDocumentSnapshot<DocumentData>,
 ): CurrentItem => {
-    const data = doc.data() as ServerCurrentItem;
+    const data = docSnapshot.data() as ServerCurrentItem;
     return {
-        id: doc.id,
+        id: docSnapshot.id,
         name: data.name,
         sortOrder: data.sortOrder,
         isAddedToFrequent: data.isAddedToFrequent,
@@ -36,20 +50,19 @@ const generateCreateItem = ({
     isAddedToFrequent: boolean;
     userEmail: string;
 }): CurrentItemBase & ItemBase & ServerCreateBase => {
-    const serverTimestamp = firestore.FieldValue.serverTimestamp();
     return {
         name,
         sortOrder,
         isAddedToFrequent,
         createdBy: userEmail,
         updatedBy: userEmail,
-        createdAt: serverTimestamp,
-        updatedAt: serverTimestamp,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
     };
 };
 
 const convertToClientItemFromAddResult = (
-    docRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>,
+    docRef: DocumentReference<DocumentData>,
     newItem: CurrentItemBase & ItemBase & ServerCreateBase,
 ): CurrentItem => {
     const currentDate = new Date(); // クライアント側の現在時刻
@@ -74,7 +87,7 @@ const generateUpdateItem = (
     return {
         ...updateBody,
         updatedBy: userEmail,
-        updatedAt: firestore.FieldValue.serverTimestamp(),
+        updatedAt: serverTimestamp(),
     };
 };
 
@@ -87,11 +100,13 @@ function handleError(error: any, functionName: string): never {
 
 export const fetchAllItems = async (): Promise<CurrentItem[]> => {
     console.log('CurrentItems api fetchAllItems');
+
     try {
-        const { docs } = await firestore()
-            .collection(collectionName)
-            .orderBy('sortOrder', 'asc')
-            .get();
+        const q = query(
+            collection(db, collectionName),
+            orderBy('sortOrder', 'asc'),
+        );
+        const { docs } = await getDocs(q);
         return docs.map(convertToClientItemFromServer);
     } catch (error: any) {
         handleError(error, 'fetchAllItems');
@@ -103,10 +118,11 @@ export const findItemByName = async (
 ): Promise<CurrentItem | null> => {
     console.log('CurrentItems api findItemByName');
     try {
-        const { docs } = await firestore()
-            .collection<FirebaseFirestoreTypes.DocumentData>(collectionName)
-            .where('name', '==', name)
-            .get();
+        const q = query(
+            collection(db, collectionName),
+            where('name', '==', name),
+        );
+        const { docs } = await getDocs(q);
         if (docs.length === 0) return null;
 
         return convertToClientItemFromServer(docs[0]);
@@ -118,11 +134,12 @@ export const findItemByName = async (
 export const fetchLatestItem = async (): Promise<CurrentItem | null> => {
     console.log('CurrentItems api fetchLatestItem');
     try {
-        const { docs } = await firestore()
-            .collection<FirebaseFirestoreTypes.DocumentData>(collectionName)
-            .orderBy('sortOrder', 'asc')
-            .limit(1)
-            .get();
+        const q = query(
+            collection(db, collectionName),
+            orderBy('sortOrder', 'asc'),
+            limit(1),
+        );
+        const { docs } = await getDocs(q);
         if (docs.length === 0) return null;
         return convertToClientItemFromServer(docs[0]);
     } catch (error: any) {
@@ -142,9 +159,7 @@ export const addItem = async (params: {
     const newItem = generateCreateItem(params);
 
     try {
-        const docRef = await firestore()
-            .collection(collectionName)
-            .add(newItem);
+        const docRef = await addDoc(collection(db, collectionName), newItem);
         return convertToClientItemFromAddResult(docRef, newItem);
     } catch (error: any) {
         handleError(error, 'addItem');
@@ -157,11 +172,12 @@ export const updateItem = async (
 ): Promise<CurrentItem> => {
     console.log(`CurrentItems api updateItem: ${JSON.stringify(currentItem)}`);
     const { id, ...rest } = currentItem;
-    const updateItem = generateUpdateItem(rest, userEmail);
+    const updateItemData = generateUpdateItem(rest, userEmail);
 
     try {
-        await firestore().collection(collectionName).doc(id).update(updateItem);
-        return { ...updateItem, id, updatedAt: new Date() } as CurrentItem;
+        const docRef = doc(db, collectionName, id);
+        await updateDoc(docRef, updateItemData);
+        return { ...updateItemData, id, updatedAt: new Date() } as CurrentItem;
     } catch (error: any) {
         handleError(error, 'updateItem');
     }
@@ -170,7 +186,8 @@ export const updateItem = async (
 export const deleteItem = async (id: string): Promise<void> => {
     console.log('CurrentItems api deleteItem');
     try {
-        await firestore().collection(collectionName).doc(id).delete();
+        const docRef = doc(db, collectionName, id);
+        await deleteDoc(docRef);
     } catch (error: any) {
         handleError(error, 'deleteItem');
     }
@@ -180,10 +197,10 @@ export const batchUpdateItems = async (
     updates: ({ id: string } & Partial<CurrentItem>)[],
 ) => {
     try {
-        const batch = firestore().batch();
+        const batch = writeBatch(db);
         updates.forEach(update => {
             const { id, ...updateData } = update;
-            const docRef = firestore().collection(collectionName).doc(id);
+            const docRef = doc(db, collectionName, id);
             batch.update(docRef, updateData);
         });
         await batch.commit();

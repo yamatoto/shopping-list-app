@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
 
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
 
@@ -16,8 +16,9 @@ export default function SignInOrUpWithEmail() {
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <TextInput
+                style={styles.input}
                 placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
@@ -25,6 +26,7 @@ export default function SignInOrUpWithEmail() {
                 autoCapitalize="none"
             />
             <TextInput
+                style={styles.input}
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
@@ -35,3 +37,20 @@ export default function SignInOrUpWithEmail() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+        backgroundColor: '#fff',
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 12,
+        paddingHorizontal: 8,
+        borderRadius: 4,
+    },
+});

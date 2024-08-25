@@ -8,12 +8,11 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { useEffect } from 'react';
-import { Platform } from 'react-native';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
-import SignInWithGoogle from '@/components/SignInWithGoogle';
 import SignInOrUpWithEmail from '@/components/SignInOrUpWithEmail';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -36,12 +35,7 @@ export default function RootLayout() {
     if (!loaded) return null;
 
     if (!currentUserEmail) {
-        // return <SignInOrUpWithEmail />;
-        return Platform.OS === 'ios' ? (
-            <SignInOrUpWithEmail />
-        ) : (
-            <SignInWithGoogle />
-        );
+        return <SignInOrUpWithEmail />;
     }
 
     return (

@@ -35,7 +35,7 @@ export default function CurrentShoppingListScreen() {
             await addCurrentItem(trimmedItem);
             setNewItem('');
         } catch (error: any) {
-            Alert.alert('追加エラー', error);
+            Alert.alert(error.message);
         }
     };
 
