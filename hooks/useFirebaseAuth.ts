@@ -5,13 +5,14 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
-import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
+import { GOOGLE_WEB_CLIENT_ID } from '@/config/firabase';
 
 const auth = FirebaseAuth();
 
+console.log(`GOOGLE_WEB_CLIENT_ID:::${GOOGLE_WEB_CLIENT_ID}`);
+
 GoogleSignin.configure({
     webClientId: GOOGLE_WEB_CLIENT_ID,
-    iosClientId: GOOGLE_IOS_CLIENT_ID,
 });
 
 const useFirebaseAuth = () => {
@@ -35,8 +36,6 @@ const useFirebaseAuth = () => {
                 showPlayServicesUpdateDialog: true,
             });
         } catch (error: any) {
-            console.error('hasPlayServices error:', error);
-
             if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
                 alert(
                     `Play Services が利用できません. ${JSON.stringify(error)}`,
@@ -47,25 +46,51 @@ const useFirebaseAuth = () => {
         }
 
         try {
-            alert(`GOOGLE_WEB_CLIENT_ID: ${GOOGLE_WEB_CLIENT_ID}`);
-            alert(
-                `process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: ${process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID}`,
-            );
             const user = await GoogleSignin.signIn();
 
-            console.log(`user:::${JSON.stringify(user)}`);
             const idToken = user.idToken;
             if (idToken === null) {
                 throw new Error(`idToken is null. user: ${user}`);
             }
-            console.log('idToken:::', idToken);
 
             const credential =
                 FirebaseAuth.GoogleAuthProvider.credential(idToken);
             await auth.signInWithCredential(credential);
         } catch (error) {
-            console.error('signInWithGoogle error:', error);
             alert(`signInWithGoogleでエラー. ${JSON.stringify(error)}`);
+        }
+    };
+
+    const signUpWithEmail = async (email: string, password: string) => {
+        try {
+            const userCredential = await auth.createUserWithEmailAndPassword(
+                email,
+                password,
+            );
+            alert(`userCredential:${JSON.stringify(userCredential)}`);
+        } catch (error: any) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    alert('登録済のメールアドレスです');
+                    return;
+                case 'auth/invalid-email':
+                    alert('無効なメールアドレスです');
+                    return;
+                default:
+                    alert(`登録に失敗しました${JSON.stringify(error)}`);
+            }
+        }
+    };
+
+    const signInWithEmail = async (email: string, password: string) => {
+        try {
+            const userCredential = await auth.signInWithEmailAndPassword(
+                email,
+                password,
+            );
+            alert(`userCredential::: ${JSON.stringify(userCredential)}`);
+        } catch (error) {
+            alert(`signInWithEmailでエラー. ${JSON.stringify(error)}`);
         }
     };
 
@@ -73,7 +98,13 @@ const useFirebaseAuth = () => {
         await auth.signOut();
     };
 
-    return { currentUserEmail, signInWithGoogle, signOut };
+    return {
+        currentUserEmail,
+        signUpWithEmail,
+        signInWithGoogle,
+        signInWithEmail,
+        signOut,
+    };
 };
 
 export default useFirebaseAuth;

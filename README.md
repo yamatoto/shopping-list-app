@@ -55,7 +55,6 @@ $ pod install
 ```shell
 $ npx expo prebuild
 $ npx expo run:android
-$ npx expo run:ios
 ```
 
 # Google認証
@@ -92,7 +91,7 @@ https://docs.expo.dev/build-reference/variables/#how-to-upload-a-secret-file-and
 
 ```shell
 $ eas secret:list
-$ eas secret::delete --id xxx
+$ eas secret:delete --id xxx
 ```
 
 # 環境変数
@@ -107,17 +106,14 @@ https://docs.expo.dev/build-reference/variables/
 
 ```shell
 $ yarn android:pre
-$ yarn ios:pre
+
+# iosはexpoで公開。ネイティブモジュールは使えない
+$ expo publish
 ```
 
 ## android
 
 Build detailsのURLにアクセスして、APKをダウンロードする。
-
-## ios
-AppleのApp Store Connectにアクセスし、アプリを登録  
-ビルド後、TestFlightにIPAファイルをアップロードし、iosユーザーのデバイスをテスターとして招待する。
-
 
 ## その他
 

@@ -8,11 +8,12 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { useEffect } from 'react';
-import { Button, View, Text } from 'react-native';
+import { Platform } from 'react-native';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
-
+import SignInWithGoogle from '@/components/SignInWithGoogle';
+import SignInOrUpWithEmail from '@/components/SignInOrUpWithEmail';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +24,7 @@ export default function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-    const { currentUserEmail, signInWithGoogle, signOut } = useFirebaseAuth();
+    const { currentUserEmail } = useFirebaseAuth();
 
     useEffect(() => {
         console.log('RootLayout useEffect');
@@ -32,44 +33,14 @@ export default function RootLayout() {
         }
     }, [loaded]);
 
-    if (!loaded) {
-        return null;
-    }
+    if (!loaded) return null;
 
     if (!currentUserEmail) {
-        return (
-            <>
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Text>Sign in with Google</Text>
-                    <Button
-                        title="Sign in with Google"
-                        onPress={() => {
-                            signInWithGoogle().then();
-                        }}
-                    />
-                </View>
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Text>Sign Out</Text>
-                    <Button
-                        title="Sign Out"
-                        onPress={() => {
-                            signOut().then();
-                        }}
-                    />
-                </View>
-            </>
+        // return <SignInOrUpWithEmail />;
+        return Platform.OS === 'ios' ? (
+            <SignInOrUpWithEmail />
+        ) : (
+            <SignInWithGoogle />
         );
     }
 
