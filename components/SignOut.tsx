@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Platform,
+} from 'react-native';
 
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
 
@@ -12,19 +18,36 @@ export default function SignOut() {
 
     return (
         <View style={styles.container}>
-            <Button title="ログアウト" onPress={handleSignOut} />
+            <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+                <Text style={styles.buttonText}>ログアウト</Text>
+            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
         paddingHorizontal: 16,
-        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 10,
     },
-    buttonContainer: {
-        marginVertical: 8,
+    button: {
+        backgroundColor: Platform.OS === 'ios' ? '#007AFF' : '#2196F3',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
