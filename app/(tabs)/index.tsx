@@ -1,5 +1,13 @@
-import React, { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    RefreshControl,
+    ScrollView,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
     RenderItemParams,
@@ -19,13 +27,19 @@ export default function CurrentShoppingListScreen() {
         deleteCurrentItem,
         reorderCurrentItems,
     } = useShoppingList();
-    const [newItem, setNewItem] = React.useState('');
+    const [newItem, setNewItem] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        console.log('CurrentShoppingListScreen useEffect');
-        fetchAllCurrentItems().then();
+    const loadItems = useCallback(async () => {
+        console.log('CurrentShoppingListScreen loadItems');
+        await fetchAllCurrentItems();
+        // fetchAllCurrentItemsをdepsに含めると無限レンダリングする
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        loadItems().then();
+    }, [loadItems]);
 
     const handleAddItem = async () => {
         const trimmedItem = newItem.trim();
@@ -38,6 +52,12 @@ export default function CurrentShoppingListScreen() {
             Alert.alert(error.message);
         }
     };
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await loadItems();
+        setRefreshing(false);
+    }, [loadItems]);
 
     const renderItem = ({
         item,
@@ -100,12 +120,24 @@ export default function CurrentShoppingListScreen() {
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
                 </View>
-                <DraggableFlatList
-                    data={currentItems}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    onDragEnd={({ data }) => reorderCurrentItems(data)}
-                />
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={['#5cb85c']} // Android
+                            tintColor="#5cb85c" // iOS
+                        />
+                    }
+                >
+                    <DraggableFlatList
+                        data={currentItems}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        onDragEnd={({ data }) => reorderCurrentItems(data)}
+                        scrollEnabled={false} // ScrollViewがスクロールを処理するため
+                    />
+                </ScrollView>
             </View>
         </GestureHandlerRootView>
     );

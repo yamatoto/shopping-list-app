@@ -1,5 +1,13 @@
-import React, { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    RefreshControl,
+    ScrollView,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
     RenderItemParams,
@@ -20,12 +28,18 @@ export default function FrequentShoppingListScreen() {
         reorderFrequentItems,
     } = useShoppingList();
     const [newItem, setNewItem] = React.useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
+    const loadItems = useCallback(async () => {
         console.log('FrequentShoppingListScreen useEffect');
-        fetchAllFrequentItems().then();
+        await fetchAllFrequentItems();
+        // fetchAllFrequentItemsをdepsに含めると無限レンダリングする
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        loadItems().then();
+    }, [loadItems]);
 
     const handleAddItem = async () => {
         console.log('FrequentShoppingListScreen handleAddItem');
@@ -38,6 +52,11 @@ export default function FrequentShoppingListScreen() {
             Alert.alert(error.message);
         }
     };
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await loadItems();
+        setRefreshing(false);
+    }, [loadItems]);
 
     const renderItem = ({
         item,
@@ -100,12 +119,24 @@ export default function FrequentShoppingListScreen() {
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
                 </View>
-                <DraggableFlatList
-                    data={frequentItems}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    onDragEnd={({ data }) => reorderFrequentItems(data)}
-                />
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={['#5cb85c']} // Android
+                            tintColor="#5cb85c" // iOS
+                        />
+                    }
+                >
+                    <DraggableFlatList
+                        data={frequentItems}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        onDragEnd={({ data }) => reorderFrequentItems(data)}
+                        scrollEnabled={false} // ScrollViewがスクロールを処理するため
+                    />
+                </ScrollView>
             </View>
         </GestureHandlerRootView>
     );
