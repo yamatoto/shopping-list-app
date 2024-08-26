@@ -16,6 +16,7 @@ import DraggableFlatList, {
 import { useShoppingList } from '@/context/ShoppingListContext';
 import { CurrentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
+import QuantityControl from '@/components/QuantityControl';
 
 export default function CurrentShoppingListScreen() {
     console.log('CurrentShoppingListScreen');
@@ -26,6 +27,7 @@ export default function CurrentShoppingListScreen() {
         addToFrequentFromCurrent,
         deleteCurrentItem,
         reorderCurrentItems,
+        updateCurrentItem,
     } = useShoppingList();
     const [newItem, setNewItem] = useState('');
     const [refreshing, setRefreshing] = useState(false);
@@ -73,7 +75,19 @@ export default function CurrentShoppingListScreen() {
                 ]}
                 onLongPress={drag}
             >
-                <Text>{item.name}</Text>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        flex: 1,
+                    }}
+                >
+                    <QuantityControl
+                        item={item}
+                        updateQuantity={updateCurrentItem}
+                    />
+                    <Text style={{ marginLeft: 10, flex: 1 }}>{item.name}</Text>
+                </View>
                 <View style={sharedStyles.buttonContainer}>
                     <TouchableOpacity
                         onPress={() => addToFrequentFromCurrent(item)}

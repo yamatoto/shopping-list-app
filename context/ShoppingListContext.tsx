@@ -24,6 +24,7 @@ interface ShoppingListContextType {
     addToCurrentFromFrequent: (frequentItem: FrequentItem) => Promise<void>;
     reorderCurrentItems: (newOrder: CurrentItem[]) => Promise<void>;
     reorderFrequentItems: (newOrder: FrequentItem[]) => Promise<void>;
+    updateCurrentItem: (updatedItem: CurrentItem) => Promise<void>;
 }
 
 const ShoppingListContext = createContext<ShoppingListContextType | undefined>(
@@ -247,6 +248,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
                 addToCurrentFromFrequent,
                 reorderCurrentItems,
                 reorderFrequentItems,
+                updateCurrentItem,
             }}
         >
             {children}

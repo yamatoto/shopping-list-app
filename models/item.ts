@@ -8,6 +8,7 @@ export interface ItemBase {
 }
 
 export interface CurrentItemBase {
+    quantity: number;
     isAddedToFrequent: boolean;
 }
 

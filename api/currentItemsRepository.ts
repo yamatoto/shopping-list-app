@@ -28,12 +28,8 @@ const convertToClientItemFromServer = (
 ): CurrentItem => {
     const data = docSnapshot.data() as ServerCurrentItem;
     return {
+        ...data,
         id: docSnapshot.id,
-        name: data.name,
-        sortOrder: data.sortOrder,
-        isAddedToFrequent: data.isAddedToFrequent,
-        createdBy: data.createdBy,
-        updatedBy: data.updatedBy,
         createdAt: data.createdAt.toDate(),
         updatedAt: data.updatedAt.toDate(),
     };
@@ -54,6 +50,7 @@ const generateCreateItem = ({
         name,
         sortOrder,
         isAddedToFrequent,
+        quantity: 1,
         createdBy: userEmail,
         updatedBy: userEmail,
         createdAt: serverTimestamp(),
