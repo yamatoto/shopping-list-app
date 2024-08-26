@@ -7,20 +7,27 @@ import {
     signInWithEmailAndPassword,
     signOut as signOutFromFirebase,
 } from '@/config/firabase';
+import { YAMATO_EMAIL } from '@/config/user';
 
 const useFirebaseAuth = () => {
     const router = useRouter();
-    const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(
-        null,
-    );
+    const [currentUser, setCurrentUser] = useState<{
+        email: string;
+        name: 'yamato' | 'miho';
+    } | null>(null);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(() => {
             if (auth.currentUser) {
-                setCurrentUserEmail(auth.currentUser.email);
+                const userName =
+                    auth.currentUser.email === YAMATO_EMAIL ? 'yamato' : 'miho';
+                setCurrentUser({
+                    email: auth.currentUser.email!,
+                    name: userName,
+                });
                 return;
             }
-            setCurrentUserEmail(null);
+            setCurrentUser(null);
         });
 
         return () => unsubscribe();
@@ -52,7 +59,7 @@ const useFirebaseAuth = () => {
     };
 
     return {
-        currentUserEmail,
+        currentUser,
         signUpWithEmail,
         signInWithEmail,
         signOut,

@@ -41,7 +41,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
     const [frequentItems, setFrequentItems] = useState<FrequentItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const { currentUserEmail } = useFirebaseAuth();
+    const { currentUser } = useFirebaseAuth();
 
     const fetchAllCurrentItems = async () => {
         setLoading(true);
@@ -71,7 +71,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         try {
             await CurrentItemsRepository.updateItem(
                 updatedItem,
-                currentUserEmail!,
+                currentUser!.email,
             );
             await fetchAllCurrentItems();
         } catch (error) {
@@ -83,7 +83,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
         try {
             await FrequentItemsRepository.updateItem(
                 updatedItem,
-                currentUserEmail!,
+                currentUser!.email,
             );
             await fetchAllFrequentItems();
         } catch (error) {
@@ -114,7 +114,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             name: trimmedName,
             sortOrder,
             isAddedToFrequent: !!registeredFrequentList,
-            userEmail: currentUserEmail!,
+            userEmail: currentUser!.email,
         });
         await fetchAllCurrentItems();
 
@@ -151,7 +151,7 @@ export const ShoppingListProvider: React.FC<{ children: ReactNode }> = ({
             name: trimmedName,
             sortOrder,
             isAddedToCurrent: !!registeredCurrentList,
-            userEmail: currentUserEmail!,
+            userEmail: currentUser!.email,
         });
         await fetchAllFrequentItems();
 

@@ -23,7 +23,7 @@ export default function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-    const { currentUserEmail } = useFirebaseAuth();
+    const { currentUser } = useFirebaseAuth();
 
     useEffect(() => {
         console.log('RootLayout useEffect');
@@ -34,7 +34,7 @@ export default function RootLayout() {
 
     if (!loaded) return null;
 
-    if (!currentUserEmail) {
+    if (!currentUser) {
         return <SignInOrUpWithEmail />;
     }
 

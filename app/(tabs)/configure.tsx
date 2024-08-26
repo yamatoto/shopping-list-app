@@ -10,23 +10,42 @@ import {
 import { sharedStyles } from '@/styles/sharedStyles';
 import SignOut from '@/components/SignOut';
 import PlannedFeaturesModal from '@/components/PlannedFeaturesModal';
+import MemoModal from '@/components/MemoModal';
 
 export default function ConfigureScreen() {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [plannedFeaturesModalVisible, setPlannedFeaturesModalVisible] =
+        useState(false);
+    const [memoModalVisible, setMemoModalVisible] = useState(false);
 
-    const handleToggleModal = () => {
-        setModalVisible(!modalVisible);
+    const handleTogglePlannedFeaturesModal = () => {
+        setPlannedFeaturesModalVisible(!plannedFeaturesModalVisible);
+    };
+    const handleToggleMemoModal = () => {
+        setMemoModalVisible(!memoModalVisible);
     };
 
     return (
         <View style={sharedStyles.container}>
-            <TouchableOpacity style={styles.button} onPress={handleToggleModal}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={handleTogglePlannedFeaturesModal}
+            >
                 <Text style={styles.buttonText}>実装予定</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={handleToggleMemoModal}
+            >
+                <Text style={styles.buttonText}>メモ</Text>
             </TouchableOpacity>
             <SignOut />
             <PlannedFeaturesModal
-                visible={modalVisible}
-                onClose={handleToggleModal}
+                visible={plannedFeaturesModalVisible}
+                onClose={handleTogglePlannedFeaturesModal}
+            />
+            <MemoModal
+                visible={memoModalVisible}
+                onClose={handleToggleMemoModal}
             />
         </View>
     );

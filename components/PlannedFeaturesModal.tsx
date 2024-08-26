@@ -18,12 +18,6 @@ const tableData = [
     },
     { feature: '通知処理', importance: '高', cost: '高', notes: '' },
     {
-        feature: '機能要望form・一覧画面',
-        importance: '高',
-        cost: '高',
-        notes: '',
-    },
-    {
         feature: '詳細画面',
         importance: '高',
         cost: '高',
