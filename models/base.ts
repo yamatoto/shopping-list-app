@@ -1,13 +1,13 @@
-import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { Timestamp, FieldValue } from 'firebase/firestore';
 
 export interface ServerResponseBase {
-    createdAt: FirebaseFirestoreTypes.Timestamp;
-    updatedAt: FirebaseFirestoreTypes.Timestamp;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 }
 
 export interface ServerCreateBase {
-    createdAt: FirebaseFirestoreTypes.FieldValue;
-    updatedAt: FirebaseFirestoreTypes.FieldValue;
+    createdAt: FieldValue;
+    updatedAt: FieldValue;
 }
 
 export interface ClientDataBase {
