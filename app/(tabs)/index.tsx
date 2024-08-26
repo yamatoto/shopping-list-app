@@ -72,6 +72,11 @@ export default function CurrentShoppingListScreen() {
                 style={[
                     sharedStyles.itemContainer,
                     isActive && sharedStyles.activeItem,
+                    {
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    },
                 ]}
                 onLongPress={drag}
             >
@@ -86,7 +91,11 @@ export default function CurrentShoppingListScreen() {
                         item={item}
                         updateQuantity={updateCurrentItem}
                     />
-                    <Text style={{ marginLeft: 10, flex: 1 }}>{item.name}</Text>
+                    <Text
+                        style={[sharedStyles.itemNameText, { marginLeft: 10 }]}
+                    >
+                        {item.name}
+                    </Text>
                 </View>
                 <View style={sharedStyles.buttonContainer}>
                     <TouchableOpacity

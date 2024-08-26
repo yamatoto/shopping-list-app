@@ -1,4 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
+
+const dynamicFontSize = width * 0.035;
+const dynamicButtonPadding = width * 0.015;
+const dynamicButtonWidth = width * 0.2;
 
 export const sharedStyles = StyleSheet.create({
     container: {
@@ -28,6 +34,7 @@ export const sharedStyles = StyleSheet.create({
     addButtonText: {
         color: '#fff',
         fontWeight: 'bold',
+        fontSize: dynamicFontSize,
     },
     itemContainer: {
         flexDirection: 'row',
@@ -45,11 +52,16 @@ export const sharedStyles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
+        justifyContent: 'flex-end',
+        flex: 1,
     },
     button: {
-        padding: 5,
+        padding: dynamicButtonPadding,
         marginLeft: 5,
-        borderRadius: 3,
+        borderRadius: 5,
+        minWidth: dynamicButtonWidth,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     addedButton: {
         backgroundColor: '#cccccc',
@@ -59,6 +71,12 @@ export const sharedStyles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: dynamicFontSize,
+        textAlign: 'center',
+    },
+    itemNameText: {
+        fontSize: dynamicFontSize,
+        flexGrow: 1,
+        maxWidth: '60%',
     },
 });

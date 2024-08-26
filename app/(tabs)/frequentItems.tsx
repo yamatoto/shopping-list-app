@@ -69,10 +69,15 @@ export default function FrequentShoppingListScreen() {
                 style={[
                     sharedStyles.itemContainer,
                     isActive && sharedStyles.activeItem,
+                    {
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    },
                 ]}
                 onLongPress={drag}
             >
-                <Text>{item.name}</Text>
+                <Text style={sharedStyles.itemNameText}>{item.name}</Text>
                 <View style={sharedStyles.buttonContainer}>
                     <TouchableOpacity
                         onPress={() => addToCurrentFromFrequent(item)}
