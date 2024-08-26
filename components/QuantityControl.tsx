@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -25,33 +25,40 @@ export default function QuantityControl({
     );
     const inputRef = useRef<TextInput>(null);
 
-    const handleQuantityUpdate = async () => {
-        const newQuantity = parseInt(tempQuantity, 10);
-        if (Number.isNaN(newQuantity) || newQuantity <= 0) {
-            setTempQuantity((item.quantity ?? 1).toString());
-            setModalVisible(false);
-            return;
-        }
-
-        await updateQuantity({ ...item, quantity: Number(newQuantity) });
-        setModalVisible(false);
-    };
-
-    const focusTextInputToEnd = () => {
+    const focusTextInputToEnd = useCallback(() => {
         if (inputRef.current) {
             setTimeout(() => {
-                inputRef.current?.setSelection(
+                (inputRef.current as TextInput).setSelection(
                     tempQuantity.length,
                     tempQuantity.length,
                 );
             }, 50);
         }
-    };
+    }, [tempQuantity]);
 
     const handleQuantityChange = (text: string) => {
-        // 数字のみを許可
         const numericValue = text.replace(/[^0-9]/g, '');
-        setTempQuantity(numericValue);
+        setTempQuantity(numericValue || '1'); // 空の場合は '1' にする
+    };
+
+    const incrementQuantity = () => {
+        const currentValue = parseInt(tempQuantity, 10);
+        setTempQuantity((currentValue + 1).toString());
+    };
+
+    const decrementQuantity = () => {
+        const currentValue = parseInt(tempQuantity, 10);
+        if (currentValue > 1) {
+            setTempQuantity((currentValue - 1).toString());
+        }
+    };
+
+    const handleConfirm = async () => {
+        const newQuantity = parseInt(tempQuantity, 10);
+        if (!isNaN(newQuantity) && newQuantity > 0) {
+            await updateQuantity({ ...item, quantity: newQuantity });
+        }
+        setModalVisible(false);
     };
 
     return (
@@ -68,33 +75,45 @@ export default function QuantityControl({
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalView}>
-                        <TextInput
-                            ref={inputRef}
-                            style={styles.modalInput}
-                            onChangeText={handleQuantityChange}
-                            value={tempQuantity}
-                            keyboardType={
-                                Platform.OS === 'ios' ? 'number-pad' : 'numeric'
-                            }
-                            textAlign="right"
-                            returnKeyType="done"
-                            onFocus={focusTextInputToEnd}
-                        />
+                        <View style={styles.inputContainer}>
+                            <TouchableOpacity
+                                style={styles.adjustButton}
+                                onPress={decrementQuantity}
+                            >
+                                <Text style={styles.adjustButtonText}>-</Text>
+                            </TouchableOpacity>
+                            <TextInput
+                                ref={inputRef}
+                                style={styles.modalInput}
+                                onChangeText={handleQuantityChange}
+                                value={tempQuantity}
+                                keyboardType={
+                                    Platform.OS === 'ios'
+                                        ? 'number-pad'
+                                        : 'numeric'
+                                }
+                                textAlign="center"
+                                returnKeyType="done"
+                                onFocus={focusTextInputToEnd}
+                                selectTextOnFocus={true}
+                            />
+                            <TouchableOpacity
+                                style={styles.adjustButton}
+                                onPress={incrementQuantity}
+                            >
+                                <Text style={styles.adjustButtonText}>+</Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
-                                style={[styles.button, styles.changeButton]}
-                                onPress={handleQuantityUpdate}
+                                style={[styles.button, styles.confirmButton]}
+                                onPress={handleConfirm}
                             >
-                                <Text style={styles.buttonText}>変更</Text>
+                                <Text style={styles.buttonText}>確定</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.button, styles.cancelButton]}
-                                onPress={() => {
-                                    setTempQuantity(
-                                        (item.quantity ?? 1).toString(),
-                                    );
-                                    setModalVisible(false);
-                                }}
+                                onPress={() => setModalVisible(false)}
                             >
                                 <Text style={styles.buttonText}>
                                     キャンセル
@@ -129,7 +148,7 @@ const styles = StyleSheet.create({
     modalView: {
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -141,15 +160,34 @@ const styles = StyleSheet.create({
         elevation: 5,
         width: '80%',
     },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    adjustButton: {
+        backgroundColor: '#e0e0e0',
+        borderRadius: 15,
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    adjustButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+    },
     modalInput: {
         height: 40,
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 10,
-        width: '100%',
-        marginBottom: 20,
+        width: 80,
         fontSize: 18,
+        marginHorizontal: 10,
+        textAlign: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -159,18 +197,18 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 10,
         padding: 10,
-        elevation: 2,
         minWidth: 100,
         alignItems: 'center',
     },
-    changeButton: {
-        backgroundColor: '#2196F3',
+    confirmButton: {
+        backgroundColor: '#4CAF50',
     },
     cancelButton: {
         backgroundColor: '#f44336',
     },
     buttonText: {
         color: 'white',
+        fontSize: 16,
         fontWeight: 'bold',
     },
 });
