@@ -19,6 +19,8 @@ interface MemoModalProps {
     onClose: () => void;
 }
 
+const MIN_TEXT_AREA_HEIGHT = 100;
+
 const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
     const { currentUser } = useFirebaseAuth();
     const { noteMap, fetchNote, updateNote } = useNote();
@@ -26,8 +28,8 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
     const [mihoText, setMihoText] = useState('');
     const [initialYamatoText, setInitialYamatoText] = useState('');
     const [initialMihoText, setInitialMihoText] = useState('');
-    const [yamatoHeight, setYamatoHeight] = useState(500);
-    const [mihoHeight, setMihoHeight] = useState(500);
+    const [yamatoHeight, setYamatoHeight] = useState(MIN_TEXT_AREA_HEIGHT);
+    const [mihoHeight, setMihoHeight] = useState(MIN_TEXT_AREA_HEIGHT);
 
     useEffect(() => {
         if (visible) {
@@ -48,8 +50,15 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
         setInitialYamatoText(yamatoContent);
         setInitialMihoText(mihoContent);
 
-        setYamatoHeight(Math.max(100, yamatoContent.split('\n').length * 20));
-        setMihoHeight(Math.max(100, mihoContent.split('\n').length * 20));
+        setYamatoHeight(
+            Math.max(
+                MIN_TEXT_AREA_HEIGHT,
+                yamatoContent.split('\n').length * 20,
+            ),
+        );
+        setMihoHeight(
+            Math.max(MIN_TEXT_AREA_HEIGHT, mihoContent.split('\n').length * 20),
+        );
     }, [noteMap]);
 
     const handleYamatoSubmit = async () => {
@@ -115,7 +124,10 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
                         onChangeText={setYamatoText}
                         onContentSizeChange={event =>
                             setYamatoHeight(
-                                event.nativeEvent.contentSize.height,
+                                Math.max(
+                                    MIN_TEXT_AREA_HEIGHT,
+                                    event.nativeEvent.contentSize.height,
+                                ),
                             )
                         }
                         editable={currentUser?.name === 'yamato'}
@@ -134,7 +146,12 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
                         value={mihoText}
                         onChangeText={setMihoText}
                         onContentSizeChange={event =>
-                            setMihoHeight(event.nativeEvent.contentSize.height)
+                            setMihoHeight(
+                                Math.max(
+                                    MIN_TEXT_AREA_HEIGHT,
+                                    event.nativeEvent.contentSize.height,
+                                ),
+                            )
                         }
                         editable={currentUser?.name === 'miho'}
                         placeholderTextColor="#000"
