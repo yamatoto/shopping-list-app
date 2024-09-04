@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     Alert,
     RefreshControl,
-    ScrollView,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
@@ -143,7 +142,11 @@ export default function CurrentShoppingListScreen() {
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
                 </View>
-                <ScrollView
+                <DraggableFlatList
+                    data={currentItems}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    onDragEnd={({ data }) => reorderCurrentItems(data)}
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
@@ -152,15 +155,8 @@ export default function CurrentShoppingListScreen() {
                             tintColor="#5cb85c" // iOS
                         />
                     }
-                >
-                    <DraggableFlatList
-                        data={currentItems}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id.toString()}
-                        onDragEnd={({ data }) => reorderCurrentItems(data)}
-                        scrollEnabled={false} // ScrollViewがスクロールを処理するため
-                    />
-                </ScrollView>
+                    contentContainerStyle={{ paddingBottom: 60 }}
+                />
             </View>
         </GestureHandlerRootView>
     );
