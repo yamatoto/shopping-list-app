@@ -7,7 +7,9 @@ import {
     TouchableOpacity,
     TextInput,
     Button,
+    Alert,
 } from 'react-native';
+import Toast from 'react-native-simple-toast';
 
 import { useNote } from '@/context/NoteContext';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
@@ -22,8 +24,10 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
     const { noteMap, fetchNote, updateNote } = useNote();
     const [yamatoText, setYamatoText] = useState('');
     const [mihoText, setMihoText] = useState('');
-    const [yamatoHeight, setYamatoHeight] = useState(100); // 初期高さ
-    const [mihoHeight, setMihoHeight] = useState(100); // 初期高さ
+    const [initialYamatoText, setInitialYamatoText] = useState('');
+    const [initialMihoText, setInitialMihoText] = useState('');
+    const [yamatoHeight, setYamatoHeight] = useState(500);
+    const [mihoHeight, setMihoHeight] = useState(500);
 
     useEffect(() => {
         if (visible) {
@@ -35,34 +39,76 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
     useEffect(() => {
         if (!noteMap) return;
 
-        setYamatoText(noteMap['yamato']?.content ?? '');
-        setMihoText(noteMap['miho']?.content ?? '');
+        const yamatoContent = noteMap['yamato']?.content ?? '';
+        const mihoContent = noteMap['miho']?.content ?? '';
+
+        setYamatoText(yamatoContent);
+        setMihoText(mihoContent);
+
+        setInitialYamatoText(yamatoContent);
+        setInitialMihoText(mihoContent);
+
+        setYamatoHeight(Math.max(100, yamatoContent.split('\n').length * 20));
+        setMihoHeight(Math.max(100, mihoContent.split('\n').length * 20));
     }, [noteMap]);
 
     const handleYamatoSubmit = async () => {
         await updateNote(yamatoText);
+        showToast('更新しました');
     };
 
     const handleMihoSubmit = async () => {
         await updateNote(mihoText);
+        showToast('更新しました');
+    };
+
+    const showToast = (message: string) => {
+        Toast.show(message, 300, {});
+    };
+
+    const handleClose = () => {
+        if (yamatoText === initialYamatoText && mihoText === initialMihoText) {
+            onClose(); // 変更がない場合はそのまま閉じる
+            return;
+        }
+
+        Alert.alert(
+            '確認',
+            '変更した内容を破棄してもよろしいですか？',
+            [
+                {
+                    text: 'キャンセル',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        onClose();
+                    },
+                },
+            ],
+            { cancelable: true },
+        );
     };
 
     return (
         <Modal
             visible={visible}
             animationType="slide"
-            transparent={false}
-            onRequestClose={onClose}
+            transparent={true}
+            onRequestClose={handleClose}
         >
             <View style={styles.modalContent}>
-                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={handleClose}
+                >
                     <Text style={styles.closeButtonText}>閉じる</Text>
                 </TouchableOpacity>
-
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Yamatoのメモ</Text>
                     <TextInput
-                        style={[styles.textArea, { height: yamatoHeight }]} // 高さをstateで管理
+                        style={[styles.textArea, { height: yamatoHeight }]}
                         multiline
                         numberOfLines={4}
                         value={yamatoText}
@@ -71,7 +117,7 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
                             setYamatoHeight(
                                 event.nativeEvent.contentSize.height,
                             )
-                        } // コンテンツの高さに応じて変更
+                        }
                         editable={currentUser?.name === 'yamato'}
                         placeholderTextColor="#000"
                     />
@@ -79,18 +125,17 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
                         <Button title="更新" onPress={handleYamatoSubmit} />
                     )}
                 </View>
-
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Mihoのメモ</Text>
                     <TextInput
-                        style={[styles.textArea, { height: mihoHeight }]} // 高さをstateで管理
+                        style={[styles.textArea, { height: mihoHeight }]}
                         multiline
                         numberOfLines={4}
                         value={mihoText}
                         onChangeText={setMihoText}
                         onContentSizeChange={event =>
                             setMihoHeight(event.nativeEvent.contentSize.height)
-                        } // コンテンツの高さに応じて変更
+                        }
                         editable={currentUser?.name === 'miho'}
                         placeholderTextColor="#000"
                     />
@@ -137,7 +182,7 @@ const styles = StyleSheet.create({
         padding: 10,
         textAlignVertical: 'top',
         marginBottom: 10,
-        color: '#000', // 常に黒色に設定
+        color: '#000',
     },
 });
 
