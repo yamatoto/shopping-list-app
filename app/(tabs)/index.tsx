@@ -8,9 +8,7 @@ import {
     RefreshControl,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import DraggableFlatList, {
-    RenderItemParams,
-} from 'react-native-draggable-flatlist';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
 import { CurrentItem } from '@/models/item';
@@ -25,7 +23,7 @@ export default function CurrentShoppingListScreen() {
         addCurrentItem,
         addToFrequentFromCurrent,
         deleteCurrentItem,
-        reorderCurrentItems,
+        // reorderCurrentItems,
         updateCurrentItem,
     } = useShoppingList();
     const [newItem, setNewItem] = useState('');
@@ -60,43 +58,25 @@ export default function CurrentShoppingListScreen() {
         setRefreshing(false);
     }, [loadItems]);
 
-    const renderItem = ({
-        item,
-        drag,
-        isActive,
-    }: RenderItemParams<CurrentItem>) => {
-        console.log('CurrentShoppingListScreen renderItem');
-        return (
-            <TouchableOpacity
-                style={[
-                    sharedStyles.itemContainer,
-                    isActive && sharedStyles.activeItem,
-                    {
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    },
-                ]}
-                onLongPress={drag}
-            >
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 1,
-                    }}
-                >
-                    <QuantityControl
-                        item={item}
-                        updateQuantity={updateCurrentItem}
-                    />
-                    <Text
-                        style={[sharedStyles.itemNameText, { marginLeft: 10 }]}
+    const renderItem = useCallback(
+        ({ item }: { item: CurrentItem }) => {
+            return (
+                <View style={sharedStyles.itemContainer}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            flex: 1,
+                        }}
                     >
-                        {item.name}
-                    </Text>
-                </View>
-                <View style={sharedStyles.buttonContainer}>
+                        <QuantityControl
+                            item={item}
+                            updateQuantity={updateCurrentItem}
+                        />
+                        <Text style={sharedStyles.itemNameText}>
+                            {item.name}
+                        </Text>
+                    </View>
                     <TouchableOpacity
                         onPress={() => addToFrequentFromCurrent(item)}
                         disabled={item.isAddedToFrequent}
@@ -107,22 +87,35 @@ export default function CurrentShoppingListScreen() {
                                 : sharedStyles.addButton,
                         ]}
                     >
-                        <Text style={sharedStyles.buttonText}>
+                        <Text
+                            style={sharedStyles.buttonText}
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                        >
                             {item.isAddedToFrequent
                                 ? '定番に追加済'
                                 : '定番に追加'}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => deleteCurrentItem(item)}
-                        style={[sharedStyles.button, sharedStyles.deleteButton]}
-                    >
-                        <Text style={sharedStyles.buttonText}>削除</Text>
-                    </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
-        );
-    };
+            );
+        },
+        [addToFrequentFromCurrent, updateCurrentItem],
+    );
+
+    const renderHiddenItem = useCallback(
+        ({ item }: { item: CurrentItem }) => (
+            <View style={sharedStyles.rowBack}>
+                <TouchableOpacity
+                    style={sharedStyles.backRightBtn}
+                    onPress={() => deleteCurrentItem(item)}
+                >
+                    <Text style={sharedStyles.backTextWhite}>削除</Text>
+                </TouchableOpacity>
+            </View>
+        ),
+        [deleteCurrentItem],
+    );
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -142,20 +135,29 @@ export default function CurrentShoppingListScreen() {
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
                 </View>
-                <DraggableFlatList
+
+                <SwipeListView
+                    contentContainerStyle={{ backgroundColor: '#f0f0f0' }}
+                    ItemSeparatorComponent={() => (
+                        <View
+                            style={{ height: 1, backgroundColor: '#f0f0f0' }}
+                        />
+                    )}
+                    closeOnRowOpen={true}
+                    rightOpenValue={-75}
                     data={currentItems}
                     renderItem={renderItem}
+                    renderHiddenItem={item => renderHiddenItem(item)}
+                    disableRightSwipe
                     keyExtractor={item => item.id.toString()}
-                    onDragEnd={({ data }) => reorderCurrentItems(data)}
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh}
-                            colors={['#5cb85c']} // Android
-                            tintColor="#5cb85c" // iOS
+                            colors={['#5cb85c']}
+                            tintColor="#5cb85c"
                         />
                     }
-                    contentContainerStyle={{ paddingBottom: 60 }}
                 />
             </View>
         </GestureHandlerRootView>

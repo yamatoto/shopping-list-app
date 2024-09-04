@@ -9,6 +9,12 @@ import {
 } from 'react-native';
 
 const tableData = [
+    {
+        feature: '並び替え',
+        importance: '高',
+        cost: '高',
+        notes: '',
+    },
     { feature: 'リアルタイム更新', importance: '高', cost: '高', notes: '' },
     {
         feature: 'レンダリング見直し・修正',
@@ -35,12 +41,6 @@ const tableData = [
         importance: '中',
         cost: '少',
         notes: '欲しい人でフィルタ',
-    },
-    {
-        feature: '削除ボタンやめて横スワイプで削除',
-        importance: '中',
-        cost: '高',
-        notes: '',
     },
     {
         feature: 'ユーザー認証情報のグルーバル保持',

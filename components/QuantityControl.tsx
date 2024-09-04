@@ -106,18 +106,18 @@ export default function QuantityControl({
                         </View>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
-                                style={[styles.button, styles.confirmButton]}
-                                onPress={handleConfirm}
-                            >
-                                <Text style={styles.buttonText}>確定</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
                                 style={[styles.button, styles.cancelButton]}
                                 onPress={() => setModalVisible(false)}
                             >
                                 <Text style={styles.buttonText}>
                                     キャンセル
                                 </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button, styles.confirmButton]}
+                                onPress={handleConfirm}
+                            >
+                                <Text style={styles.buttonText}>確定</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
