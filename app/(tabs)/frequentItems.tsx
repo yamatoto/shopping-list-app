@@ -9,10 +9,10 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-import { sharedStyles } from '@/styles/sharedStyles';
-import { useShoppingListQuery } from '@/queries/useShoppingListQuery';
-import { useShoppingListUsecase } from '@/usecases/useShoppingListUsecase';
-import { DisplayItem } from '@/models/itemModel';
+import { sharedStyles } from '@/shared/styles/sharedStyles';
+import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
+import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
+import { DisplayItem } from '@/features/shopping-list/models/itemModel';
 
 export default function FrequentShoppingListScreen() {
     const { frequentItems, refreshing } = useShoppingListQuery();

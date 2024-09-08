@@ -7,12 +7,12 @@ import {
     Platform,
 } from 'react-native';
 
-import { sharedStyles } from '@/styles/sharedStyles';
-import SignOut from '@/components/SignOut';
-import PlannedFeaturesModal from '@/components/PlannedFeaturesModal';
-import NoteModal from '@/components/NoteModal';
-import useFirebaseAuth from '@/hooks/useFirebaseAuth';
-import { DEVELOPER_EMAIL } from '@/config/user';
+import { sharedStyles } from '@/shared/styles/sharedStyles';
+import SignOut from '@/features/auth/SignOut';
+import PlannedFeaturesModal from '@/features/configure/components/PlannedFeaturesModal';
+import NoteModal from '@/features/note/components/NoteModal';
+import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import { DEVELOPER_EMAIL } from '@/shared/config/user';
 
 export default function ConfigureScreen() {
     const { currentUser } = useFirebaseAuth();

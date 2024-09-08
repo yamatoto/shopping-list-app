@@ -9,9 +9,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { useEffect } from 'react';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import useFirebaseAuth from '@/hooks/useFirebaseAuth';
-import SignInOrUpWithEmail from '@/components/SignInOrUpWithEmail';
+import { useColorScheme } from '@/shared/hooks/useColorScheme';
+import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import SignInOrUpWithEmail from '@/features/auth/SignInOrUpWithEmail';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

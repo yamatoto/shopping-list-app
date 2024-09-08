@@ -9,11 +9,11 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-import { sharedStyles } from '@/styles/sharedStyles';
-import { useShoppingListUsecase } from '@/usecases/useShoppingListUsecase';
-import { useShoppingListQuery } from '@/queries/useShoppingListQuery';
-import { DisplayItem } from '@/models/itemModel';
-import QuantityControl from '@/components/QuantityControl';
+import { sharedStyles } from '@/shared/styles/sharedStyles';
+import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
+import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
+import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import QuantityControl from '@/features/shopping-list/components/QuantityControl';
 
 export default function CurrentShoppingListScreen() {
     const { currentItems, refreshing } = useShoppingListQuery();
