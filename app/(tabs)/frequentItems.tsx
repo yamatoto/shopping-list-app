@@ -11,7 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { useShoppingList } from '@/context/ShoppingListContext';
-import { FrequentItem } from '@/models/item';
+import { FrequentItem } from '@/models/itemModelOld';
 import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function FrequentShoppingListScreen() {
@@ -31,7 +31,6 @@ export default function FrequentShoppingListScreen() {
         console.log('FrequentShoppingListScreen useEffect');
         await fetchAllFrequentItems();
         // fetchAllFrequentItemsをdepsに含めると無限レンダリングする
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

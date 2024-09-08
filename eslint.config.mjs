@@ -65,7 +65,7 @@ export default [
                 },
             ],
             'react-hooks/rules-of-hooks': 'error',
-            'react-hooks/exhaustive-deps': 'warn',
+            'react-hooks/exhaustive-deps': 'off',
             'import/order': [
                 'error',
                 {

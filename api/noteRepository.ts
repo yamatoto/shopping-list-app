@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 
 import { Note, NoteBase } from '@/models/note';
-import { ServerCreateBase, ServerResponseBase } from '@/models/base';
+import { ServerCreateBase, ServerResponseBase } from '@/models/baseModel';
 import { db } from '@/config/firabase';
 
 const collectionName = 'note';
@@ -33,10 +33,15 @@ const generateUpdateItem = (
     note: Omit<Note, 'id'>,
     userEmail: string,
 ): Omit<NoteBase & ServerCreateBase, 'id' | 'createdAt'> => {
-    const { updatedBy: _, createdAt: __, updatedAt: ___, ...updateBody } = note;
+    const {
+        updatedUser: _,
+        createdAt: __,
+        updatedAt: ___,
+        ...updateBody
+    } = note;
     return {
         ...updateBody,
-        updatedBy: userEmail,
+        updatedUser: userEmail,
         updatedAt: serverTimestamp(),
     };
 };

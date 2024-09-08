@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-import { FrequentItem, CurrentItem } from '@/models/item';
+import { FrequentItem, CurrentItem } from '@/models/itemModelOld';
 import * as CurrentItemsRepository from '@/api/currentItemsRepository';
 import * as FrequentItemsRepository from '@/api/frequentItemsRepository';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';

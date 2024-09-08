@@ -9,7 +9,7 @@ import {
     Platform,
 } from 'react-native';
 
-import { CurrentItem } from '@/models/item';
+import { CurrentItem } from '@/models/itemModelOld';
 
 type QuantityControlProps = {
     item: CurrentItem;

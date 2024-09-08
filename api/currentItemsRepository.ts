@@ -1,5 +1,4 @@
 import {
-    serverTimestamp,
     collection,
     query,
     orderBy,
@@ -14,10 +13,11 @@ import {
     QueryDocumentSnapshot,
     DocumentReference,
     DocumentData,
+    Timestamp,
 } from 'firebase/firestore';
 
-import { CurrentItem, CurrentItemBase, ItemBase } from '@/models/item';
-import { ServerCreateBase, ServerResponseBase } from '@/models/base';
+import { CurrentItem, CurrentItemBase, ItemBase } from '@/models/itemModelOld';
+import { ServerCreateBase, ServerResponseBase } from '@/models/baseModel';
 import { db } from '@/config/firabase';
 const collectionName = 'current-items';
 
@@ -53,8 +53,8 @@ const generateCreateItem = ({
         quantity: 1,
         createdBy: userEmail,
         updatedBy: userEmail,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
     };
 };
 
@@ -84,7 +84,7 @@ const generateUpdateItem = (
     return {
         ...updateBody,
         updatedBy: userEmail,
-        updatedAt: serverTimestamp(),
+        updatedAt: Timestamp.now(),
     };
 };
 
@@ -96,8 +96,6 @@ function handleError(error: any, functionName: string): never {
 }
 
 export const fetchAllItems = async (): Promise<CurrentItem[]> => {
-    console.log('CurrentItems api fetchAllItems');
-
     try {
         const q = query(
             collection(db, collectionName),

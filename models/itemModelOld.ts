@@ -1,4 +1,4 @@
-import { ClientDataBase } from '@/models/base';
+import { ClientDataBase } from '@/models/baseModel';
 
 export interface ItemBase {
     name: string;

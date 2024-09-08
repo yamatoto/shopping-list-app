@@ -35,7 +35,6 @@ const MemoModal: React.FC<MemoModalProps> = ({ visible, onClose }) => {
         if (visible) {
             fetchNote().then();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visible]);
 
     useEffect(() => {
