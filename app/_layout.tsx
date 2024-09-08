@@ -17,16 +17,13 @@ import SignInOrUpWithEmail from '@/components/SignInOrUpWithEmail';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    console.log('RootLayout');
-
     const colorScheme = useColorScheme();
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-    const { currentUser } = useFirebaseAuth();
+    const { isAuthenticated } = useFirebaseAuth();
 
     useEffect(() => {
-        console.log('RootLayout useEffect');
         if (loaded) {
             SplashScreen.hideAsync();
         }
@@ -34,7 +31,7 @@ export default function RootLayout() {
 
     if (!loaded) return null;
 
-    if (!currentUser) {
+    if (!isAuthenticated) {
         return <SignInOrUpWithEmail />;
     }
 

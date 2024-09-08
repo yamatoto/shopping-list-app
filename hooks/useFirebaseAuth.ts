@@ -17,12 +17,12 @@ const useFirebaseAuth = () => {
     } | null>(null);
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(() => {
-            if (auth.currentUser) {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
                 const userName =
-                    auth.currentUser.email === YAMATO_EMAIL ? 'yamato' : 'miho';
+                    user.email === YAMATO_EMAIL ? 'yamato' : 'miho';
                 setCurrentUser({
-                    email: auth.currentUser.email!,
+                    email: user.email!,
                     name: userName,
                 });
                 return;
@@ -58,7 +58,10 @@ const useFirebaseAuth = () => {
         router.replace('/');
     };
 
+    const isAuthenticated = currentUser != null;
+
     return {
+        isAuthenticated,
         currentUser,
         signUpWithEmail,
         signInWithEmail,
