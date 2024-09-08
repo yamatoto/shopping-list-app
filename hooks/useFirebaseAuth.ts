@@ -7,23 +7,18 @@ import {
     signInWithEmailAndPassword,
     signOut as signOutFromFirebase,
 } from '@/config/firabase';
-import { YAMATO_EMAIL } from '@/config/user';
 
 const useFirebaseAuth = () => {
     const router = useRouter();
-    const [currentUser, setCurrentUser] = useState<{
-        email: string;
-        name: 'yamato' | 'miho';
-    } | null>(null);
+    const [currentUser, setCurrentUser] = useState<{ email: string } | null>(
+        null,
+    );
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                const userName =
-                    user.email === YAMATO_EMAIL ? 'yamato' : 'miho';
                 setCurrentUser({
                     email: user.email!,
-                    name: userName,
                 });
                 return;
             }

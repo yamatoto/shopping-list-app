@@ -10,8 +10,9 @@ import {
 import { sharedStyles } from '@/styles/sharedStyles';
 import SignOut from '@/components/SignOut';
 import PlannedFeaturesModal from '@/components/PlannedFeaturesModal';
-import MemoModal from '@/components/MemoModal';
+import NoteModal from '@/components/NoteModal';
 import useFirebaseAuth from '@/hooks/useFirebaseAuth';
+import { DEVELOPER_EMAIL } from '@/config/user';
 
 export default function ConfigureScreen() {
     const { currentUser } = useFirebaseAuth();
@@ -44,7 +45,7 @@ export default function ConfigureScreen() {
                 </TouchableOpacity>
             </View>
 
-            {currentUser?.name === 'yamato' && (
+            {currentUser?.email === DEVELOPER_EMAIL && (
                 <View style={styles.signOutContainer}>
                     <SignOut />
                 </View>
@@ -54,7 +55,7 @@ export default function ConfigureScreen() {
                 visible={plannedFeaturesModalVisible}
                 onClose={handleTogglePlannedFeaturesModal}
             />
-            <MemoModal
+            <NoteModal
                 visible={memoModalVisible}
                 onClose={handleToggleMemoModal}
             />
