@@ -15,19 +15,11 @@ const tableData = [
         cost: '高',
         notes: '',
     },
-    { feature: 'リアルタイム更新', importance: '高', cost: '高', notes: '' },
-    {
-        feature: 'レンダリング見直し・修正',
-        importance: '高',
-        cost: '高',
-        notes: '',
-    },
-    { feature: '通知処理', importance: '高', cost: '高', notes: '' },
     {
         feature: '詳細画面',
         importance: '高',
         cost: '高',
-        notes: 'カテゴライズ、メモ、更新処理',
+        notes: 'アイテム名、数量、カテゴライズ、メモ、更新処理',
     },
     {
         feature: 'カテゴリー表示',
@@ -41,12 +33,6 @@ const tableData = [
         importance: '中',
         cost: '少',
         notes: '欲しい人でフィルタ',
-    },
-    {
-        feature: 'ユーザー認証情報のグルーバル保持',
-        importance: '中',
-        cost: '小',
-        notes: '',
     },
     { feature: '画像添付', importance: '低', cost: '中', notes: '' },
     { feature: '検索', importance: '低', cost: '高', notes: '' },
