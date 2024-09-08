@@ -4,62 +4,35 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Alert,
     RefreshControl,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-import { useShoppingList } from '@/context/ShoppingListContext';
-import { CurrentItem } from '@/models/item';
 import { sharedStyles } from '@/styles/sharedStyles';
+import { useShoppingListUsecase } from '@/usecases/useShoppingListUsecase';
+import { useShoppingListQuery } from '@/queries/useShoppingListQuery';
+import { DisplayItem } from '@/models/itemModel';
 import QuantityControl from '@/components/QuantityControl';
 
 export default function CurrentShoppingListScreen() {
-    console.log('CurrentShoppingListScreen');
+    const { currentItems, refreshing } = useShoppingListQuery();
     const {
-        currentItems,
-        fetchAllCurrentItems,
-        addCurrentItem,
-        addToFrequentFromCurrent,
-        deleteCurrentItem,
-        // reorderCurrentItems,
-        updateCurrentItem,
-    } = useShoppingList();
-    const [newItem, setNewItem] = useState('');
-    const [refreshing, setRefreshing] = useState(false);
-
-    const loadItems = useCallback(async () => {
-        console.log('CurrentShoppingListScreen loadItems');
-        await fetchAllCurrentItems();
-        // fetchAllCurrentItemsをdepsに含めると無限レンダリングする
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        initialize,
+        handleRefresh,
+        handleAddItem,
+        handleUpdateItem,
+        handleDeleteItem,
+        handleAddToFrequent,
+    } = useShoppingListUsecase();
+    const [newItemName, setNewItemName] = useState('');
 
     useEffect(() => {
-        loadItems().then();
-    }, [loadItems]);
-
-    const handleAddItem = async () => {
-        const trimmedItem = newItem.trim();
-        console.log('CurrentShoppingListScreen handleAddItem', trimmedItem);
-        if (!trimmedItem) return;
-        try {
-            await addCurrentItem(trimmedItem);
-            setNewItem('');
-        } catch (error: any) {
-            Alert.alert(error.message);
-        }
-    };
-
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true);
-        await loadItems();
-        setRefreshing(false);
-    }, [loadItems]);
+        initialize().then();
+    }, []);
 
     const renderItem = useCallback(
-        ({ item }: { item: CurrentItem }) => {
+        ({ item }: { item: DisplayItem }) => {
             return (
                 <View style={sharedStyles.itemContainer}>
                     <View
@@ -71,18 +44,18 @@ export default function CurrentShoppingListScreen() {
                     >
                         <QuantityControl
                             item={item}
-                            updateQuantity={updateCurrentItem}
+                            updateQuantity={handleUpdateItem}
                         />
                         <Text style={sharedStyles.itemNameText}>
                             {item.name}
                         </Text>
                     </View>
                     <TouchableOpacity
-                        onPress={() => addToFrequentFromCurrent(item)}
-                        disabled={item.isAddedToFrequent}
+                        onPress={() => handleAddToFrequent(item)}
+                        disabled={item.isFrequent}
                         style={[
                             sharedStyles.button,
-                            item.isAddedToFrequent
+                            item.isFrequent
                                 ? sharedStyles.addedButton
                                 : sharedStyles.addButton,
                         ]}
@@ -92,29 +65,27 @@ export default function CurrentShoppingListScreen() {
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            {item.isAddedToFrequent
-                                ? '定番に追加済'
-                                : '定番に追加'}
+                            {item.isFrequent ? '定番に追加済' : '定番に追加'}
                         </Text>
                     </TouchableOpacity>
                 </View>
             );
         },
-        [addToFrequentFromCurrent, updateCurrentItem],
+        [handleUpdateItem, handleAddToFrequent],
     );
 
     const renderHiddenItem = useCallback(
-        ({ item }: { item: CurrentItem }) => (
+        ({ item }: { item: DisplayItem }) => (
             <View style={sharedStyles.rowBack}>
                 <TouchableOpacity
                     style={sharedStyles.backRightBtn}
-                    onPress={() => deleteCurrentItem(item)}
+                    onPress={() => handleDeleteItem(item, true)}
                 >
                     <Text style={sharedStyles.backTextWhite}>削除</Text>
                 </TouchableOpacity>
             </View>
         ),
-        [deleteCurrentItem],
+        [handleDeleteItem],
     );
 
     return (
@@ -123,14 +94,14 @@ export default function CurrentShoppingListScreen() {
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}
-                        value={newItem}
-                        onChangeText={setNewItem}
+                        value={newItemName}
+                        onChangeText={setNewItemName}
                         placeholderTextColor="#888"
                         placeholder="新しい直近の買い物を追加"
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
-                        onPress={handleAddItem}
+                        onPress={() => handleAddItem(newItemName, true)}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
@@ -153,7 +124,7 @@ export default function CurrentShoppingListScreen() {
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
-                            onRefresh={onRefresh}
+                            onRefresh={handleRefresh}
                             colors={['#5cb85c']}
                             tintColor="#5cb85c"
                         />

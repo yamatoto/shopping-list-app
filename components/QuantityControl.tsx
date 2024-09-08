@@ -9,11 +9,11 @@ import {
     Platform,
 } from 'react-native';
 
-import { CurrentItem } from '@/models/itemModelOld';
+import { DisplayItem } from '@/models/itemModel';
 
 type QuantityControlProps = {
-    item: CurrentItem;
-    updateQuantity: (updatedItem: CurrentItem) => Promise<void>;
+    item: DisplayItem;
+    updateQuantity: (updatedItem: DisplayItem) => Promise<void>;
 };
 export default function QuantityControl({
     item,

@@ -1,4 +1,4 @@
-import { ClientDataBase, ServerResponseBase } from '@/models/baseModel';
+import { Timestamp } from 'firebase/firestore';
 
 export interface ItemBase {
     name: string;
@@ -9,6 +9,13 @@ export interface ItemBase {
     updatedUser: string;
 }
 
-export interface ApiResponseItem extends ServerResponseBase, ItemBase {}
+export interface ApiResponseItem extends ItemBase {
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+}
 
-export interface DisplayItem extends ClientDataBase, ItemBase {}
+export interface DisplayItem extends ItemBase {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+}

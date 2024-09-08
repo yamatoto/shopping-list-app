@@ -1,62 +1,37 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
     View,
     Text,
     TextInput,
     TouchableOpacity,
-    Alert,
     RefreshControl,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-import { useShoppingList } from '@/context/ShoppingListContext';
-import { FrequentItem } from '@/models/itemModelOld';
 import { sharedStyles } from '@/styles/sharedStyles';
+import { useShoppingListQuery } from '@/queries/useShoppingListQuery';
+import { useShoppingListUsecase } from '@/usecases/useShoppingListUsecase';
+import { DisplayItem } from '@/models/itemModel';
 
 export default function FrequentShoppingListScreen() {
-    console.log('FrequentShoppingListScreen');
+    const { frequentItems, refreshing } = useShoppingListQuery();
     const {
-        frequentItems,
-        fetchAllFrequentItems,
-        addFrequentItem,
-        addToCurrentFromFrequent,
-        deleteFrequentItem,
-        // reorderFrequentItems,
-    } = useShoppingList();
-    const [newItem, setNewItem] = React.useState('');
-    const [refreshing, setRefreshing] = useState(false);
-
-    const loadItems = useCallback(async () => {
-        console.log('FrequentShoppingListScreen useEffect');
-        await fetchAllFrequentItems();
-        // fetchAllFrequentItemsをdepsに含めると無限レンダリングする
-    }, []);
+        initialize,
+        handleRefresh,
+        handleAddItem,
+        // handleUpdateItem,
+        handleDeleteItem,
+        handleAddToCurrent,
+    } = useShoppingListUsecase();
+    const [newItemName, setNewItemName] = useState('');
 
     useEffect(() => {
-        loadItems().then();
-    }, [loadItems]);
-
-    const handleAddItem = async () => {
-        console.log('FrequentShoppingListScreen handleAddItem');
-        const trimmedItem = newItem.trim();
-        if (!trimmedItem) return;
-        try {
-            await addFrequentItem(trimmedItem);
-            setNewItem('');
-        } catch (error: any) {
-            Alert.alert(error.message);
-        }
-    };
-
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true);
-        await loadItems();
-        setRefreshing(false);
-    }, [loadItems]);
+        initialize().then();
+    }, []);
 
     const renderItem = useCallback(
-        ({ item }: { item: FrequentItem }) => {
+        ({ item }: { item: DisplayItem }) => {
             return (
                 <View style={sharedStyles.itemContainer}>
                     <View
@@ -71,11 +46,11 @@ export default function FrequentShoppingListScreen() {
                         </Text>
                     </View>
                     <TouchableOpacity
-                        onPress={() => addToCurrentFromFrequent(item)}
-                        disabled={item.isAddedToCurrent}
+                        onPress={() => handleAddToCurrent(item)}
+                        disabled={item.isCurrent}
                         style={[
                             sharedStyles.button,
-                            item.isAddedToCurrent
+                            item.isCurrent
                                 ? sharedStyles.addedButton
                                 : sharedStyles.addButton,
                         ]}
@@ -85,29 +60,27 @@ export default function FrequentShoppingListScreen() {
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            {item.isAddedToCurrent
-                                ? '直近に追加済'
-                                : '直近に追加'}
+                            {item.isCurrent ? '直近に追加済' : '直近に追加'}
                         </Text>
                     </TouchableOpacity>
                 </View>
             );
         },
-        [addToCurrentFromFrequent],
+        [handleAddToCurrent],
     );
 
     const renderHiddenItem = useCallback(
-        ({ item }: { item: FrequentItem }) => (
+        ({ item }: { item: DisplayItem }) => (
             <View style={sharedStyles.rowBack}>
                 <TouchableOpacity
                     style={sharedStyles.backRightBtn}
-                    onPress={() => deleteFrequentItem(item)}
+                    onPress={() => handleDeleteItem(item, false)}
                 >
                     <Text style={sharedStyles.backTextWhite}>削除</Text>
                 </TouchableOpacity>
             </View>
         ),
-        [deleteFrequentItem],
+        [handleDeleteItem],
     );
 
     return (
@@ -116,14 +89,14 @@ export default function FrequentShoppingListScreen() {
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}
-                        value={newItem}
-                        onChangeText={setNewItem}
+                        value={newItemName}
+                        onChangeText={setNewItemName}
                         placeholderTextColor="#888"
                         placeholder="新しい定番の買い物を追加"
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
-                        onPress={handleAddItem}
+                        onPress={() => handleAddItem(newItemName, false)}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
@@ -146,7 +119,7 @@ export default function FrequentShoppingListScreen() {
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
-                            onRefresh={onRefresh}
+                            onRefresh={handleRefresh}
                             colors={['#5cb85c']}
                             tintColor="#5cb85c"
                         />
