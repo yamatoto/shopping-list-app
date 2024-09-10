@@ -96,7 +96,10 @@ export default function FrequentShoppingListScreen() {
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
-                        onPress={() => handleAddItem(newItemName, false)}
+                        onPress={() => {
+                            setNewItemName('');
+                            handleAddItem(newItemName, false).then();
+                        }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>

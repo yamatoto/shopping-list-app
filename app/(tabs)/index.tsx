@@ -101,7 +101,10 @@ export default function CurrentShoppingListScreen() {
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
-                        onPress={() => handleAddItem(newItemName, true)}
+                        onPress={() => {
+                            setNewItemName('');
+                            handleAddItem(newItemName, true).then();
+                        }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
