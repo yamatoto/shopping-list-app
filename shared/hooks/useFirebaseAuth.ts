@@ -10,15 +10,17 @@ import {
 
 const useFirebaseAuth = () => {
     const router = useRouter();
-    const [currentUser, setCurrentUser] = useState<{ email: string } | null>(
-        null,
-    );
+    const [currentUser, setCurrentUser] = useState<{
+        email: string;
+        displayName: string;
+    } | null>(null);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
                 setCurrentUser({
                     email: user.email!,
+                    displayName: user.displayName!,
                 });
                 return;
             }
@@ -43,7 +45,7 @@ const useFirebaseAuth = () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
-            console.error(`でエラー: ${JSON.stringify(error)}`);
+            console.error(`signInWithEmailでエラー: ${JSON.stringify(error)}`);
             alert('ログインに失敗しました');
         }
     };

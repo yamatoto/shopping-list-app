@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseNote, DisplayNote } from '@/features/note/models/noteModel';
-import { useNoteStore } from '@/features/note/store/useNoteStore';
+import {
+    ApiResponseNote,
+    DisplayNote,
+} from '@/features/configure/note/models/noteModel';
+import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 
@@ -47,14 +50,9 @@ export const useNoteQuery = () => {
         }>(
             (acc, fetchedNote) => {
                 const converted = convertToClientNoteFromServer(fetchedNote);
-                const noteKey =
-                    converted.updatedUser === DEVELOPER_EMAIL
-                        ? 'developerNote'
-                        : 'partnerNote';
-
                 return {
                     ...acc,
-                    [noteKey]: converted,
+                    [`${converted.userType}Note`]: converted,
                 };
             },
             {

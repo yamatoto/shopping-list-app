@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseNote } from '@/features/note/models/noteModel';
+import { ApiResponseNote } from '@/features/configure/note/models/noteModel';
 
 type NoteStore = {
     resultOfFetchNoteList: QueryDocumentSnapshot<ApiResponseNote>[];

@@ -4,9 +4,9 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import { useNoteQuery } from '@/features/note/queries/useNoteQuery';
-import { useNoteUsecase } from '@/features/note/usecases/useNoteUsecase';
-import NoteForm from '@/features/note/components/NoteForm';
+import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
+import { useNoteUsecase } from '@/features/configure/note/usecases/useNoteUsecase';
+import NoteForm from '@/features/configure/note/components/NoteForm';
 
 type RootStackParamList = {
     index: undefined;
@@ -102,7 +102,7 @@ export default function NoteScreen() {
                 note={developerNote}
                 textAreaHeight={developerTextAreaHeight}
                 handleChangeTextAreaHeight={handleChangeDeveloperTextAreaHeight}
-                editable={currentUser?.email === developerNote.updatedUser}
+                editable={currentUser?.email === developerNote.userEmail}
                 handleUpdateNote={handleUpdateNote}
                 onChangeText={handleTextChange}
             />
@@ -110,7 +110,7 @@ export default function NoteScreen() {
                 note={partnerNote}
                 textAreaHeight={partnerTextAreaHeight}
                 handleChangeTextAreaHeight={handleChangePartnerTextAreaHeight}
-                editable={currentUser?.email === partnerNote.updatedUser}
+                editable={currentUser?.email === partnerNote.userEmail}
                 handleUpdateNote={handleUpdateNote}
                 onChangeText={handleTextChange}
             />

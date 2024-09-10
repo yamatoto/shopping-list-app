@@ -11,7 +11,7 @@ import {
     DocumentChange,
 } from 'firebase/firestore';
 
-import { ApiResponseNote } from '@/features/note/models/noteModel';
+import { ApiResponseNote } from '@/features/configure/note/models/noteModel';
 import { db } from '@/shared/config/firabase';
 
 const collectionName = 'note';

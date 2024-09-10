@@ -57,7 +57,7 @@ export default function PlannedFeaturesScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 50, // 状況に応じてパディングを調整
+        paddingTop: 50,
         paddingHorizontal: 16,
         backgroundColor: 'white',
     },

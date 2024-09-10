@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
-import { DisplayNote } from '@/features/note/models/noteModel';
+import { DisplayNote } from '@/features/configure/note/models/noteModel';
 
 interface NoteFormModalProps {
     note: DisplayNote;
@@ -17,7 +17,7 @@ interface NoteFormModalProps {
 }
 
 const NoteForm: React.FC<NoteFormModalProps> = ({
-    note: { id, userDisplayName, content },
+    note: { id, displayName, content },
     textAreaHeight,
     handleChangeTextAreaHeight,
     editable,
@@ -28,7 +28,7 @@ const NoteForm: React.FC<NoteFormModalProps> = ({
 
     return (
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>{userDisplayName}のメモ</Text>
+            <Text style={styles.label}>{displayName}のメモ</Text>
             <TextInput
                 style={[styles.textArea, { height: textAreaHeight }]}
                 multiline

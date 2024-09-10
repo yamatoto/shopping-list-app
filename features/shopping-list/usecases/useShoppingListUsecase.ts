@@ -2,13 +2,13 @@ import { useCallback, useEffect } from 'react';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import * as ItemsRepository from '@/shared/api/itemsRepository';
-import * as ItemSortRepository from '@/shared/api/itemSortRepository';
+import * as ItemsRepository from '@/features/shopping-list/api/itemsRepository';
+import * as ItemSortRepository from '@/features/shopping-list/api/itemSortRepository';
 import {
     ApiResponseItem,
     DisplayItem,
 } from '@/features/shopping-list/models/itemModel';
-import { setupItemListener } from '@/shared/api/itemsRepository';
+import { setupItemListener } from '@/features/shopping-list/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 
 export const useShoppingListUsecase = () => {
@@ -47,7 +47,7 @@ export const useShoppingListUsecase = () => {
         ) => {
             const trimmedItem = newItemName.trim();
             if (!trimmedItem) return;
-            const userEmail = currentUser!.email;
+            const createdUser = currentUser!.displayName;
             try {
                 await ItemsRepository.addItem(
                     {
@@ -55,10 +55,10 @@ export const useShoppingListUsecase = () => {
                         quantity: 1,
                         isCurrent,
                         isFrequent: !isCurrent,
-                        createdUser: userEmail,
-                        updatedUser: userEmail,
+                        createdUser,
+                        updatedUser: createdUser,
                     },
-                    `${isCurrent ? '直近' : '定番'}の買い物リストに「${trimmedItem}」が追加されました。`,
+                    `${isCurrent ? '直近' : '定番'}の買い物リストに「${trimmedItem}」を追加しました。`,
                 );
                 // await ItemSortRepository.updateItemSort(
                 //     sortList.id,
@@ -77,14 +77,14 @@ export const useShoppingListUsecase = () => {
 
     const handleUpdateItem = useCallback(
         async (updateItem: DisplayItem) => {
-            const userEmail = currentUser!.email;
+            const updatedUser = currentUser!.displayName;
             try {
                 await ItemsRepository.updateItem(
                     {
                         ...updateItem,
-                        updatedUser: userEmail,
+                        updatedUser,
                     },
-                    `直近の買い物リストの「${updateItem}」が更新されました。`,
+                    `直近の買い物リストの「${updateItem}」を更新しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -97,7 +97,7 @@ export const useShoppingListUsecase = () => {
 
     const handleDeleteItem = useCallback(
         async ({ id, name }: DisplayItem, isCurrent: boolean) => {
-            const userEmail = currentUser!.email;
+            const updatedUser = currentUser!.displayName;
             try {
                 await ItemsRepository.updateItem(
                     {
@@ -105,9 +105,9 @@ export const useShoppingListUsecase = () => {
                             ? { isCurrent: false }
                             : { isFrequent: false }),
                         id,
-                        updatedUser: userEmail,
+                        updatedUser,
                     },
-                    `${isCurrent ? '直近' : '定番'}の買い物リストから「${name}」が削除されました。`,
+                    `${isCurrent ? '直近' : '定番'}の買い物リストから「${name}」を削除しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -121,15 +121,15 @@ export const useShoppingListUsecase = () => {
 
     const handleAddToFrequent = useCallback(
         async (item: DisplayItem) => {
-            const userEmail = currentUser!.email;
+            const updatedUser = currentUser!.displayName;
             try {
                 await ItemsRepository.updateItem(
                     {
                         ...item,
                         isFrequent: true,
-                        updatedUser: userEmail,
+                        updatedUser,
                     },
-                    `定番の買い物リストに「${item.name}」が追加されました。`,
+                    `定番の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -143,15 +143,15 @@ export const useShoppingListUsecase = () => {
 
     const handleAddToCurrent = useCallback(
         async (item: DisplayItem) => {
-            const userEmail = currentUser!.email;
+            const updatedUser = currentUser!.displayName;
             try {
                 await ItemsRepository.updateItem(
                     {
                         ...item,
                         isCurrent: true,
-                        updatedUser: userEmail,
+                        updatedUser,
                     },
-                    `直近の買い物リストに「${item.name}」が追加されました。`,
+                    `直近の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -169,10 +169,11 @@ export const useShoppingListUsecase = () => {
 
     useEffect(() => {
         const unsubscribe = setupItemListener(change => {
-            const { message } = change.doc.data() as ApiResponseItem;
+            const { message, updatedUser } =
+                change.doc.data() as ApiResponseItem;
 
             if (message) {
-                showToast(message);
+                showToast(`${updatedUser}が${message}`);
             }
 
             fetchAllItems().then();

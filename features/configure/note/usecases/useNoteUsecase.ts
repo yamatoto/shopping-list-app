@@ -4,10 +4,10 @@ import {
     TextInputContentSizeChangeEventData,
 } from 'react-native';
 
-import * as NoteRepository from '@/shared/api/noteRepository';
-import { useNoteStore } from '@/features/note/store/useNoteStore';
-import { ApiResponseNote } from '@/features/note/models/noteModel';
-import { setupNoteListener } from '@/shared/api/noteRepository';
+import * as NoteRepository from '@/features/configure/note/api/noteRepository';
+import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
+import { ApiResponseNote } from '@/features/configure/note/models/noteModel';
+import { setupNoteListener } from '@/features/configure/note/api/noteRepository';
 import { showToast } from '@/shared/helpers/toast';
 
 export const useNoteUsecase = () => {
@@ -47,8 +47,8 @@ export const useNoteUsecase = () => {
 
     useEffect(() => {
         const unsubscribe = setupNoteListener(change => {
-            const { userDisplayName } = change.doc.data() as ApiResponseNote;
-            showToast(`${userDisplayName}のメモが更新されました。`);
+            const { displayName } = change.doc.data() as ApiResponseNote;
+            showToast(`${displayName}のメモが更新されました。`);
             fetchNoteList().then();
         });
         return () => unsubscribe();
