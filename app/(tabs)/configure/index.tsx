@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -6,59 +6,29 @@ import {
     StyleSheet,
     Platform,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import SignOut from '@/features/auth/SignOut';
-import PlannedFeaturesModal from '@/features/configure/components/PlannedFeaturesModal';
-import NoteModal from '@/features/note/components/NoteModal';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import { DEVELOPER_EMAIL } from '@/shared/config/user';
 
 export default function ConfigureScreen() {
-    const { currentUser } = useFirebaseAuth();
-
-    const [plannedFeaturesModalVisible, setPlannedFeaturesModalVisible] =
-        useState(false);
-    const [memoModalVisible, setMemoModalVisible] = useState(false);
-
-    const handleTogglePlannedFeaturesModal = () => {
-        setPlannedFeaturesModalVisible(!plannedFeaturesModalVisible);
-    };
-    const handleToggleMemoModal = () => {
-        setMemoModalVisible(!memoModalVisible);
-    };
+    const router = useRouter();
 
     return (
         <View style={sharedStyles.container}>
             <View style={styles.topButtonsContainer}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={handleTogglePlannedFeaturesModal}
+                    onPress={() => router.push('/configure/planned-features')}
                 >
                     <Text style={styles.buttonText}>実装予定</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={handleToggleMemoModal}
+                    onPress={() => router.push('/configure/note')}
                 >
                     <Text style={styles.buttonText}>メモ</Text>
                 </TouchableOpacity>
             </View>
-
-            {currentUser?.email === DEVELOPER_EMAIL && (
-                <View style={styles.signOutContainer}>
-                    <SignOut />
-                </View>
-            )}
-
-            <PlannedFeaturesModal
-                visible={plannedFeaturesModalVisible}
-                onClose={handleTogglePlannedFeaturesModal}
-            />
-            <NoteModal
-                visible={memoModalVisible}
-                onClose={handleToggleMemoModal}
-            />
         </View>
     );
 }

@@ -16,7 +16,7 @@ interface NoteFormModalProps {
     onChangeText: (text: string) => void;
 }
 
-const NoteFormModal: React.FC<NoteFormModalProps> = ({
+const NoteForm: React.FC<NoteFormModalProps> = ({
     note: { id, userDisplayName, content },
     textAreaHeight,
     handleChangeTextAreaHeight,
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default NoteFormModal;
+export default NoteForm;

@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import Toast from 'react-native-simple-toast';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
@@ -10,6 +9,7 @@ import {
     DisplayItem,
 } from '@/features/shopping-list/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
+import { showToast } from '@/shared/helpers/toast';
 
 export const useShoppingListUsecase = () => {
     const {
@@ -29,7 +29,7 @@ export const useShoppingListUsecase = () => {
             setResultOfFetchItemSortList(sortList);
         } catch (error: any) {
             console.error(error);
-            Toast.show('買い物リストの取得に失敗しました。', 300, {});
+            showToast('買い物リストの取得に失敗しました。');
         }
     }, [currentUser]);
 
@@ -67,7 +67,7 @@ export const useShoppingListUsecase = () => {
                 // );
             } catch (error: any) {
                 console.error(error);
-                Toast.show('買い物リストの追加に失敗しました。', 300, {});
+                showToast('買い物リストの追加に失敗しました。');
             }
 
             await fetchAllItems();
@@ -88,7 +88,7 @@ export const useShoppingListUsecase = () => {
                 );
             } catch (error: any) {
                 console.error(error);
-                Toast.show('買い物リストの更新に失敗しました。', 300, {});
+                showToast('買い物リストの更新に失敗しました。');
             }
             await fetchAllItems();
         },
@@ -111,7 +111,7 @@ export const useShoppingListUsecase = () => {
                 );
             } catch (error: any) {
                 console.error(error);
-                Toast.show('買い物リストの削除に失敗しました。', 300, {});
+                showToast('買い物リストの削除に失敗しました。');
             }
 
             await fetchAllItems();
@@ -133,11 +133,7 @@ export const useShoppingListUsecase = () => {
                 );
             } catch (error: any) {
                 console.error(error);
-                Toast.show(
-                    '定番の買い物リストへの追加に失敗しました。',
-                    300,
-                    {},
-                );
+                showToast('定番の買い物リストへの追加に失敗しました。');
             }
 
             await fetchAllItems();
@@ -159,11 +155,7 @@ export const useShoppingListUsecase = () => {
                 );
             } catch (error: any) {
                 console.error(error);
-                Toast.show(
-                    '直近の買い物リストへの追加に失敗しました。',
-                    300,
-                    {},
-                );
+                showToast('直近の買い物リストへの追加に失敗しました。');
             }
 
             await fetchAllItems();
@@ -180,7 +172,7 @@ export const useShoppingListUsecase = () => {
             const { message } = change.doc.data() as ApiResponseItem;
 
             if (message) {
-                Toast.show(message, 300, {});
+                showToast(message);
             }
 
             fetchAllItems().then();

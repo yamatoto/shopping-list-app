@@ -3152,6 +3152,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native/normalize-color@npm:*":
+  version: 2.1.0
+  resolution: "@react-native/normalize-color@npm:2.1.0"
+  checksum: 8ccbd40b3c7629f1dc97b3e9aadd95fd3507fcf2e37535a6299a70436ab891c34cbdc4240b07380553d6e85dd909e23d5773b5be1da2906b026312e0b0768838
+  languageName: node
+  linkType: hard
+
 "@react-native/normalize-colors@npm:0.74.84":
   version: 0.74.84
   resolution: "@react-native/normalize-colors@npm:0.74.84"
@@ -5498,6 +5505,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deprecated-react-native-prop-types@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "deprecated-react-native-prop-types@npm:2.3.0"
+  dependencies:
+    "@react-native/normalize-color": "*"
+    invariant: "*"
+    prop-types: "*"
+  checksum: d14f4be1dfe780a7fa9197a31b4a9a2b409c8cf1bf677713fd92d06733dee1043578662d1a8858541cf06164ae91d295db6e595f29bf13e808d9fb37bc58c90b
+  languageName: node
+  linkType: hard
+
 "destroy@npm:1.2.0":
   version: 1.2.0
   resolution: "destroy@npm:1.2.0"
@@ -7568,7 +7586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.4":
+"invariant@npm:*, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -10652,7 +10670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:*, prop-types@npm:^15.5.10, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -10907,6 +10925,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-root-siblings@npm:^4.0.0":
+  version: 4.1.1
+  resolution: "react-native-root-siblings@npm:4.1.1"
+  checksum: a4df9213be4864ec9ca5a99dd5e9218034a3cda66faa76b8910247a5e728d720df297f4dde811d83219adf370762a62948a8d954f8198bb3e4512e4dbc7dad00
+  languageName: node
+  linkType: hard
+
+"react-native-root-toast@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "react-native-root-toast@npm:3.6.0"
+  dependencies:
+    deprecated-react-native-prop-types: ^2.3.0
+    prop-types: ^15.5.10
+    react-native-root-siblings: ^4.0.0
+  peerDependencies:
+    react-native: ">=0.47.0"
+  checksum: a4807d808f3beecb8fb4b6658057b8ce0c58dd54cce5e7a2beeda0cfb6073146e60dfaa7cb208f66ebe0ac228f2c2ffd7a43aa9031b4e677c64bd6f1fc20ef5b
+  languageName: node
+  linkType: hard
+
 "react-native-safe-area-context@npm:4.10.5":
   version: 4.10.5
   resolution: "react-native-safe-area-context@npm:4.10.5"
@@ -10927,16 +10965,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 1fc61cf7a223b3ef1c8000e74416c8953561c5fa0861557da43659db62a640e37fb51fbdc35dae810a665881a7aa9eeaf1873e90f67404b4dda53a672464a7fe
-  languageName: node
-  linkType: hard
-
-"react-native-simple-toast@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "react-native-simple-toast@npm:3.3.1"
-  peerDependencies:
-    react: "*"
-    react-native: ">=0.71.0"
-  checksum: 0f535a469b9519f761ee0224828df8e531fb92ad5e9accefdc04aafcd896da4c6fead488fe6911ccc11592f325707499f4b696768afd8c20cefe06fa6cdac50f
   languageName: node
   linkType: hard
 
@@ -11729,9 +11757,9 @@ __metadata:
     react-native-draggable-flatlist: ^4.0.1
     react-native-gesture-handler: ~2.16.1
     react-native-reanimated: ~3.10.1
+    react-native-root-toast: ^3.6.0
     react-native-safe-area-context: 4.10.5
     react-native-screens: 3.31.1
-    react-native-simple-toast: ^3.3.1
     react-native-swipe-list-view: ^3.2.9
     react-native-web: ~0.19.10
     react-test-renderer: 18.2.0

@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import Toast from 'react-native-simple-toast';
 import {
     NativeSyntheticEvent,
     TextInputContentSizeChangeEventData,
@@ -9,6 +8,7 @@ import * as NoteRepository from '@/shared/api/noteRepository';
 import { useNoteStore } from '@/features/note/store/useNoteStore';
 import { ApiResponseNote } from '@/features/note/models/noteModel';
 import { setupNoteListener } from '@/shared/api/noteRepository';
+import { showToast } from '@/shared/helpers/toast';
 
 export const useNoteUsecase = () => {
     const {
@@ -24,7 +24,7 @@ export const useNoteUsecase = () => {
             setResultOfFetchNoteList(noteList);
         } catch (error: any) {
             console.error(error);
-            Toast.show('メモの取得に失敗しました。', 300, {});
+            showToast('メモの取得に失敗しました。');
         }
     }, []);
 
@@ -34,7 +34,7 @@ export const useNoteUsecase = () => {
                 await NoteRepository.updateNote(noteId, content);
             } catch (error: any) {
                 console.error(error);
-                Toast.show('ノートの更新に失敗しました。', 300, {});
+                showToast('ノートの更新に失敗しました。');
             }
             await fetchNoteList();
         },
@@ -48,7 +48,7 @@ export const useNoteUsecase = () => {
     useEffect(() => {
         const unsubscribe = setupNoteListener(change => {
             const { userDisplayName } = change.doc.data() as ApiResponseNote;
-            Toast.show(`${userDisplayName}のメモが更新されました。`, 300, {});
+            showToast(`${userDisplayName}のメモが更新されました。`);
             fetchNoteList().then();
         });
         return () => unsubscribe();
