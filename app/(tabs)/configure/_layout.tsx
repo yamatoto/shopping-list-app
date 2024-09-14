@@ -12,13 +12,6 @@ export default function ConfigureLayout() {
                 }}
             />
             <Stack.Screen
-                name="planned-features"
-                options={{
-                    headerShown: true,
-                    headerTitle: '実装予定',
-                }}
-            />
-            <Stack.Screen
                 name="note"
                 options={{
                     headerShown: true,

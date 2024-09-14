@@ -18,12 +18,6 @@ export default function ConfigureScreen() {
             <View style={styles.topButtonsContainer}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => router.push('/configure/planned-features')}
-                >
-                    <Text style={styles.buttonText}>実装予定</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
                     onPress={() => router.push('/configure/note')}
                 >
                     <Text style={styles.buttonText}>メモ</Text>
