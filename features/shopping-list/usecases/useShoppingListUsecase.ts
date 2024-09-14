@@ -49,6 +49,13 @@ export const useShoppingListUsecase = () => {
             if (!trimmedItem) return;
             const createdUser = currentUser!.displayName;
             try {
+                const registeredItem =
+                    await ItemsRepository.findItemByName(trimmedItem);
+                if (!!registeredItem) {
+                    showToast(`${trimmedItem}はすでに登録されています。`);
+                    return;
+                }
+
                 await ItemsRepository.addItem(
                     {
                         name: trimmedItem,

@@ -9,7 +9,7 @@ Google認証は高価なAppleデベロッパーに登録しないといけない
 実機で開発者モードを有効にしておく。
 
 ```shell
-$ yarn start
+$ yarn dev
 ```
 
 Expo GoアプリでQRコードを読み込む。

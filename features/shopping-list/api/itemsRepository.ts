@@ -54,6 +54,15 @@ export const fetchAllItems = async (): Promise<
     return docs as QueryDocumentSnapshot<ApiResponseItem>[];
 };
 
+export const findItemByName = async (
+    name: string,
+): Promise<QueryDocumentSnapshot<ApiResponseItem> | null> => {
+    const q = query(collection(db, collectionName), where('name', '==', name));
+    const { docs } = await getDocs(q);
+    if (docs.length === 0) return null;
+    return docs[0] as QueryDocumentSnapshot<ApiResponseItem>;
+};
+
 export const addItem = async (
     newItem: ItemBase,
     message: string,
