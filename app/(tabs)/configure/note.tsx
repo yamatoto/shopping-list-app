@@ -49,7 +49,7 @@ export default function NoteScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            const unsubscribe = navigation.addListener('beforeRemove', e => {
+            return navigation.addListener('beforeRemove', e => {
                 if (!isNoteChanged) {
                     // 変更がない場合は、通常通り画面を離れる
                     return;
@@ -77,43 +77,47 @@ export default function NoteScreen() {
                     ],
                 );
             });
-
-            return unsubscribe;
         }, [navigation, isNoteChanged]),
     );
 
     // コンポーネントがマウントされたときに初期化
     useFocusEffect(
         useCallback(() => {
-            initialize();
+            initialize().then();
             return () => {
                 // クリーンアップ関数
                 setIsNoteChanged(false);
                 setInputtingText(initialText);
             };
-        }, [initialize, initialText, setInputtingText]),
+        }, []),
     );
-
-    if (!developerNote || !partnerNote) return null;
 
     return (
         <View style={styles.container}>
-            <NoteForm
-                note={developerNote}
-                textAreaHeight={developerTextAreaHeight}
-                handleChangeTextAreaHeight={handleChangeDeveloperTextAreaHeight}
-                editable={currentUser?.email === developerNote.userEmail}
-                handleUpdateNote={handleUpdateNote}
-                onChangeText={handleTextChange}
-            />
-            <NoteForm
-                note={partnerNote}
-                textAreaHeight={partnerTextAreaHeight}
-                handleChangeTextAreaHeight={handleChangePartnerTextAreaHeight}
-                editable={currentUser?.email === partnerNote.userEmail}
-                handleUpdateNote={handleUpdateNote}
-                onChangeText={handleTextChange}
-            />
+            {developerNote?.content && (
+                <NoteForm
+                    note={developerNote}
+                    textAreaHeight={developerTextAreaHeight}
+                    handleChangeTextAreaHeight={
+                        handleChangeDeveloperTextAreaHeight
+                    }
+                    editable={currentUser?.email === developerNote.userEmail}
+                    handleUpdateNote={handleUpdateNote}
+                    onChangeText={handleTextChange}
+                />
+            )}
+            {partnerNote?.content && (
+                <NoteForm
+                    note={partnerNote}
+                    textAreaHeight={partnerTextAreaHeight}
+                    handleChangeTextAreaHeight={
+                        handleChangePartnerTextAreaHeight
+                    }
+                    editable={currentUser?.email === partnerNote.userEmail}
+                    handleUpdateNote={handleUpdateNote}
+                    onChangeText={handleTextChange}
+                />
+            )}
         </View>
     );
 }
