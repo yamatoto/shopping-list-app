@@ -36,8 +36,11 @@ export default function CurrentShoppingListScreen() {
             return (
                 <ShoppingItemContainer
                     item={item}
-                    updateQuantity={handleUpdateItem}
-                    onAddToFrequent={() => handleAddToFrequent(item)}
+                    updateItem={newItem =>
+                        handleUpdateItem(item, newItem, '直近')
+                    }
+                    onAddToAnother={() => handleAddToFrequent(item)}
+                    isCurrentScreen={true}
                 />
             );
         },

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -13,6 +13,7 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
 import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import ShoppingItemContainer from '@/features/shopping-list/components/ShoppingItemContainer';
 
 export default function FrequentShoppingListScreen() {
     const { frequentItems, refreshing } = useShoppingListQuery();
@@ -20,7 +21,7 @@ export default function FrequentShoppingListScreen() {
         initialize,
         handleRefresh,
         handleAddItem,
-        // handleUpdateItem,
+        handleUpdateItem,
         handleDeleteItem,
         handleAddToCurrent,
     } = useShoppingListUsecase();
@@ -33,40 +34,17 @@ export default function FrequentShoppingListScreen() {
     const renderItem = useCallback(
         ({ item }: { item: DisplayItem }) => {
             return (
-                <View style={sharedStyles.itemContainer}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            flex: 1,
-                        }}
-                    >
-                        <Text style={sharedStyles.itemNameText}>
-                            {item.name}
-                        </Text>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => handleAddToCurrent(item)}
-                        disabled={item.isCurrent}
-                        style={[
-                            sharedStyles.button,
-                            item.isCurrent
-                                ? sharedStyles.addedButton
-                                : sharedStyles.addButton,
-                        ]}
-                    >
-                        <Text
-                            style={sharedStyles.buttonText}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            {item.isCurrent ? '直近に追加済' : '直近に追加'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <ShoppingItemContainer
+                    item={item}
+                    updateItem={newItem =>
+                        handleUpdateItem(item, newItem, '定番')
+                    }
+                    onAddToAnother={() => handleAddToCurrent(item)}
+                    isCurrentScreen={false}
+                />
             );
         },
-        [handleAddToCurrent],
+        [handleUpdateItem, handleAddToCurrent],
     );
 
     const renderHiddenItem = useCallback(

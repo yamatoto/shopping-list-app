@@ -2962,6 +2962,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-picker/picker@npm:2.7.5":
+  version: 2.7.5
+  resolution: "@react-native-picker/picker@npm:2.7.5"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 7c968bc2886e63aa9ddfd9115c4f7f5523e6e19c21427a72dadc68eff09d33acd04c3b8b6332108b7e3e608a31c79a81a7a897ab44ee31ca22743f5bffc5908a
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.74.87":
   version: 0.74.87
   resolution: "@react-native/assets-registry@npm:0.74.87"
@@ -9130,6 +9140,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: da27515dc5230eb1140ba65ff8de3613649620e8656b19a6270afe4866b7bd461d9ba2ac8a48dcc57f7adac4ee80e1de9f965d89d4d81a0ad52bb3eec2609644
+  languageName: node
+  linkType: hard
+
+"lodash.isobject@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "lodash.isobject@npm:3.0.2"
+  checksum: 6c1667cbc4494d0a13a3617a4b23278d6d02dac520311f2bbb43f16f2cf71d2e6eb9dec8057315b77459df4890c756a256a087d3f4baa44a79ab5d6c968b060e
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -10905,6 +10929,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-picker-select@npm:^9.3.1":
+  version: 9.3.1
+  resolution: "react-native-picker-select@npm:9.3.1"
+  dependencies:
+    lodash.isequal: ^4.5.0
+    lodash.isobject: ^3.0.2
+  peerDependencies:
+    "@react-native-picker/picker": ^2.4.0
+  checksum: ba03c79bff736f225f6cf06a971a5058739ef27c26d2f66edf31e80250fc40be29085d4b15a35339c31b4d4830d362594f8d5933a25a0f2f1f9d702189e2d611
+  languageName: node
+  linkType: hard
+
 "react-native-reanimated@npm:~3.10.1":
   version: 3.10.1
   resolution: "react-native-reanimated@npm:3.10.1"
@@ -11721,6 +11757,7 @@ __metadata:
     "@eslint/compat": ^1.1.1
     "@expo/vector-icons": ^14.0.2
     "@react-native-async-storage/async-storage": 1.23.1
+    "@react-native-picker/picker": 2.7.5
     "@react-navigation/native": ^6.1.18
     "@react-navigation/stack": ^6.4.1
     "@types/jest": ^29.5.12
@@ -11756,6 +11793,7 @@ __metadata:
     react-native: 0.74.5
     react-native-draggable-flatlist: ^4.0.1
     react-native-gesture-handler: ~2.16.1
+    react-native-picker-select: ^9.3.1
     react-native-reanimated: ~3.10.1
     react-native-root-toast: ^3.6.0
     react-native-safe-area-context: 4.10.5

@@ -82,20 +82,52 @@ export const useShoppingListUsecase = () => {
         [currentUser, fetchAllItems],
     );
 
+    const keyLabels: Partial<Record<keyof DisplayItem, string>> = {
+        name: '商品名',
+        quantity: '数量',
+        category: 'カテゴリー',
+    };
     const handleUpdateItem = useCallback(
-        async (updateItem: DisplayItem) => {
+        async (
+            beforeItem: DisplayItem,
+            updateItem: Partial<DisplayItem>,
+            screen: '直近' | '定番',
+        ) => {
+            const trimmedUpdatedItemName = updateItem.name?.trim();
             const updatedUser = currentUser!.displayName;
+            const changedContent = (
+                Object.keys(updateItem) as Array<keyof DisplayItem>
+            )
+                .filter(key => updateItem[key] !== beforeItem[key])
+                .map(
+                    key =>
+                        `${keyLabels[key]}: ${beforeItem[key]} → ${updateItem[key]}`,
+                )
+                .join('\n');
             try {
+                if (trimmedUpdatedItemName) {
+                    const registeredItem = await ItemsRepository.findItemByName(
+                        trimmedUpdatedItemName,
+                    );
+                    if (!!registeredItem) {
+                        showToast(
+                            `${trimmedUpdatedItemName}はすでに登録されています。`,
+                        );
+                        return;
+                    }
+                }
+
                 await ItemsRepository.updateItem(
                     {
+                        ...beforeItem,
                         ...updateItem,
                         updatedUser,
                     },
-                    `直近の買い物リストの「${updateItem.name}」を更新しました。`,
+                    `${screen}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast('買い物リストの更新に失敗しました。');
+                showToast(`${screen}の買い物リストの更新に失敗しました。`);
             }
             await fetchAllItems();
         },

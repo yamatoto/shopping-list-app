@@ -1,11 +1,12 @@
 import { Timestamp } from 'firebase/firestore';
 
 export interface ItemBase {
-    // Add時にはidは不要
+    // add時にはidは不要
     name: string;
     quantity: number;
     isCurrent: boolean;
     isFrequent: boolean;
+    category?: string;
     createdUser: string;
     updatedUser: string;
     message?: string;
