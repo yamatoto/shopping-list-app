@@ -13,7 +13,7 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { DisplayItem } from '@/features/shopping-list/models/itemModel';
-import QuantityControl from '@/features/shopping-list/components/QuantityControl';
+import ShoppingItemContainer from '@/features/shopping-list/components/ShoppingItemContainer';
 
 export default function CurrentShoppingListScreen() {
     const { currentItems, refreshing } = useShoppingListQuery();
@@ -34,41 +34,11 @@ export default function CurrentShoppingListScreen() {
     const renderItem = useCallback(
         ({ item }: { item: DisplayItem }) => {
             return (
-                <View style={sharedStyles.itemContainer}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            flex: 1,
-                        }}
-                    >
-                        <QuantityControl
-                            item={item}
-                            updateQuantity={handleUpdateItem}
-                        />
-                        <Text style={sharedStyles.itemNameText}>
-                            {item.name}
-                        </Text>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => handleAddToFrequent(item)}
-                        disabled={item.isFrequent}
-                        style={[
-                            sharedStyles.button,
-                            item.isFrequent
-                                ? sharedStyles.addedButton
-                                : sharedStyles.addButton,
-                        ]}
-                    >
-                        <Text
-                            style={sharedStyles.buttonText}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            {item.isFrequent ? '定番に追加済' : '定番に追加'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <ShoppingItemContainer
+                    item={item}
+                    updateQuantity={handleUpdateItem}
+                    onAddToFrequent={() => handleAddToFrequent(item)}
+                />
             );
         },
         [handleUpdateItem, handleAddToFrequent],

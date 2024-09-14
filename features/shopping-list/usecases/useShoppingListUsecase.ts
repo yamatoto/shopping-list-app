@@ -91,7 +91,7 @@ export const useShoppingListUsecase = () => {
                         ...updateItem,
                         updatedUser,
                     },
-                    `直近の買い物リストの「${updateItem}」を更新しました。`,
+                    `直近の買い物リストの「${updateItem.name}」を更新しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
