@@ -39,33 +39,46 @@ export const useShoppingListUsecase = () => {
         setRefreshing(false);
     }, [fetchAllItems]);
 
+    const checkRegisteredItem = useCallback(async (newItemName: string) => {
+        try {
+            const registeredItem =
+                await ItemsRepository.findItemByName(newItemName);
+            if (!!registeredItem) {
+                showToast(`${newItemName}はすでに登録されています。`);
+                return true;
+            }
+            return false;
+        } catch (error: any) {
+            console.error(error);
+            showToast('商品の登録状況の確認に失敗しました。');
+            return true;
+        }
+    }, []);
+
     const handleAddItem = useCallback(
         async (
             newItemName: string,
             isCurrent: boolean,
             // sortList: { id: string; list: string[] },
         ) => {
-            const trimmedItem = newItemName.trim();
-            if (!trimmedItem) return;
+            const trimmedItemName = newItemName.trim();
+            if (!trimmedItemName) return;
             const createdUser = currentUser!.displayName;
             try {
-                const registeredItem =
-                    await ItemsRepository.findItemByName(trimmedItem);
-                if (!!registeredItem) {
-                    showToast(`${trimmedItem}はすでに登録されています。`);
-                    return;
-                }
+                const cannotRegister =
+                    await checkRegisteredItem(trimmedItemName);
+                if (cannotRegister) return;
 
                 await ItemsRepository.addItem(
                     {
-                        name: trimmedItem,
+                        name: trimmedItemName,
                         quantity: 1,
                         isCurrent,
                         isFrequent: !isCurrent,
                         createdUser,
                         updatedUser: createdUser,
                     },
-                    `${isCurrent ? '直近' : '定番'}の買い物リストに「${trimmedItem}」を追加しました。`,
+                    `${isCurrent ? '直近' : '定番'}の買い物リストに「${trimmedItemName}」を追加しました。`,
                 );
                 // await ItemSortRepository.updateItemSort(
                 //     sortList.id,
@@ -82,6 +95,32 @@ export const useShoppingListUsecase = () => {
         [currentUser, fetchAllItems],
     );
 
+    const trimItem = useCallback((item: Partial<DisplayItem>) => {
+        return Object.keys(item).reduce((acc, key) => {
+            const value = item[key as keyof DisplayItem];
+            if (typeof value === 'string') {
+                acc[key as keyof DisplayItem] = value.trim() as any;
+                return acc;
+            }
+
+            acc[key as keyof DisplayItem] = value as any;
+            return acc;
+        }, {} as Partial<DisplayItem>);
+    }, []);
+
+    const getChangedContent = useCallback(
+        (beforeItem: DisplayItem, updateItem: Partial<DisplayItem>) => {
+            return (Object.keys(updateItem) as Array<keyof DisplayItem>)
+                .filter(key => updateItem[key] !== beforeItem[key])
+                .map(
+                    key =>
+                        `${keyLabels[key]}: ${beforeItem[key]} → ${updateItem[key]}`,
+                )
+                .join('\n');
+        },
+        [],
+    );
+
     const keyLabels: Partial<Record<keyof DisplayItem, string>> = {
         name: '商品名',
         quantity: '数量',
@@ -93,28 +132,23 @@ export const useShoppingListUsecase = () => {
             updateItem: Partial<DisplayItem>,
             screen: '直近' | '定番',
         ) => {
-            const trimmedUpdatedItemName = updateItem.name?.trim();
+            const trimmedUpdateItem = trimItem(updateItem);
+            const { name: trimmedUpdateName } = trimmedUpdateItem;
+            const changedContent = getChangedContent(
+                beforeItem,
+                trimmedUpdateItem,
+            );
+            if (!changedContent) return;
+
             const updatedUser = currentUser!.displayName;
-            const changedContent = (
-                Object.keys(updateItem) as Array<keyof DisplayItem>
-            )
-                .filter(key => updateItem[key] !== beforeItem[key])
-                .map(
-                    key =>
-                        `${keyLabels[key]}: ${beforeItem[key]} → ${updateItem[key]}`,
-                )
-                .join('\n');
             try {
-                if (trimmedUpdatedItemName) {
-                    const registeredItem = await ItemsRepository.findItemByName(
-                        trimmedUpdatedItemName,
-                    );
-                    if (!!registeredItem) {
-                        showToast(
-                            `${trimmedUpdatedItemName}はすでに登録されています。`,
-                        );
-                        return;
-                    }
+                if (
+                    trimmedUpdateName &&
+                    trimmedUpdateName !== beforeItem.name
+                ) {
+                    const cannotRegister =
+                        await checkRegisteredItem(trimmedUpdateName);
+                    if (cannotRegister) return;
                 }
 
                 await ItemsRepository.updateItem(
