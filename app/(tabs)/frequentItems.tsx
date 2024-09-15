@@ -98,7 +98,7 @@ export default function FrequentShoppingListScreen() {
                         style={sharedStyles.addButton}
                         onPress={() => {
                             setNewItemName('');
-                            handleAddItem(newItemName, false).then();
+                            handleAddItem(newItemName, '定番').then();
                         }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>

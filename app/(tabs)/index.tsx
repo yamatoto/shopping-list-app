@@ -76,7 +76,7 @@ export default function CurrentShoppingListScreen() {
                         style={sharedStyles.addButton}
                         onPress={() => {
                             setNewItemName('');
-                            handleAddItem(newItemName, true).then();
+                            handleAddItem(newItemName, '直近').then();
                         }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
