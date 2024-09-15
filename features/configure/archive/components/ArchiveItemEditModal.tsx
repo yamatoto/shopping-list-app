@@ -30,19 +30,10 @@ export default function ArchiveItemEditModal({
         >
             <View style={styles.modalOverlay}>
                 <View style={styles.modalView}>
-                    <View style={styles.categoryContainer}>
+                    <View style={styles.nameContainer}>
                         <Text style={styles.label}>{item.name}</Text>
                     </View>
-                    <View style={styles.categoryContainer}>
-                        <Text style={styles.label}>{item.category}</Text>
-                    </View>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.cancelButton]}
-                            onPress={onClose}
-                        >
-                            <Text style={styles.buttonText}>キャンセル</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.button, styles.confirmButton]}
                             onPress={() => handleConfirm(true)}
@@ -55,6 +46,12 @@ export default function ArchiveItemEditModal({
                         >
                             <Text style={styles.buttonText}>定番に追加</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, styles.cancelButton]}
+                            onPress={onClose}
+                        >
+                            <Text style={styles.buttonText}>キャンセル</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -63,12 +60,12 @@ export default function ArchiveItemEditModal({
 }
 
 const styles = StyleSheet.create({
-    categoryContainer: {
+    nameContainer: {
         marginBottom: 20,
         width: '100%',
     },
     label: {
-        fontSize: 16,
+        fontSize: 18,
         marginBottom: 8,
     },
     modalOverlay: {
@@ -93,14 +90,13 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
         width: '100%',
     },
     button: {
         borderRadius: 10,
         padding: 10,
-        minWidth: 100,
+        marginVertical: 8,
         alignItems: 'center',
     },
     confirmButton: {
