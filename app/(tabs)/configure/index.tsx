@@ -5,13 +5,17 @@ import {
     TouchableOpacity,
     StyleSheet,
     Platform,
+    Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
+import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import { DEVELOPER_EMAIL } from '@/shared/config/user';
 
 export default function ConfigureScreen() {
     const router = useRouter();
+    const { currentUser, signOut } = useFirebaseAuth();
 
     return (
         <View style={sharedStyles.container}>
@@ -22,6 +26,35 @@ export default function ConfigureScreen() {
                 >
                     <Text style={styles.buttonText}>メモ</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => router.push('/configure/archive')}
+                >
+                    <Text style={styles.buttonText}>アーカイブ</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.signOutContainer}>
+                {currentUser?.email === DEVELOPER_EMAIL && (
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                            Alert.alert('確認', 'サインアウトしますか？', [
+                                {
+                                    text: 'キャンセル',
+                                    onPress: () => {},
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: 'サインアウト',
+                                    onPress: () => signOut(),
+                                },
+                            ]);
+                        }}
+                    >
+                        <Text style={styles.buttonText}>サインアウト</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </View>
     );

@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
-import {
-    ApiResponseItem,
-    DisplayItem,
-} from '@/features/shopping-list/models/itemModel';
+import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
 
 export const useShoppingListQuery = () => {
     const { resultOfFetchAllItems, refreshing } = useShoppingItemsStore(

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import { DisplayItem } from '@/shared/models/itemModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import ShoppingItemEditModal from '@/features/shopping-list/components/ShoppingItemEditModal';
 

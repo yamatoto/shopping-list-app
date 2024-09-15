@@ -18,6 +18,13 @@ export default function ConfigureLayout() {
                     headerTitle: 'メモ',
                 }}
             />
+            <Stack.Screen
+                name="archive"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'アーカイブ',
+                }}
+            />
         </Stack>
     );
 }

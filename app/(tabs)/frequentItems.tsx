@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
-import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/components/ShoppingItemContainer';
 import { CATEGORIES } from '@/features/shopping-list/constants/category';
 

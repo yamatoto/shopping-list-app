@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import { DisplayItem } from '@/shared/models/itemModel';
 import { CATEGORIES } from '@/features/shopping-list/constants/category';
 
 type Props = {

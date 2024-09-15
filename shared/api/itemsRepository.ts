@@ -7,7 +7,7 @@ import {
     addDoc,
     doc,
     updateDoc,
-    // deleteDoc,
+    deleteDoc,
     QueryDocumentSnapshot,
     onSnapshot,
     Timestamp,
@@ -18,7 +18,7 @@ import {
     ApiResponseItem,
     DisplayItem,
     ItemBase,
-} from '@/features/shopping-list/models/itemModel';
+} from '@/shared/models/itemModel';
 import { db } from '@/shared/config/firabase';
 
 const collectionName = 'items';
@@ -48,6 +48,19 @@ export const fetchAllItems = async (): Promise<
 > => {
     const q = query(
         collection(db, collectionName),
+        orderBy('updatedAt', 'desc'),
+    );
+    const { docs } = await getDocs(q);
+    return docs as QueryDocumentSnapshot<ApiResponseItem>[];
+};
+
+export const fetchArchiveItems = async (): Promise<
+    QueryDocumentSnapshot<ApiResponseItem>[]
+> => {
+    const q = query(
+        collection(db, collectionName),
+        where('isCurrent', '==', false),
+        where('isFrequent', '==', false),
         orderBy('updatedAt', 'desc'),
     );
     const { docs } = await getDocs(q);
@@ -88,7 +101,7 @@ export const updateItem = async (
     });
 };
 
-// export const deleteItem = async (id: string): Promise<void> => {
-//     const docRef = doc(db, collectionName, id);
-//     await deleteDoc(docRef);
-// };
+export const deleteItem = async (id: string): Promise<void> => {
+    const docRef = doc(db, collectionName, id);
+    await deleteDoc(docRef);
+};

@@ -2,12 +2,9 @@ import { useCallback, useEffect } from 'react';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import * as ItemsRepository from '@/features/shopping-list/api/itemsRepository';
-import {
-    ApiResponseItem,
-    DisplayItem,
-} from '@/features/shopping-list/models/itemModel';
-import { setupItemListener } from '@/features/shopping-list/api/itemsRepository';
+import * as ItemsRepository from '@/shared/api/itemsRepository';
+import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 
 export const useShoppingListUsecase = () => {
@@ -97,6 +94,7 @@ export const useShoppingListUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast(`${screen}の買い物リストの追加に失敗しました。`);
+                return;
             }
 
             await fetchAllItems();
@@ -178,6 +176,7 @@ export const useShoppingListUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast(`${screen}の買い物リストの更新に失敗しました。`);
+                return;
             }
             await fetchAllItems();
         },
@@ -201,6 +200,7 @@ export const useShoppingListUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast('買い物リストの削除に失敗しました。');
+                return;
             }
 
             await fetchAllItems();
@@ -223,6 +223,7 @@ export const useShoppingListUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast('定番の買い物リストへの追加に失敗しました。');
+                return;
             }
 
             await fetchAllItems();
@@ -245,6 +246,7 @@ export const useShoppingListUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast('直近の買い物リストへの追加に失敗しました。');
+                return;
             }
 
             await fetchAllItems();
