@@ -75,6 +75,7 @@ export const useShoppingListUsecase = () => {
                         quantity: 1,
                         isCurrent,
                         isFrequent: !isCurrent,
+                        category: '未設定',
                         createdUser,
                         updatedUser: createdUser,
                     },
