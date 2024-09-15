@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, SafeAreaView } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ScrollView } from 'react-native';
 
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
@@ -93,41 +94,48 @@ export default function NoteScreen() {
     );
 
     return (
-        <View style={styles.container}>
-            {developerNote?.content && (
-                <NoteForm
-                    note={developerNote}
-                    textAreaHeight={developerTextAreaHeight}
-                    handleChangeTextAreaHeight={
-                        handleChangeDeveloperTextAreaHeight
-                    }
-                    editable={currentUser?.email === developerNote.userEmail}
-                    handleUpdateNote={handleUpdateNote}
-                    onChangeText={handleTextChange}
-                />
-            )}
-            {partnerNote?.content && (
-                <NoteForm
-                    note={partnerNote}
-                    textAreaHeight={partnerTextAreaHeight}
-                    handleChangeTextAreaHeight={
-                        handleChangePartnerTextAreaHeight
-                    }
-                    editable={currentUser?.email === partnerNote.userEmail}
-                    handleUpdateNote={handleUpdateNote}
-                    onChangeText={handleTextChange}
-                />
-            )}
-        </View>
+        <SafeAreaView style={styles.safeArea}>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                {developerNote?.content && (
+                    <NoteForm
+                        note={developerNote}
+                        textAreaHeight={developerTextAreaHeight}
+                        handleChangeTextAreaHeight={
+                            handleChangeDeveloperTextAreaHeight
+                        }
+                        editable={
+                            currentUser?.email === developerNote.userEmail
+                        }
+                        handleUpdateNote={handleUpdateNote}
+                        onChangeText={handleTextChange}
+                    />
+                )}
+                {partnerNote?.content && (
+                    <NoteForm
+                        note={partnerNote}
+                        textAreaHeight={partnerTextAreaHeight}
+                        handleChangeTextAreaHeight={
+                            handleChangePartnerTextAreaHeight
+                        }
+                        editable={currentUser?.email === partnerNote.userEmail}
+                        handleUpdateNote={handleUpdateNote}
+                        onChangeText={handleTextChange}
+                    />
+                )}
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
-        paddingTop: 50,
-        paddingHorizontal: 16,
         backgroundColor: 'white',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        paddingHorizontal: 16,
+        paddingTop: 32,
     },
     closeButton: {
         alignSelf: 'flex-end',

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
 import { DisplayNote } from '@/features/configure/note/models/noteModel';
+import SubmitButton from '@/shared/components/SubmitButton';
 
 interface NoteFormModalProps {
     note: DisplayNote;
@@ -43,7 +44,7 @@ const NoteForm: React.FC<NoteFormModalProps> = ({
                 placeholderTextColor="#000"
             />
             {editable && (
-                <Button
+                <SubmitButton
                     title="更新"
                     onPress={() => handleUpdateNote(id, text)}
                 />
