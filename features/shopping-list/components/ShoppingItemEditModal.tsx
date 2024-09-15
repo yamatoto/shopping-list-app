@@ -11,6 +11,7 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 
 import { DisplayItem } from '@/features/shopping-list/models/itemModel';
+import { CATEGORIES } from '@/features/shopping-list/constants/category';
 
 type Props = {
     item: DisplayItem;
@@ -19,20 +20,8 @@ type Props = {
     onClose: () => void;
     isCurrent: boolean;
 };
-const categories = [
-    '未設定',
-    '野菜',
-    '肉・魚',
-    '豆類',
-    '乳製品',
-    '調味料',
-    '加工食品',
-    '冷凍品',
-    '飲料',
-    'キッチン用品',
-    '日用品',
-    'その他',
-].map(text => ({
+
+const CATEGORY_SELECT_ITEMS = CATEGORIES.map(text => ({
     label: text,
     value: text,
 }));
@@ -45,7 +34,7 @@ export default function ShoppingItemEditModal({
     isCurrent,
 }: Props) {
     const [selectedCategory, setSelectedCategory] = useState(
-        item.category || categories[0].value,
+        item.category || CATEGORIES[0],
     );
 
     const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
@@ -148,7 +137,7 @@ export default function ShoppingItemEditModal({
                             placeholder={{}}
                             value={selectedCategory}
                             onValueChange={setSelectedCategory}
-                            items={categories}
+                            items={CATEGORY_SELECT_ITEMS}
                             style={pickerSelectStyles}
                         />
                     </View>
