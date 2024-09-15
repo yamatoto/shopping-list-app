@@ -32,6 +32,12 @@ export default function ConfigureScreen() {
                 >
                     <Text style={styles.buttonText}>アーカイブ</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => router.push('/configure/bugReport')}
+                >
+                    <Text style={styles.buttonText}>バグ報告</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.signOutContainer}>

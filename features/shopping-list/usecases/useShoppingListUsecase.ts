@@ -147,7 +147,6 @@ export const useShoppingListUsecase = () => {
             );
             if (!changedContent) return;
 
-            const updatedUser = currentUser!.displayName;
             try {
                 if (
                     trimmedUpdateName &&
@@ -169,7 +168,7 @@ export const useShoppingListUsecase = () => {
                     {
                         ...beforeItem,
                         ...updateItem,
-                        updatedUser,
+                        updatedUser: currentUser!.displayName,
                     },
                     `${screen}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
                 );

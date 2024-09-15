@@ -25,6 +25,13 @@ export default function ConfigureLayout() {
                     headerTitle: 'アーカイブ',
                 }}
             />
+            <Stack.Screen
+                name="bugReport"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'バグ報告',
+                }}
+            />
         </Stack>
     );
 }
