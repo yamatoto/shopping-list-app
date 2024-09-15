@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 import * as ItemsRepository from '@/shared/api/itemsRepository';
-import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 
@@ -259,12 +259,9 @@ export const useShoppingListUsecase = () => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = setupItemListener(change => {
-            const { message, updatedUser } =
-                change.doc.data() as ApiResponseItem;
-
+        const unsubscribe = setupItemListener(({ message, updatedUser }) => {
             if (message) {
-                showToast(`${updatedUser}が${message}`);
+                showToast(`${updatedUser}${message}`);
             }
 
             fetchAllItems().then();

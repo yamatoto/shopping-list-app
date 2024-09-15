@@ -4,7 +4,7 @@ import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 import { useArchiveItemStore } from '@/features/configure/archive/store/useArchiveStore';
 import * as ItemsRepository from '@/shared/api/itemsRepository';
-import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
 
 export const useArchiveUsecase = () => {
@@ -74,12 +74,9 @@ export const useArchiveUsecase = () => {
     );
 
     useEffect(() => {
-        const unsubscribe = setupItemListener(change => {
-            const { message, updatedUser } =
-                change.doc.data() as ApiResponseItem;
-
+        const unsubscribe = setupItemListener(({ message, updatedUser }) => {
             if (message) {
-                showToast(`${updatedUser}が${message}`);
+                showToast(`${updatedUser}${message}`);
             }
 
             fetchArchiveItems().then();

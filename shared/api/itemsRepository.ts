@@ -23,21 +23,46 @@ import { db } from '@/shared/config/firabase';
 
 const collectionName = 'items';
 
+const createHandleDocChange =
+    (now: number) =>
+    (
+        change: DocumentChange,
+    ): { updatedUser: string; message?: string } | null => {
+        const response = change.doc.data();
+        return {
+            added:
+                response.updatedAt > Timestamp.fromMillis(now)
+                    ? {
+                          updatedUser: `${response.updatedUser}が`,
+                          message: response.message,
+                      }
+                    : null,
+            modified: {
+                updatedUser: `${response.updatedUser}が`,
+                message: response.message,
+            },
+            removed: {
+                updatedUser: '',
+                message: `「${response.name}」がアーカイブから削除されました`,
+            },
+        }[change.type];
+    };
+
 export const setupItemListener = (
-    onChange: (change: DocumentChange) => void,
+    onChange: (change: { message?: string; updatedUser: string }) => void,
 ) => {
-    const now = Date.now();
-    const collectionRef = query(
-        collection(db, collectionName),
-        where('updatedAt', '>=', Timestamp.fromMillis(now)),
-    );
+    const collectionRef = query(collection(db, collectionName));
+    const handleDocChange = createHandleDocChange(Date.now());
 
     return onSnapshot(
         collectionRef,
         { includeMetadataChanges: false },
         snapshot => {
             snapshot.docChanges().forEach(change => {
-                onChange(change);
+                const changeData = handleDocChange(change);
+                if (changeData) {
+                    onChange(changeData);
+                }
             });
         },
     );
