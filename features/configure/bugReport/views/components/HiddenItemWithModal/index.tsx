@@ -2,7 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
-import { modalStyles, sharedStyles } from '@/shared/styles/sharedStyles';
+import { sharedStyles } from '@/shared/styles/sharedStyles';
+import { modalStyles } from '@/shared/styles/modalStyles';
 import SubmitButton from '@/shared/components/SubmitButton';
 
 const HiddenItemWithModal = React.memo(

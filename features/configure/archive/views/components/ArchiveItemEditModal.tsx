@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
-import { modalStyles } from '@/shared/styles/sharedStyles';
+import { modalStyles } from '@/shared/styles/modalStyles';
 
 type Props = {
     item: DisplayItem;

@@ -11,7 +11,7 @@ import {
     bugReportEditModalStyles,
     pickerSelectStyles,
 } from '@/features/configure/bugReport/views/components/BugReportEditModal/styles';
-import { modalStyles } from '@/shared/styles/sharedStyles';
+import { modalStyles } from '@/shared/styles/modalStyles';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 
 type Props = {
