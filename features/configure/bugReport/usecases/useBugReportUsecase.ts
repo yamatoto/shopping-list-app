@@ -123,10 +123,12 @@ export const useBugReportUsecase = () => {
                 Object.keys(updateBugReport) as Array<keyof DisplayBugReport>
             )
                 .filter(key => updateBugReport[key] !== beforeBugReport[key])
-                .map(
-                    key =>
-                        `${keyLabels[key]}: ${beforeBugReport[key]} → ${updateBugReport[key]}`,
-                )
+                .map(key => {
+                    if (key === 'priority') {
+                        return `${keyLabels[key]}: ${PRIORITY_TO_LABEL[beforeBugReport[key]]} → ${PRIORITY_TO_LABEL[updateBugReport[key]!]}`;
+                    }
+                    return `${keyLabels[key]}: ${beforeBugReport[key]} → ${updateBugReport[key]}`;
+                })
                 .join('\n');
         },
         [],
