@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { modalStyles } from '@/shared/styles/modalStyles';
+import Modal from '@/shared/components/Modal';
 
 type Props = {
     item: DisplayItem;
@@ -23,53 +24,29 @@ export default function ArchiveItemEditModal({
     };
 
     return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-            onRequestClose={onClose}
-        >
-            <View style={modalStyles.modalOverlay}>
-                <View style={modalStyles.modalView}>
-                    <View style={styles.nameContainer}>
-                        <Text style={styles.label}>{item.name}</Text>
-                    </View>
-                    <View style={modalStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={[
-                                modalStyles.button,
-                                modalStyles.confirmButton,
-                            ]}
-                            onPress={() => handleConfirm(true)}
-                        >
-                            <Text style={modalStyles.buttonText}>
-                                直近に追加
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[
-                                modalStyles.button,
-                                modalStyles.confirmButton,
-                            ]}
-                            onPress={() => handleConfirm(false)}
-                        >
-                            <Text style={modalStyles.buttonText}>
-                                定番に追加
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[
-                                modalStyles.button,
-                                modalStyles.cancelButton,
-                            ]}
-                            onPress={onClose}
-                        >
-                            <Text style={modalStyles.buttonText}>
-                                キャンセル
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+        <Modal visible={visible} onClose={onClose}>
+            <View style={styles.nameContainer}>
+                <Text style={styles.label}>{item.name}</Text>
+            </View>
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity
+                    style={[modalStyles.button, modalStyles.confirmButton]}
+                    onPress={() => handleConfirm(true)}
+                >
+                    <Text style={modalStyles.buttonText}>直近に追加</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[modalStyles.button, modalStyles.confirmButton]}
+                    onPress={() => handleConfirm(false)}
+                >
+                    <Text style={modalStyles.buttonText}>定番に追加</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[modalStyles.button, modalStyles.cancelButton]}
+                    onPress={onClose}
+                >
+                    <Text style={modalStyles.buttonText}>キャンセル</Text>
+                </TouchableOpacity>
             </View>
         </Modal>
     );

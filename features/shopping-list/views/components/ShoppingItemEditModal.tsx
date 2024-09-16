@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Modal,
     StyleSheet,
     Platform,
 } from 'react-native';
@@ -12,6 +11,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { CATEGORIES } from '@/features/shopping-list/constants/category';
+import Modal from '@/shared/components/Modal';
 
 type Props = {
     item: DisplayItem;
@@ -86,76 +86,65 @@ export default function ShoppingItemEditModal({
     };
 
     return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-            onRequestClose={onClose}
-        >
-            <View style={styles.modalOverlay}>
-                <View style={styles.modalView}>
+        <Modal visible={visible} onClose={onClose}>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={handleNameChange}
+                value={tempName}
+                placeholder="アイテム名を入力"
+            />
+            {isCurrent && (
+                <View style={styles.inputContainer}>
+                    <TouchableOpacity
+                        style={styles.adjustButton}
+                        onPress={decrementQuantity}
+                    >
+                        <Text style={styles.adjustButtonText}>-</Text>
+                    </TouchableOpacity>
                     <TextInput
-                        style={styles.nameInput}
-                        onChangeText={handleNameChange}
-                        value={tempName}
-                        placeholder="アイテム名を入力"
+                        ref={inputRef}
+                        style={styles.modalInput}
+                        onChangeText={handleQuantityChange}
+                        value={tempQuantity}
+                        keyboardType={
+                            Platform.OS === 'ios' ? 'number-pad' : 'numeric'
+                        }
+                        textAlign="center"
+                        returnKeyType="done"
+                        onFocus={focusTextInputToEnd}
+                        selectTextOnFocus={true}
                     />
-                    {isCurrent && (
-                        <View style={styles.inputContainer}>
-                            <TouchableOpacity
-                                style={styles.adjustButton}
-                                onPress={decrementQuantity}
-                            >
-                                <Text style={styles.adjustButtonText}>-</Text>
-                            </TouchableOpacity>
-                            <TextInput
-                                ref={inputRef}
-                                style={styles.modalInput}
-                                onChangeText={handleQuantityChange}
-                                value={tempQuantity}
-                                keyboardType={
-                                    Platform.OS === 'ios'
-                                        ? 'number-pad'
-                                        : 'numeric'
-                                }
-                                textAlign="center"
-                                returnKeyType="done"
-                                onFocus={focusTextInputToEnd}
-                                selectTextOnFocus={true}
-                            />
-                            <TouchableOpacity
-                                style={styles.adjustButton}
-                                onPress={incrementQuantity}
-                            >
-                                <Text style={styles.adjustButtonText}>+</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                    <View style={styles.categoryContainer}>
-                        <Text style={styles.label}>カテゴリ</Text>
-                        <RNPickerSelect
-                            placeholder={{}}
-                            value={selectedCategory}
-                            onValueChange={setSelectedCategory}
-                            items={CATEGORY_SELECT_ITEMS}
-                            style={pickerSelectStyles}
-                        />
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.cancelButton]}
-                            onPress={onClose}
-                        >
-                            <Text style={styles.buttonText}>キャンセル</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.button, styles.confirmButton]}
-                            onPress={handleConfirm}
-                        >
-                            <Text style={styles.buttonText}>確定</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        style={styles.adjustButton}
+                        onPress={incrementQuantity}
+                    >
+                        <Text style={styles.adjustButtonText}>+</Text>
+                    </TouchableOpacity>
                 </View>
+            )}
+            <View style={styles.categoryContainer}>
+                <Text style={styles.label}>カテゴリ</Text>
+                <RNPickerSelect
+                    placeholder={{}}
+                    value={selectedCategory}
+                    onValueChange={setSelectedCategory}
+                    items={CATEGORY_SELECT_ITEMS}
+                    style={pickerSelectStyles}
+                />
+            </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    style={[styles.button, styles.cancelButton]}
+                    onPress={onClose}
+                >
+                    <Text style={styles.buttonText}>キャンセル</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.button, styles.confirmButton]}
+                    onPress={handleConfirm}
+                >
+                    <Text style={styles.buttonText}>確定</Text>
+                </TouchableOpacity>
             </View>
         </Modal>
     );

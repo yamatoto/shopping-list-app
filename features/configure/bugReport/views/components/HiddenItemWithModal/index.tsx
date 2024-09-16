@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { modalStyles } from '@/shared/styles/modalStyles';
 import SubmitButton from '@/shared/components/SubmitButton';
+import Modal from '@/shared/components/Modal';
 
 const HiddenItemWithModal = React.memo(
     ({
@@ -21,16 +22,16 @@ const HiddenItemWithModal = React.memo(
             setModalVisible(true);
         }, []);
 
-        const closeModal = useCallback(() => {
+        const onClose = useCallback(() => {
             setModalVisible(false);
         }, []);
 
         const confirmReject = useCallback(() => {
             if (rejectReason.trim() !== '') {
                 onReject({ ...item, rejectedReason: rejectReason });
-                closeModal();
+                onClose();
             }
-        }, [item, rejectReason, onReject, closeModal]);
+        }, [item, rejectReason, onReject, onClose]);
 
         return (
             <TouchableOpacity
@@ -38,45 +39,29 @@ const HiddenItemWithModal = React.memo(
                 onPress={openModal}
             >
                 <Text style={sharedStyles.backTextWhite}>却下</Text>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={isModalVisible}
-                    onRequestClose={closeModal}
-                >
-                    <TouchableOpacity
-                        style={modalStyles.modalOverlay}
-                        activeOpacity={1}
-                        onPressOut={closeModal}
-                    >
-                        <View style={modalStyles.modalView}>
-                            <Text style={modalStyles.modalTitle}>
-                                却下理由を入力してください
+                <Modal visible={isModalVisible} onClose={onClose}>
+                    <Text style={modalStyles.modalTitle}>
+                        却下理由を入力してください
+                    </Text>
+                    <TextInput
+                        style={[modalStyles.input]}
+                        multiline
+                        numberOfLines={4}
+                        value={rejectReason}
+                        onChangeText={setRejectReason}
+                        placeholder="却下理由を入力..."
+                    />
+                    <View style={modalStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={modalStyles.button}
+                            onPress={onClose}
+                        >
+                            <Text style={modalStyles.buttonText}>
+                                キャンセル
                             </Text>
-                            <TextInput
-                                style={[modalStyles.input]}
-                                multiline
-                                numberOfLines={4}
-                                value={rejectReason}
-                                onChangeText={setRejectReason}
-                                placeholder="却下理由を入力..."
-                            />
-                            <View style={modalStyles.buttonContainer}>
-                                <TouchableOpacity
-                                    style={modalStyles.button}
-                                    onPress={closeModal}
-                                >
-                                    <Text style={modalStyles.buttonText}>
-                                        キャンセル
-                                    </Text>
-                                </TouchableOpacity>
-                                <SubmitButton
-                                    title="確定"
-                                    onPress={confirmReject}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                        <SubmitButton title="確定" onPress={confirmReject} />
+                    </View>
                 </Modal>
             </TouchableOpacity>
         );
