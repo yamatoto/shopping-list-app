@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
@@ -7,7 +7,7 @@ import { DisplayNote } from '@/features/configure/note/models/noteModel';
 import ModalTextArea from '@/shared/components/ModalTextArea';
 import SubmitButton from '@/shared/components/SubmitButton';
 
-interface NoteFormModalProps {
+type Props = {
     note: DisplayNote;
     textAreaHeight: number;
     handleChangeTextAreaHeight: (
@@ -16,20 +16,20 @@ interface NoteFormModalProps {
     editable: boolean;
     handleUpdateNote: (id: string, content: string) => void;
     onChangeText: (text: string) => void;
-}
+};
 
-const NoteForm: React.FC<NoteFormModalProps> = ({
+export default function NoteForm({
     note: { id, displayName, content },
     textAreaHeight,
     handleChangeTextAreaHeight,
     editable,
     handleUpdateNote,
     onChangeText,
-}) => {
+}: Props) {
     const [text, setText] = useState(content);
 
     return (
-        <View style={styles.inputContainer}>
+        <View style={{ marginBottom: 20 }}>
             <ModalTextArea
                 label={`${displayName}のメモ`}
                 value={text}
@@ -51,26 +51,4 @@ const NoteForm: React.FC<NoteFormModalProps> = ({
             )}
         </View>
     );
-};
-
-const styles = StyleSheet.create({
-    inputContainer: {
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 8,
-    },
-    textArea: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-        textAlignVertical: 'top',
-        marginBottom: 10,
-        color: '#000',
-    },
-});
-
-export default NoteForm;
+}

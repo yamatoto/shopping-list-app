@@ -5,7 +5,7 @@ import { TextStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 import { modalStyles } from '@/shared/styles/modalStyles';
 
-const ModalTextInput: React.FC<{
+type Props = {
     label: string;
     value: string;
     style?: StyleProp<TextStyle>;
@@ -13,14 +13,15 @@ const ModalTextInput: React.FC<{
     placeholder?: string;
     editable?: boolean;
     placeholderTextColor?: string;
-}> = ({
+};
+export default function ModalTextInput({
     label,
     value,
     onChangeText,
     placeholder,
     editable,
     placeholderTextColor,
-}) => {
+}: Props) {
     return (
         <View style={modalStyles.itemContainer}>
             <Text style={modalStyles.label}>{label}</Text>
@@ -34,6 +35,4 @@ const ModalTextInput: React.FC<{
             />
         </View>
     );
-};
-
-export default ModalTextInput;
+}

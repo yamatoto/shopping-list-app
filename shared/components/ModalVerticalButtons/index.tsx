@@ -3,13 +3,20 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import { modalStyles } from '@/shared/styles/modalStyles';
 
-const ModalVerticalButtons: React.FC<{
+type Props = {
     onSubmit1: () => void;
     submitText1: string;
     onSubmit2: () => void;
     submitText2: string;
     onCancel: () => void;
-}> = ({ onCancel, onSubmit1, onSubmit2, submitText1, submitText2 }) => {
+};
+export default function ModalVerticalButtons({
+    onCancel,
+    onSubmit1,
+    onSubmit2,
+    submitText1,
+    submitText2,
+}: Props) {
     return (
         <View style={modalStyles.buttonContainerVertical}>
             <TouchableOpacity
@@ -38,6 +45,4 @@ const ModalVerticalButtons: React.FC<{
             </TouchableOpacity>
         </View>
     );
-};
-
-export default ModalVerticalButtons;
+}

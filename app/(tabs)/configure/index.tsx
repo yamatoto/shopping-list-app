@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'expo-router';
 
 import Configure from '@/features/configure';
-import { ConfigurePath } from '@/features/configure/bugReport/constants';
+import { ConfigurePath } from '@/features/configure/bugReport/constants/path';
 
 export default function ConfigureScreen() {
     const router = useRouter();

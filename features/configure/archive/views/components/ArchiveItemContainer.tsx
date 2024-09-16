@@ -25,16 +25,16 @@ export default function ArchiveItemContainer({ item, restoreItem }: Props) {
                     flex: 1,
                 }}
             >
-                {modalVisible && (
-                    <ArchiveItemEditModal
-                        restoreItem={restoreItem}
-                        item={item}
-                        visible={modalVisible}
-                        onClose={() => setModalVisible(false)}
-                    />
-                )}
                 <Text style={sharedStyles.itemNameText}>{item.name}</Text>
             </View>
+            {modalVisible && (
+                <ArchiveItemEditModal
+                    restoreItem={restoreItem}
+                    item={item}
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                />
+            )}
         </TouchableOpacity>
     );
 }

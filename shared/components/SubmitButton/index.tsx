@@ -3,17 +3,18 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import { TextStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
-const SubmitButton: React.FC<{
+type Props = {
     title: string;
     onPress: () => void;
     style?: StyleProp<TextStyle>;
-}> = ({ title, onPress, style }) => {
+};
+export default function SubmitButton({ title, onPress, style }: Props) {
     return (
         <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
             <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
     );
-};
+}
 
 const styles = StyleSheet.create({
     button: {
@@ -29,5 +30,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default SubmitButton;

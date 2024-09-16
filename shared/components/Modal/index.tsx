@@ -3,11 +3,12 @@ import { Modal as RNModal, TouchableOpacity, View } from 'react-native';
 
 import { modalStyles } from '@/shared/components/Modal/modalStyles';
 
-const Modal: React.FC<{
+type Props = {
     visible: boolean;
     onClose: () => void;
     children: React.ReactNode;
-}> = ({ visible, onClose, children }) => {
+};
+export default function Modal({ visible, onClose, children }: Props) {
     return (
         <RNModal
             animationType="fade"
@@ -24,6 +25,4 @@ const Modal: React.FC<{
             </TouchableOpacity>
         </RNModal>
     );
-};
-
-export default Modal;
+}

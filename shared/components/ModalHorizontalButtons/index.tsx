@@ -3,11 +3,16 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import { modalStyles } from '@/shared/styles/modalStyles';
 
-const ModalHorizontalButtons: React.FC<{
+type Props = {
     onCancel: () => void;
     onSubmit: () => void;
     submitText?: string;
-}> = ({ onCancel, onSubmit, submitText = '送信' }) => {
+};
+export default function ModalHorizontalButtons({
+    onCancel,
+    onSubmit,
+    submitText = '送信',
+}: Props) {
     return (
         <View style={modalStyles.buttonContainerHorizontal}>
             <TouchableOpacity
@@ -30,6 +35,4 @@ const ModalHorizontalButtons: React.FC<{
             </TouchableOpacity>
         </View>
     );
-};
-
-export default ModalHorizontalButtons;
+}

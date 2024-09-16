@@ -15,14 +15,14 @@ type Props<T> = {
     disabled?: boolean;
     style?: StyleProp<TextStyle>;
 };
-const ModalPickerSelect = <T,>({
+export default function ModalPickerSelect<T>({
     label,
     value,
     items,
     onValueChange,
     disabled,
     style,
-}: Props<T>) => {
+}: Props<T>) {
     return (
         <View style={[modalStyles.itemContainer, style]}>
             <Text style={modalStyles.label}>{label}</Text>
@@ -38,6 +38,4 @@ const ModalPickerSelect = <T,>({
             />
         </View>
     );
-};
-
-export default ModalPickerSelect;
+}

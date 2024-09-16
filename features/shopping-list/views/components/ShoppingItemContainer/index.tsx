@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
+import { shoppingItemContainerStyles } from '@/features/shopping-list/views/components/ShoppingItemContainer/styles';
 
 type Props = {
     item: DisplayItem;
@@ -36,8 +37,8 @@ export default function ShoppingItemContainer({
                 }}
             >
                 {isCurrentScreen && (
-                    <View style={styles.quantityContainer}>
-                        <Text style={styles.quantityText}>
+                    <View style={shoppingItemContainerStyles.quantityContainer}>
+                        <Text style={shoppingItemContainerStyles.quantityText}>
                             {item.quantity ?? 1}
                         </Text>
                     </View>
@@ -79,28 +80,3 @@ export default function ShoppingItemContainer({
         </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({
-    quantityContainer: {
-        backgroundColor: '#f0f0f0',
-        borderRadius: 5,
-        padding: 5,
-        minWidth: 30,
-        alignItems: 'center',
-    },
-    quantityText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    button: {
-        borderRadius: 10,
-        padding: 10,
-        minWidth: 100,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-});

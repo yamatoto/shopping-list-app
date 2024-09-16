@@ -6,7 +6,7 @@ import { configureStyles } from './styles';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
-import { ConfigurePath } from '@/features/configure/bugReport/constants';
+import { ConfigurePath } from '@/features/configure/bugReport/constants/path';
 
 export default function Configure({
     handleRoute,

@@ -11,7 +11,7 @@ import { TextStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 import { modalStyles } from '@/shared/styles/modalStyles';
 
-const ModalTextArea: React.FC<{
+type Props = {
     label: string;
     value: string;
     style?: StyleProp<TextStyle>;
@@ -22,7 +22,8 @@ const ModalTextArea: React.FC<{
         e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>,
     ) => void;
     placeholderTextColor?: string;
-}> = ({
+};
+export default function ModalTextArea({
     label,
     value,
     onChangeText,
@@ -31,7 +32,7 @@ const ModalTextArea: React.FC<{
     style,
     onContentSizeChange,
     placeholderTextColor,
-}) => {
+}: Props) {
     return (
         <View style={modalStyles.itemContainer}>
             <Text style={modalStyles.label}>{label}</Text>
@@ -48,6 +49,4 @@ const ModalTextArea: React.FC<{
             />
         </View>
     );
-};
-
-export default ModalTextArea;
+}

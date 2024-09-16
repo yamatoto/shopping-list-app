@@ -25,17 +25,4 @@ export const bugReportStyles = StyleSheet.create({
         height: 'auto',
         padding: 10,
     },
-    backRightBtn: {
-        alignItems: 'center',
-        bottom: 0,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        width: 75,
-        right: 0,
-        backgroundColor: 'red',
-    },
-    backTextWhite: {
-        color: '#FFF',
-    },
 });

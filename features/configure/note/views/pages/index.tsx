@@ -6,8 +6,8 @@ import { Alert, SafeAreaView, ScrollView } from 'react-native';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 import { useNoteUsecase } from '@/features/configure/note/usecases/useNoteUsecase';
-import NoteForm from '@/features/configure/note/components/NoteForm';
-import { noteStyles } from '@/features/configure/note/views/styles';
+import NoteForm from '@/features/configure/note/views/components/NoteForm';
+import { noteStyles } from '@/features/configure/note/views/pages/styles';
 
 type RootStackParamList = {
     index: undefined;
