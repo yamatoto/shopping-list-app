@@ -10,6 +10,7 @@ import {
 import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
+import { bugReportContainerStyles } from '@/features/configure/bugReport/views/components/BugReportContainer/styles';
 
 type Props = {
     bugReport: DisplayBugReport;
@@ -43,7 +44,7 @@ export default function BugReportContainer({
             )}
 
             <TouchableOpacity
-                style={sharedStyles.itemContainer}
+                style={[sharedStyles.itemContainer, { paddingRight: 0 }]}
                 activeOpacity={1}
                 onPress={() => setModalVisible(true)}
             >
@@ -64,10 +65,10 @@ export default function BugReportContainer({
                             }
                         />
                     )}
-                    <Text style={sharedStyles.itemNameText}>
+                    <Text style={bugReportContainerStyles.contentText}>
                         {bugReport.content}
                     </Text>
-                    <Text style={sharedStyles.itemNameText}>
+                    <Text style={bugReportContainerStyles.priorityText}>
                         重要度: {PRIORITY_TO_LABEL[bugReport.priority]}
                     </Text>
                 </View>

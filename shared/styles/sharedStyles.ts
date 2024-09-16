@@ -2,8 +2,8 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-const dynamicFontSize = Math.max(12, width * 0.03);
-const dynamicButtonWidth = Math.max(100, width * 0.25);
+export const dynamicFontSize = Math.max(12, width * 0.03);
+export const dynamicButtonWidth = Math.max(100, width * 0.25);
 
 export const sharedStyles = StyleSheet.create({
     container: {
@@ -31,6 +31,7 @@ export const sharedStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     addButtonText: {
+        textAlign: 'center',
         color: '#fff',
         fontWeight: 'bold',
         fontSize: dynamicFontSize,

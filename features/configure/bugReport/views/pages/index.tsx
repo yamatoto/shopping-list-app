@@ -40,15 +40,15 @@ export default function BugReport() {
 
     const renderItem = useCallback(
         ({ item }: { item: DisplayBugReport }) => {
-            // @ts-ignore
             return (
+                // @ts-ignore
                 <SwipeRow
                     rightOpenValue={isDeveloper ? -75 : 0}
                     disableRightSwipe={true}
                     disableLeftSwipe={!isDeveloper}
                     swipeToOpenPercent={30}
                 >
-                    <View style={bugReportStyles.rowBack}>
+                    <View style={sharedStyles.rowBack}>
                         {isDeveloper && (
                             <HiddenItemWithModal
                                 item={item}
@@ -94,9 +94,9 @@ export default function BugReport() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <View style={sharedStyles.inputContainer}>
+                <View style={bugReportStyles.addButtonContainer}>
                     <TouchableOpacity
-                        style={sharedStyles.addButton}
+                        style={bugReportStyles.addButton}
                         onPress={() => {
                             setModalVisible(true);
                         }}

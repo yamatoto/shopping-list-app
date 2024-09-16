@@ -1,26 +1,16 @@
 import { StyleSheet } from 'react-native';
+
 export const bugReportStyles = StyleSheet.create({
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 22,
+    addButtonContainer: {
+        flexDirection: 'column',
+        marginBottom: 20,
+    },
+    addButton: {
+        width: 'auto',
+        backgroundColor: '#5cb85c',
+        padding: 12,
+        borderRadius: 5,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    input: {
-        height: 100,
-        width: '100%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginTop: 10,
-        marginBottom: 10,
-        padding: 5,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
     },
     sectionHeader: {
         backgroundColor: '#f0f0f0',
@@ -31,14 +21,9 @@ export const bugReportStyles = StyleSheet.create({
     },
     rowFront: {
         backgroundColor: 'white',
-    },
-    rowBack: {
-        alignItems: 'center',
-        backgroundColor: '#DDD',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 15,
+        justifyContent: 'center',
+        height: 'auto',
+        padding: 10,
     },
     backRightBtn: {
         alignItems: 'center',

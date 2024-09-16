@@ -69,6 +69,7 @@ export const useBugReportUsecase = () => {
                     {
                         id,
                         completed,
+                        rejected: false,
                         updatedUserName: currentUser!.displayName,
                     },
                     `バグ報告の「${content}」を${completed ? '修正' : '未'}完了にしました。`,
@@ -90,6 +91,7 @@ export const useBugReportUsecase = () => {
                 await BugReportsRepository.updateBugReport(
                     {
                         id,
+                        completed: false,
                         rejected: true,
                         rejectedReason,
                         updatedUserName: currentUser!.displayName,

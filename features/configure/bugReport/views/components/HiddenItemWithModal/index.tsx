@@ -10,7 +10,7 @@ import {
 
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
+import { hiddenItemWithModalStyles } from '@/features/configure/bugReport/views/components/HiddenItemWithModal/styles';
 
 const HiddenItemWithModal = React.memo(
     ({
@@ -40,35 +40,32 @@ const HiddenItemWithModal = React.memo(
         }, [item, rejectReason, onReject, closeModal]);
 
         return (
-            <View style={sharedStyles.rowBack}>
-                <TouchableOpacity
-                    style={sharedStyles.backRightBtn}
-                    onPress={openModal}
-                >
-                    <Text style={sharedStyles.backTextWhite}>却下</Text>
-                </TouchableOpacity>
-
+            <TouchableOpacity
+                style={sharedStyles.backRightBtn}
+                onPress={openModal}
+            >
+                <Text style={sharedStyles.backTextWhite}>却下</Text>
                 <Modal
                     animationType="slide"
                     transparent={true}
                     visible={isModalVisible}
                     onRequestClose={closeModal}
                 >
-                    <View style={bugReportStyles.modalContent}>
+                    <View style={hiddenItemWithModalStyles.modalContent}>
                         <Text>却下理由を入力してください</Text>
                         <TextInput
-                            style={bugReportStyles.input}
+                            style={hiddenItemWithModalStyles.input}
                             value={rejectReason}
                             onChangeText={setRejectReason}
                             multiline
                         />
-                        <View style={bugReportStyles.buttonContainer}>
+                        <View style={hiddenItemWithModalStyles.buttonContainer}>
                             <Button title="キャンセル" onPress={closeModal} />
                             <Button title="確定" onPress={confirmReject} />
                         </View>
                     </View>
                 </Modal>
-            </View>
+            </TouchableOpacity>
         );
     },
 );
