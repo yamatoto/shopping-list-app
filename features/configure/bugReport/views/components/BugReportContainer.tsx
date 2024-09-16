@@ -7,7 +7,7 @@ import {
     DisplayBugReport,
     PRIORITY_TO_LABEL,
 } from '@/features/configure/bugReport/models/bugReportModel';
-import BugReportEditModal from '@/features/configure/bugReport/components/BugReportEditModal';
+import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
 

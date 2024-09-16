@@ -27,16 +27,30 @@ export const useBugReportQuery = () => {
         };
     };
 
-    const bugReports = useMemo(
-        () =>
-            resultOfFetchBugReports.map(fetchedBugReport =>
-                convertToClientBugReportFromServer(fetchedBugReport),
-            ),
-        [resultOfFetchBugReports],
-    );
+    const sections = useMemo(() => {
+        const bugReports = resultOfFetchBugReports.map(fetchedBugReport =>
+            convertToClientBugReportFromServer(fetchedBugReport),
+        );
+        return [
+            {
+                title: '未完了',
+                data: bugReports.filter(
+                    report => !report.completed && !report.rejected,
+                ),
+            },
+            {
+                title: '完了',
+                data: bugReports.filter(report => report.completed),
+            },
+            {
+                title: '却下',
+                data: bugReports.filter(report => report.rejected),
+            },
+        ];
+    }, [resultOfFetchBugReports]);
 
     return {
-        bugReports,
         refreshing,
+        sections,
     };
 };
