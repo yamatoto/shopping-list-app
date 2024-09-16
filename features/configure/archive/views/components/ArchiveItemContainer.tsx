@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import ArchiveItemEditModal from '@/features/configure/archive/components/ArchiveItemEditModal';
+import ArchiveItemEditModal from '@/features/configure/archive/views/components/ArchiveItemEditModal';
 
 type Props = {
     item: DisplayItem;
