@@ -50,19 +50,12 @@ export default function BugReportEditModal({
         onClose();
     };
 
-    const handleContentChange = (text: string) => {
-        setTempContent(text);
-    };
-    const handleRejectedReasonChange = (text: string) => {
-        setTempRejectedReason(text);
-    };
-
     return (
         <Modal visible={visible} onClose={onClose}>
             <ModalTextArea
                 label="バグ内容"
                 value={tempContent}
-                onChangeText={handleContentChange}
+                onChangeText={setTempContent}
                 placeholder="バグ内容を入力"
             />
             {!bugReport?.rejected && (
@@ -78,7 +71,7 @@ export default function BugReportEditModal({
                 <ModalTextArea
                     label="却下理由"
                     value={tempRejectedReason}
-                    onChangeText={handleRejectedReasonChange}
+                    onChangeText={setTempRejectedReason}
                     placeholder="却下理由を入力"
                     editable={currentUser?.isDeveloper}
                 />
