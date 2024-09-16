@@ -41,7 +41,7 @@ const createHandleDocChange =
             },
             removed: {
                 updatedUserName: '',
-                message: `「バグ報告の${response.content}」が削除されました`,
+                message: `バグ報告の「${response.content}」が削除されました`,
             },
         }[change.type];
     };
