@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 
+import ModalTextArea from '@/shared/components/ModalTextArea';
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import { modalStyles } from '@/shared/styles/modalStyles';
-import SubmitButton from '@/shared/components/SubmitButton';
 import Modal from '@/shared/components/Modal';
+import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
 
 const HiddenItemWithModal = React.memo(
     ({
@@ -40,28 +40,16 @@ const HiddenItemWithModal = React.memo(
             >
                 <Text style={sharedStyles.backTextWhite}>却下</Text>
                 <Modal visible={isModalVisible} onClose={onClose}>
-                    <Text style={modalStyles.modalTitle}>
-                        却下理由を入力してください
-                    </Text>
-                    <TextInput
-                        style={[modalStyles.input]}
-                        multiline
-                        numberOfLines={4}
+                    <ModalTextArea
+                        label="却下理由"
                         value={rejectReason}
                         onChangeText={setRejectReason}
-                        placeholder="却下理由を入力..."
+                        placeholder="却下理由を入力"
                     />
-                    <View style={modalStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={modalStyles.button}
-                            onPress={onClose}
-                        >
-                            <Text style={modalStyles.buttonText}>
-                                キャンセル
-                            </Text>
-                        </TouchableOpacity>
-                        <SubmitButton title="確定" onPress={confirmReject} />
-                    </View>
+                    <ModalHorizontalButtons
+                        onCancel={onClose}
+                        onSubmit={confirmReject}
+                    />
                 </Modal>
             </TouchableOpacity>
         );

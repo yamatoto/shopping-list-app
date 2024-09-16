@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
 import { DisplayNote } from '@/features/configure/note/models/noteModel';
+import ModalTextArea from '@/shared/components/ModalTextArea';
 import SubmitButton from '@/shared/components/SubmitButton';
 
 interface NoteFormModalProps {
@@ -29,19 +30,18 @@ const NoteForm: React.FC<NoteFormModalProps> = ({
 
     return (
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>{displayName}のメモ</Text>
-            <TextInput
-                style={[styles.textArea, { height: textAreaHeight }]}
-                multiline
-                numberOfLines={4}
+            <ModalTextArea
+                label={`${displayName}のメモ`}
                 value={text}
                 onChangeText={text => {
                     setText(text);
                     onChangeText(text);
                 }}
-                onContentSizeChange={handleChangeTextAreaHeight}
                 editable={editable}
+                onContentSizeChange={handleChangeTextAreaHeight}
                 placeholderTextColor="#000"
+                style={{ height: textAreaHeight }}
+                placeholder="メモを入力してください"
             />
             {editable && (
                 <SubmitButton

@@ -1,10 +1,12 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import { TextStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 const SubmitButton: React.FC<{
     title: string;
     onPress: () => void;
-    style?: any;
+    style?: StyleProp<TextStyle>;
 }> = ({ title, onPress, style }) => {
     return (
         <TouchableOpacity style={[styles.button, style]} onPress={onPress}>

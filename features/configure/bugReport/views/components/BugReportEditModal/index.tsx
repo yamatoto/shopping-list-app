@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 
 import {
     DisplayBugReport,
     PRIORITY,
     PriorityValue,
 } from '@/features/configure/bugReport/models/bugReportModel';
-import {
-    bugReportEditModalStyles,
-    pickerSelectStyles,
-} from '@/features/configure/bugReport/views/components/BugReportEditModal/styles';
-import { modalStyles } from '@/shared/styles/modalStyles';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import Modal from '@/shared/components/Modal';
+import ModalTextArea from '@/shared/components/ModalTextArea';
+import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
+import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
 
 type Props = {
     bugReport?: DisplayBugReport;
@@ -63,69 +59,34 @@ export default function BugReportEditModal({
 
     return (
         <Modal visible={visible} onClose={onClose}>
-            <View style={bugReportEditModalStyles.container}>
-                <Text style={bugReportEditModalStyles.label}>バグ内容</Text>
-                <TextInput
-                    style={modalStyles.input}
-                    multiline
-                    numberOfLines={4}
-                    onChangeText={handleContentChange}
-                    value={tempContent}
-                    placeholder="バグ内容を入力"
-                    placeholderTextColor="#888"
-                />
-            </View>
+            <ModalTextArea
+                label="バグ内容"
+                value={tempContent}
+                onChangeText={handleContentChange}
+                placeholder="バグ内容を入力"
+            />
             {!bugReport?.rejected && (
-                <View style={bugReportEditModalStyles.container}>
-                    <Text style={bugReportEditModalStyles.label}>優先度</Text>
-                    <RNPickerSelect
-                        placeholder={{}}
-                        value={selectedPriority}
-                        onValueChange={setSelectedPriority}
-                        items={Object.values(PRIORITY)}
-                        style={pickerSelectStyles}
-                        disabled={!currentUser?.isDeveloper}
-                    />
-                </View>
+                <ModalPickerSelect
+                    label="優先度"
+                    value={selectedPriority}
+                    items={Object.values(PRIORITY)}
+                    onValueChange={setSelectedPriority}
+                    disabled={!currentUser?.isDeveloper}
+                />
             )}
             {bugReport?.rejected && (
-                <View style={bugReportEditModalStyles.container}>
-                    <Text style={modalStyles.label}>却下理由</Text>
-                    <TextInput
-                        style={modalStyles.input}
-                        multiline
-                        numberOfLines={4}
-                        onChangeText={handleRejectedReasonChange}
-                        value={tempRejectedReason}
-                        placeholder="却下理由を入力"
-                        editable={currentUser?.isDeveloper}
-                    />
-                </View>
+                <ModalTextArea
+                    label="却下理由"
+                    value={tempRejectedReason}
+                    onChangeText={handleRejectedReasonChange}
+                    placeholder="却下理由を入力"
+                    editable={currentUser?.isDeveloper}
+                />
             )}
-            <View style={bugReportEditModalStyles.buttonContainer}>
-                <TouchableOpacity
-                    style={[
-                        bugReportEditModalStyles.button,
-                        bugReportEditModalStyles.cancelButton,
-                    ]}
-                    onPress={onClose}
-                >
-                    <Text style={bugReportEditModalStyles.buttonText}>
-                        キャンセル
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        bugReportEditModalStyles.button,
-                        bugReportEditModalStyles.confirmButton,
-                    ]}
-                    onPress={handleConfirm}
-                >
-                    <Text style={bugReportEditModalStyles.buttonText}>
-                        確定
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            <ModalHorizontalButtons
+                onCancel={onClose}
+                onSubmit={handleConfirm}
+            />
         </Modal>
     );
 }

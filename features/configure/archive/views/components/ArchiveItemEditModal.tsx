@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { modalStyles } from '@/shared/styles/modalStyles';
 import Modal from '@/shared/components/Modal';
+import ModalVerticalButtons from '@/shared/components/ModalVerticalButtons';
 
 type Props = {
     item: DisplayItem;
@@ -25,40 +26,16 @@ export default function ArchiveItemEditModal({
 
     return (
         <Modal visible={visible} onClose={onClose}>
-            <View style={styles.nameContainer}>
-                <Text style={styles.label}>{item.name}</Text>
+            <View style={modalStyles.itemContainer}>
+                <Text style={modalStyles.label}>{item.name}</Text>
             </View>
-            <View style={modalStyles.buttonContainer}>
-                <TouchableOpacity
-                    style={[modalStyles.button, modalStyles.confirmButton]}
-                    onPress={() => handleConfirm(true)}
-                >
-                    <Text style={modalStyles.buttonText}>直近に追加</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[modalStyles.button, modalStyles.confirmButton]}
-                    onPress={() => handleConfirm(false)}
-                >
-                    <Text style={modalStyles.buttonText}>定番に追加</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[modalStyles.button, modalStyles.cancelButton]}
-                    onPress={onClose}
-                >
-                    <Text style={modalStyles.buttonText}>キャンセル</Text>
-                </TouchableOpacity>
-            </View>
+            <ModalVerticalButtons
+                onSubmit1={() => handleConfirm(true)}
+                submitText1="直近に追加"
+                onSubmit2={() => handleConfirm(false)}
+                submitText2="定番に追加"
+                onCancel={onClose}
+            />
         </Modal>
     );
 }
-
-const styles = StyleSheet.create({
-    nameContainer: {
-        marginBottom: 20,
-        width: '100%',
-    },
-    label: {
-        fontSize: 18,
-        marginBottom: 8,
-    },
-});

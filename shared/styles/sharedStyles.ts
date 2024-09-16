@@ -101,3 +101,23 @@ export const sharedStyles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
+export const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 20,
+        paddingVertical: 14,
+        paddingHorizontal: 14,
+        borderWidth: 1,
+        borderColor: '#789',
+        borderRadius: 4,
+        color: '#000',
+    },
+    inputAndroid: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        backgroundColor: '#f0f0f0',
+    },
+    activeItemStyle: {
+        backgroundColor: '#f0f0f0',
+    },
+});
