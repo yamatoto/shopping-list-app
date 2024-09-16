@@ -15,7 +15,7 @@ import { useBugReportUsecase } from '@/features/configure/bugReport/usecases/use
 import BugReportContainer from '@/features/configure/bugReport/views/components/BugReportContainer';
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
 

@@ -3,7 +3,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Alert, SafeAreaView, ScrollView } from 'react-native';
 
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 import { useNoteUsecase } from '@/features/configure/note/usecases/useNoteUsecase';
 import NoteForm from '@/features/configure/note/components/NoteForm';

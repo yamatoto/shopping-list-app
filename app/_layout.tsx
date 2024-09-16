@@ -10,9 +10,9 @@ import 'react-native-reanimated';
 import { useEffect } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
-import { useColorScheme } from '@/shared/hooks/useColorScheme';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import SignInOrUpWithEmail from '@/features/auth/SignInOrUpWithEmail';
+import { useColorScheme } from '@/shared/styles/useColorScheme';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
+import SignInOrUpWithEmail from '@/shared/auth/SignInOrUpWithEmail';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { showToast } from '@/shared/helpers/toast';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useArchiveItemStore } from '@/features/configure/archive/store/useArchiveStore';
 import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';

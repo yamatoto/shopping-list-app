@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { showToast } from '@/shared/helpers/toast';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import * as BugReportsRepository from '@/features/configure/bugReport/api/bugReportsRepository';
 import { useBugReportStore } from '@/features/configure/bugReport/store/useBugReportStore';
 import {

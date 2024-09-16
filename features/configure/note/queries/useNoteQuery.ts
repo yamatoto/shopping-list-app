@@ -7,7 +7,7 @@ import {
 } from '@/features/configure/note/models/noteModel';
 import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 
 const MIN_TEXT_AREA_HEIGHT = 100;
 

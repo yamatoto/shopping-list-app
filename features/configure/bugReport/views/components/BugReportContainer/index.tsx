@@ -8,7 +8,7 @@ import {
     PRIORITY_TO_LABEL,
 } from '@/features/configure/bugReport/models/bugReportModel';
 import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportContainerStyles } from '@/features/configure/bugReport/views/components/BugReportContainer/styles';
 
 type Props = {

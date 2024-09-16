@@ -8,7 +8,7 @@ import {
     Alert,
 } from 'react-native';
 
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 
 export default function SignOut() {
     const { signOut } = useFirebaseAuth();

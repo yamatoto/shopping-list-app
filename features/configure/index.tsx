@@ -3,7 +3,7 @@ import React from 'react';
 
 import { configureStyles } from './styles';
 
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
 import { ConfigurePath } from '@/features/configure/bugReport/constants';

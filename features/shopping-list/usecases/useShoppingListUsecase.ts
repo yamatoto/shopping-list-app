@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
-import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
+import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
