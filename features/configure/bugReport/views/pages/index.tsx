@@ -4,11 +4,10 @@ import {
     Text,
     TouchableOpacity,
     RefreshControl,
-    SectionList,
     SectionListData,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { IPropsSwipeRow, SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useBugReportQuery } from '@/features/configure/bugReport/queries/useBugReportQuery';
@@ -36,28 +35,27 @@ export default function BugReport() {
     const isDeveloper = currentUser?.email === DEVELOPER_EMAIL;
 
     useEffect(() => {
-        initialize().catch(error => console.error('初期化エラー:', error));
+        initialize().then();
     }, []);
 
     const renderItem = useCallback(
         ({ item }: { item: DisplayBugReport }) => {
-            const swipeRowProps: Partial<IPropsSwipeRow<DisplayBugReport>> = {
-                rightOpenValue: isDeveloper ? -75 : 0,
-                disableRightSwipe: true,
-                disableLeftSwipe: !isDeveloper,
-                swipeToOpenPercent: 30,
-            };
-
+            // @ts-ignore
             return (
-                <SwipeRow<DisplayBugReport> {...swipeRowProps}>
-                    {isDeveloper ? (
-                        <View style={bugReportStyles.rowBack}>
+                <SwipeRow
+                    rightOpenValue={isDeveloper ? -75 : 0}
+                    disableRightSwipe={true}
+                    disableLeftSwipe={!isDeveloper}
+                    swipeToOpenPercent={30}
+                >
+                    <View style={bugReportStyles.rowBack}>
+                        {isDeveloper && (
                             <HiddenItemWithModal
                                 item={item}
                                 onReject={handleRejectBugReport}
                             />
-                        </View>
-                    ) : null}
+                        )}
+                    </View>
                     <View style={bugReportStyles.rowFront}>
                         <BugReportContainer
                             bugReport={item}
@@ -114,7 +112,8 @@ export default function BugReport() {
                     />
                 )}
 
-                <SectionList
+                <SwipeListView
+                    useSectionList
                     sections={sections}
                     renderItem={renderItem}
                     renderSectionHeader={renderSectionHeader}
