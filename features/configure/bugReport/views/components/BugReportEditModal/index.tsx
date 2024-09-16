@@ -11,6 +11,8 @@ import {
     bugReportEditModalStyles,
     pickerSelectStyles,
 } from '@/features/configure/bugReport/views/components/BugReportEditModal/styles';
+import { modalStyles } from '@/shared/styles/sharedStyles';
+import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
 
 type Props = {
     bugReport?: DisplayBugReport;
@@ -20,7 +22,6 @@ type Props = {
     onClose: () => void;
 };
 
-// TODO: developerじゃなければRejectedReason非活性
 export default function BugReportEditModal({
     bugReport,
     addBugReport,
@@ -28,6 +29,7 @@ export default function BugReportEditModal({
     visible,
     onClose,
 }: Props) {
+    const { currentUser } = useFirebaseAuth();
     const [selectedPriority, setSelectedPriority] = useState(
         bugReport?.priority || PRIORITY.HIGH.value,
     );
@@ -67,31 +69,48 @@ export default function BugReportEditModal({
         >
             <View style={bugReportEditModalStyles.modalOverlay}>
                 <View style={bugReportEditModalStyles.modalView}>
-                    <TextInput
-                        style={bugReportEditModalStyles.textInput}
-                        onChangeText={handleContentChange}
-                        value={tempContent}
-                        placeholder="バグ内容を入力"
-                    />
-                    <View style={bugReportEditModalStyles.priorityContainer}>
+                    <View style={bugReportEditModalStyles.container}>
                         <Text style={bugReportEditModalStyles.label}>
-                            優先度
+                            バグ内容
                         </Text>
-                        <RNPickerSelect
-                            placeholder={{}}
-                            value={selectedPriority}
-                            onValueChange={setSelectedPriority}
-                            items={Object.values(PRIORITY)}
-                            style={pickerSelectStyles}
+                        <TextInput
+                            style={modalStyles.input}
+                            multiline
+                            numberOfLines={4}
+                            onChangeText={handleContentChange}
+                            value={tempContent}
+                            placeholder="バグ内容を入力"
+                            placeholderTextColor="#888"
                         />
                     </View>
+                    {!bugReport?.rejected && (
+                        <View style={bugReportEditModalStyles.container}>
+                            <Text style={bugReportEditModalStyles.label}>
+                                優先度
+                            </Text>
+                            <RNPickerSelect
+                                placeholder={{}}
+                                value={selectedPriority}
+                                onValueChange={setSelectedPriority}
+                                items={Object.values(PRIORITY)}
+                                style={pickerSelectStyles}
+                                disabled={!currentUser?.isDeveloper}
+                            />
+                        </View>
+                    )}
                     {bugReport?.rejected && (
-                        <TextInput
-                            style={bugReportEditModalStyles.textInput}
-                            onChangeText={handleRejectedReasonChange}
-                            value={tempRejectedReason}
-                            placeholder="却下理由を入力"
-                        />
+                        <View style={bugReportEditModalStyles.container}>
+                            <Text style={modalStyles.label}>却下理由</Text>
+                            <TextInput
+                                style={modalStyles.input}
+                                multiline
+                                numberOfLines={4}
+                                onChangeText={handleRejectedReasonChange}
+                                value={tempRejectedReason}
+                                placeholder="却下理由を入力"
+                                editable={currentUser?.isDeveloper}
+                            />
+                        </View>
                     )}
                     <View style={bugReportEditModalStyles.buttonContainer}>
                         <TouchableOpacity

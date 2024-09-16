@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export const bugReportEditModalStyles = StyleSheet.create({
-    priorityContainer: {
+    container: {
         marginBottom: 20,
         width: '100%',
     },
@@ -41,6 +41,7 @@ export const bugReportEditModalStyles = StyleSheet.create({
         width: '80%',
     },
     buttonContainer: {
+        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',

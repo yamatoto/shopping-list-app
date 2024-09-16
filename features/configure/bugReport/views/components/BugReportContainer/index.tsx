@@ -9,7 +9,6 @@ import {
 } from '@/features/configure/bugReport/models/bugReportModel';
 import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import { DEVELOPER_EMAIL } from '@/shared/config/user';
 import { bugReportContainerStyles } from '@/features/configure/bugReport/views/components/BugReportContainer/styles';
 
 type Props = {
@@ -55,7 +54,7 @@ export default function BugReportContainer({
                         flex: 1,
                     }}
                 >
-                    {currentUser?.email === DEVELOPER_EMAIL && (
+                    {currentUser?.isDeveloper && (
                         <Checkbox
                             status={
                                 bugReport.completed ? 'checked' : 'unchecked'

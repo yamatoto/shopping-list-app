@@ -1,16 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import {
-    Button,
-    Modal,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
-import { sharedStyles } from '@/shared/styles/sharedStyles';
-import { hiddenItemWithModalStyles } from '@/features/configure/bugReport/views/components/HiddenItemWithModal/styles';
+import { modalStyles, sharedStyles } from '@/shared/styles/sharedStyles';
+import SubmitButton from '@/shared/components/SubmitButton';
 
 const HiddenItemWithModal = React.memo(
     ({
@@ -18,10 +11,10 @@ const HiddenItemWithModal = React.memo(
         onReject,
     }: {
         item: DisplayBugReport;
-        onReject: (item: DisplayBugReport, reason: string) => void;
+        onReject: (item: DisplayBugReport) => void;
     }) => {
         const [isModalVisible, setModalVisible] = useState(false);
-        const [rejectReason, setRejectReason] = useState('');
+        const [rejectReason, setRejectReason] = useState(item.rejectedReason);
 
         const openModal = useCallback(() => {
             setModalVisible(true);
@@ -29,12 +22,11 @@ const HiddenItemWithModal = React.memo(
 
         const closeModal = useCallback(() => {
             setModalVisible(false);
-            setRejectReason('');
         }, []);
 
         const confirmReject = useCallback(() => {
             if (rejectReason.trim() !== '') {
-                onReject(item, rejectReason);
+                onReject({ ...item, rejectedReason: rejectReason });
                 closeModal();
             }
         }, [item, rejectReason, onReject, closeModal]);
@@ -51,19 +43,39 @@ const HiddenItemWithModal = React.memo(
                     visible={isModalVisible}
                     onRequestClose={closeModal}
                 >
-                    <View style={hiddenItemWithModalStyles.modalContent}>
-                        <Text>却下理由を入力してください</Text>
-                        <TextInput
-                            style={hiddenItemWithModalStyles.input}
-                            value={rejectReason}
-                            onChangeText={setRejectReason}
-                            multiline
-                        />
-                        <View style={hiddenItemWithModalStyles.buttonContainer}>
-                            <Button title="キャンセル" onPress={closeModal} />
-                            <Button title="確定" onPress={confirmReject} />
+                    <TouchableOpacity
+                        style={modalStyles.modalOverlay}
+                        activeOpacity={1}
+                        onPressOut={closeModal}
+                    >
+                        <View style={modalStyles.modalView}>
+                            <Text style={modalStyles.modalTitle}>
+                                却下理由を入力してください
+                            </Text>
+                            <TextInput
+                                style={[modalStyles.input]}
+                                multiline
+                                numberOfLines={4}
+                                value={rejectReason}
+                                onChangeText={setRejectReason}
+                                placeholder="却下理由を入力..."
+                            />
+                            <View style={modalStyles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={modalStyles.button}
+                                    onPress={closeModal}
+                                >
+                                    <Text style={modalStyles.buttonText}>
+                                        キャンセル
+                                    </Text>
+                                </TouchableOpacity>
+                                <SubmitButton
+                                    title="確定"
+                                    onPress={confirmReject}
+                                />
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </Modal>
             </TouchableOpacity>
         );

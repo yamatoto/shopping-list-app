@@ -16,7 +16,6 @@ import BugReportContainer from '@/features/configure/bugReport/views/components/
 import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
 import useFirebaseAuth from '@/shared/hooks/useFirebaseAuth';
-import { DEVELOPER_EMAIL } from '@/shared/config/user';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
 
@@ -32,7 +31,6 @@ export default function BugReport() {
     } = useBugReportUsecase();
     const [modalVisible, setModalVisible] = useState(false);
     const { currentUser } = useFirebaseAuth();
-    const isDeveloper = currentUser?.email === DEVELOPER_EMAIL;
 
     useEffect(() => {
         initialize().then();
@@ -40,16 +38,18 @@ export default function BugReport() {
 
     const renderItem = useCallback(
         ({ item }: { item: DisplayBugReport }) => {
+            const canReject =
+                currentUser?.isDeveloper && !item.completed && !item.rejected;
             return (
                 // @ts-ignore
                 <SwipeRow
-                    rightOpenValue={isDeveloper ? -75 : 0}
+                    rightOpenValue={canReject ? -75 : 0}
                     disableRightSwipe={true}
-                    disableLeftSwipe={!isDeveloper}
+                    disableLeftSwipe={!canReject}
                     swipeToOpenPercent={30}
                 >
                     <View style={sharedStyles.rowBack}>
-                        {isDeveloper && (
+                        {canReject && (
                             <HiddenItemWithModal
                                 item={item}
                                 onReject={handleRejectBugReport}
@@ -71,7 +71,7 @@ export default function BugReport() {
             );
         },
         [
-            isDeveloper,
+            currentUser?.isDeveloper,
             handleCompleteBugReportCheckToggle,
             handleUpdateBugReport,
             handleRejectBugReport,

@@ -7,12 +7,14 @@ import {
     signInWithEmailAndPassword,
     signOut as signOutFromFirebase,
 } from '@/shared/config/firabase';
+import { DEVELOPER_EMAIL } from '@/shared/config/user';
 
 const useFirebaseAuth = () => {
     const router = useRouter();
     const [currentUser, setCurrentUser] = useState<{
         email: string;
         displayName: string;
+        isDeveloper: boolean;
     } | null>(null);
 
     useEffect(() => {
@@ -21,6 +23,7 @@ const useFirebaseAuth = () => {
                 setCurrentUser({
                     email: user.email!,
                     displayName: user.displayName!,
+                    isDeveloper: user.email === DEVELOPER_EMAIL,
                 });
                 return;
             }
