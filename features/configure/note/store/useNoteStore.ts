@@ -16,6 +16,8 @@ type NoteStore = {
     setInputtingText: (text: string) => void;
     initialText: string;
     setInitialText: (text: string) => void;
+    isNoteChanged: boolean;
+    setIsNoteChanged: (isChanged: boolean) => void;
 };
 
 export const useNoteStore = create<NoteStore>(set => ({
@@ -38,5 +40,9 @@ export const useNoteStore = create<NoteStore>(set => ({
     initialText: '',
     setInitialText: text => {
         set({ initialText: text });
+    },
+    isNoteChanged: false,
+    setIsNoteChanged: isChanged => {
+        set({ isNoteChanged: isChanged });
     },
 }));

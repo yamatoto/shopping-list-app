@@ -18,17 +18,20 @@ export const useNoteQuery = () => {
         developerTextAreaHeight,
         partnerTextAreaHeight,
         inputtingText,
+        isNoteChanged,
     } = useNoteStore(
         ({
             resultOfFetchNoteList,
             developerTextAreaHeight,
             partnerTextAreaHeight,
             inputtingText,
+            isNoteChanged,
         }) => ({
             resultOfFetchNoteList,
             developerTextAreaHeight,
             partnerTextAreaHeight,
             inputtingText,
+            isNoteChanged,
         }),
     );
 
@@ -82,5 +85,6 @@ export const useNoteQuery = () => {
         ),
         inputtingText,
         initialText,
+        isNoteChanged,
     };
 };

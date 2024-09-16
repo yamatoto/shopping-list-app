@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Alert, SafeAreaView } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -29,24 +29,15 @@ export default function NoteScreen() {
         developerTextAreaHeight,
         partnerTextAreaHeight,
         initialText,
+        isNoteChanged,
     } = useNoteQuery();
     const {
         initialize,
         handleUpdateNote,
         handleChangeDeveloperTextAreaHeight,
         handleChangePartnerTextAreaHeight,
-        setInputtingText,
+        handleTextChange,
     } = useNoteUsecase();
-
-    const [isNoteChanged, setIsNoteChanged] = useState(false);
-
-    const handleTextChange = useCallback(
-        (text: string) => {
-            setInputtingText(text);
-            setIsNoteChanged(text !== initialText);
-        },
-        [initialText, setInputtingText],
-    );
 
     useFocusEffect(
         useCallback(() => {
@@ -81,14 +72,12 @@ export default function NoteScreen() {
         }, [navigation, isNoteChanged]),
     );
 
-    // コンポーネントがマウントされたときに初期化
     useFocusEffect(
         useCallback(() => {
             initialize().then();
             return () => {
                 // クリーンアップ関数
-                setIsNoteChanged(false);
-                setInputtingText(initialText);
+                handleTextChange(initialText);
             };
         }, []),
     );
@@ -96,7 +85,7 @@ export default function NoteScreen() {
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                {developerNote?.content && (
+                {developerNote?.content != null && (
                     <NoteForm
                         note={developerNote}
                         textAreaHeight={developerTextAreaHeight}
@@ -110,7 +99,7 @@ export default function NoteScreen() {
                         onChangeText={handleTextChange}
                     />
                 )}
-                {partnerNote?.content && (
+                {partnerNote?.content != null && (
                     <NoteForm
                         note={partnerNote}
                         textAreaHeight={partnerTextAreaHeight}

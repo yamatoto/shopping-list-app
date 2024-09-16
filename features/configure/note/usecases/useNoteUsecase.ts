@@ -9,6 +9,7 @@ import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
 import { ApiResponseNote } from '@/features/configure/note/models/noteModel';
 import { setupNoteListener } from '@/features/configure/note/api/noteRepository';
 import { showToast } from '@/shared/helpers/toast';
+import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 
 export const useNoteUsecase = () => {
     const {
@@ -16,7 +17,10 @@ export const useNoteUsecase = () => {
         setDeveloperTextAreaHeight,
         setPartnerTextAreaHeight,
         setInputtingText,
+        setIsNoteChanged,
     } = useNoteStore();
+
+    const { initialText } = useNoteQuery();
 
     const fetchNoteList = useCallback(async () => {
         try {
@@ -32,6 +36,7 @@ export const useNoteUsecase = () => {
         async (noteId: string, content: string) => {
             try {
                 await NoteRepository.updateNote(noteId, content);
+                setIsNoteChanged(false);
             } catch (error: any) {
                 console.error(error);
                 showToast('ノートの更新に失敗しました。');
@@ -67,11 +72,19 @@ export const useNoteUsecase = () => {
         [],
     );
 
+    const handleTextChange = useCallback(
+        (text: string) => {
+            setInputtingText(text);
+            setIsNoteChanged(text !== initialText);
+        },
+        [setInputtingText],
+    );
+
     return {
         initialize,
         handleUpdateNote,
         handleChangeDeveloperTextAreaHeight,
         handleChangePartnerTextAreaHeight,
-        setInputtingText,
+        handleTextChange,
     };
 };
