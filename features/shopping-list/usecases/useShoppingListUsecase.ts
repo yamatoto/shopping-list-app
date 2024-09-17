@@ -8,8 +8,12 @@ import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 
 export const useShoppingListUsecase = () => {
-    const { setResultOfFetchAllItems, setRefreshing, setOpenSections } =
-        useShoppingItemsStore();
+    const {
+        setResultOfFetchAllItems,
+        setRefreshing,
+        setOpenSections,
+        setTempNewItemName,
+    } = useShoppingItemsStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllItems = useCallback(async () => {
@@ -77,6 +81,7 @@ export const useShoppingListUsecase = () => {
                         },
                         `${screen}の買い物リストに「${newItemName}」を追加しました。`,
                     );
+                    setTempNewItemName('');
                     return;
                 }
 
@@ -92,6 +97,7 @@ export const useShoppingListUsecase = () => {
                     },
                     `${screen}の買い物リストに「${trimmedItemName}」を追加しました。`,
                 );
+                setTempNewItemName('');
             } catch (error: any) {
                 console.error(error);
                 showToast(`${screen}の買い物リストの追加に失敗しました。`);
@@ -285,5 +291,6 @@ export const useShoppingListUsecase = () => {
         handleAddToFrequent,
         handleAddToCurrent,
         toggleSection,
+        setTempNewItemName,
     };
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
     SectionListData,
     Text,
@@ -19,7 +19,7 @@ import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function FrequentShoppingList() {
-    const { frequentItemSections, refreshing, openSections } =
+    const { frequentItemSections, refreshing, openSections, tempNewItemName } =
         useShoppingListQuery();
     const {
         initialize,
@@ -29,8 +29,8 @@ export default function FrequentShoppingList() {
         handleDeleteItem,
         handleAddToCurrent,
         toggleSection,
+        setTempNewItemName,
     } = useShoppingListUsecase();
-    const [newItemName, setNewItemName] = useState('');
 
     useEffect(() => {
         initialize().then();
@@ -72,19 +72,18 @@ export default function FrequentShoppingList() {
         [openSections, handleDeleteItem],
     );
 
-    const renderSectionHeader = ({
-        section: { title },
-    }: {
-        section: SectionListData<DisplayItem>;
-    }) => (
-        <TouchableOpacity onPress={() => toggleSection(title)}>
-            <View style={frequentShoppingListStyles.sectionHeader}>
-                <Text style={frequentShoppingListStyles.sectionHeaderText}>
-                    {title}
-                </Text>
-                <Text>{openSections[title] ? '▲' : '▼'}</Text>
-            </View>
-        </TouchableOpacity>
+    const renderSectionHeader = useCallback(
+        ({ section: { title } }: { section: SectionListData<DisplayItem> }) => (
+            <TouchableOpacity onPress={() => toggleSection(title)}>
+                <View style={frequentShoppingListStyles.sectionHeader}>
+                    <Text style={frequentShoppingListStyles.sectionHeaderText}>
+                        {title}
+                    </Text>
+                    <Text>{openSections[title] ? '▲' : '▼'}</Text>
+                </View>
+            </TouchableOpacity>
+        ),
+        [openSections, toggleSection],
     );
 
     return (
@@ -93,16 +92,15 @@ export default function FrequentShoppingList() {
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}
-                        value={newItemName}
-                        onChangeText={setNewItemName}
+                        value={tempNewItemName}
+                        onChangeText={setTempNewItemName}
                         placeholderTextColor="#888"
                         placeholder="新しい定番の買い物を追加"
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
                         onPress={() => {
-                            setNewItemName('');
-                            handleAddItem(newItemName, '定番').then();
+                            handleAddItem(tempNewItemName, '定番').then();
                         }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>

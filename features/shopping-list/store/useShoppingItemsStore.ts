@@ -17,6 +17,8 @@ type ShoppingItemsStore = {
             [p: string]: boolean;
         },
     ) => void;
+    tempNewItemName: string;
+    setTempNewItemName: (newItemName: string) => void;
 };
 
 export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
@@ -39,5 +41,9 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
         set(state => ({
             openSections: updater(state.openSections),
         }));
+    },
+    tempNewItemName: '',
+    setTempNewItemName: tempNewItemName => {
+        set({ tempNewItemName });
     },
 }));
