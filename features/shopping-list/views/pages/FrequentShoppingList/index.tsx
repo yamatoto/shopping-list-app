@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     RefreshControl,
     SectionListData,
@@ -55,52 +55,51 @@ export default function FrequentShoppingList() {
         setOpenSections(initialOpenSections);
     }, []);
 
-    const renderItem = useCallback(
-        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) =>
-            openSections[section.title] ? (
-                <ShoppingItemContainer
-                    item={item}
-                    updateItem={newItem =>
-                        handleUpdateItem(item, newItem, '定番')
-                    }
-                    onAddToAnother={() => handleAddToCurrent(item)}
-                    isCurrentScreen={false}
-                />
-            ) : (
-                <EmptyComponent />
-            ),
-        [handleUpdateItem, handleAddToCurrent],
-    );
+    const renderItem = ({
+        item,
+        section,
+    }: SectionListRenderItemInfo<DisplayItem>) =>
+        openSections[section.title] ? (
+            <ShoppingItemContainer
+                item={item}
+                updateItem={newItem => handleUpdateItem(item, newItem, '定番')}
+                onAddToAnother={() => handleAddToCurrent(item)}
+                isCurrentScreen={false}
+            />
+        ) : (
+            <EmptyComponent />
+        );
 
-    const renderHiddenItem = useCallback(
-        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) =>
-            openSections[section.title] ? (
-                <View style={sharedStyles.rowBack}>
-                    <TouchableOpacity
-                        style={sharedStyles.backRightBtn}
-                        onPress={() => handleDeleteItem(item, false)}
-                    >
-                        <Text style={sharedStyles.backTextWhite}>削除</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <EmptyComponent />
-            ),
-        [handleDeleteItem],
-    );
+    const renderHiddenItem = ({
+        item,
+        section,
+    }: SectionListRenderItemInfo<DisplayItem>) =>
+        openSections[section.title] ? (
+            <View style={sharedStyles.rowBack}>
+                <TouchableOpacity
+                    style={sharedStyles.backRightBtn}
+                    onPress={() => handleDeleteItem(item, false)}
+                >
+                    <Text style={sharedStyles.backTextWhite}>削除</Text>
+                </TouchableOpacity>
+            </View>
+        ) : (
+            <EmptyComponent />
+        );
 
-    const renderSectionHeader = useCallback(
-        ({ section: { title } }: { section: SectionListData<DisplayItem> }) => (
-            <TouchableOpacity onPress={() => toggleSection(title)}>
-                <View style={frequentShoppingListStyles.sectionHeader}>
-                    <Text style={frequentShoppingListStyles.sectionHeaderText}>
-                        {title}
-                    </Text>
-                    <Text>{openSections[title] ? '▲' : '▼'}</Text>
-                </View>
-            </TouchableOpacity>
-        ),
-        [],
+    const renderSectionHeader = ({
+        section: { title },
+    }: {
+        section: SectionListData<DisplayItem>;
+    }) => (
+        <TouchableOpacity onPress={() => toggleSection(title)}>
+            <View style={frequentShoppingListStyles.sectionHeader}>
+                <Text style={frequentShoppingListStyles.sectionHeaderText}>
+                    {title}
+                </Text>
+                <Text>{openSections[title] ? '▲' : '▼'}</Text>
+            </View>
+        </TouchableOpacity>
     );
 
     return (
