@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import {
     SectionListData,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
     SectionListRenderItemInfo,
@@ -18,6 +17,7 @@ import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
+import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 
 export default function FrequentShoppingList() {
     const { frequentItemSections, refreshing, openSections, tempNewItemName } =
@@ -85,23 +85,12 @@ export default function FrequentShoppingList() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <View style={sharedStyles.inputContainer}>
-                    <TextInput
-                        style={sharedStyles.input}
-                        value={tempNewItemName}
-                        onChangeText={setTempNewItemName}
-                        placeholderTextColor="#888"
-                        placeholder="新しい定番の買い物を追加"
-                    />
-                    <TouchableOpacity
-                        style={sharedStyles.addButton}
-                        onPress={() => {
-                            handleAddItem(tempNewItemName, '定番').then();
-                        }}
-                    >
-                        <Text style={sharedStyles.addButtonText}>追加</Text>
-                    </TouchableOpacity>
-                </View>
+                <ItemAddForm
+                    screen="定番"
+                    tempNewItemName={tempNewItemName}
+                    setTempNewItemName={setTempNewItemName}
+                    onAdd={handleAddItem}
+                />
 
                 <CommonSwipeListView
                     useSectionList

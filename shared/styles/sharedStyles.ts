@@ -11,19 +11,6 @@ export const sharedStyles = StyleSheet.create({
         padding: 15,
         backgroundColor: '#f0f0f0',
     },
-    inputContainer: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-    input: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        marginRight: 10,
-        borderRadius: 5,
-        backgroundColor: '#fff',
-    },
     addButton: {
         backgroundColor: '#5cb85c',
         padding: 12,
