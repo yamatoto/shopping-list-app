@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
     RefreshControl,
+    SectionListData,
     Text,
     TextInput,
     TouchableOpacity,
@@ -16,19 +17,11 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
-const EmptyComponent = () => <View style={{ height: 0 }} />;
-type SectionListRenderItemInfo<T> = {
-    item: T;
-    index: number;
-    section: { title: string; data: T[] };
-    separators: {
-        highlight: () => void;
-        unhighlight: () => void;
-        updateProps: (select: 'leading' | 'trailing', newProps: any) => void;
-    };
-};
+import { SectionListRenderItemInfo } from '@/shared/components/types';
+import { EmptyComponent } from '@/shared/components/EmptyComponent';
+
 export default function FrequentShoppingList() {
-    const { groupedItems, refreshing } = useShoppingListQuery();
+    const { frequentItemSections, refreshing } = useShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -63,8 +56,8 @@ export default function FrequentShoppingList() {
     }, []);
 
     const renderItem = useCallback(
-        ({ item }: { item: DisplayItem }) => {
-            return (
+        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) =>
+            openSections[section.title] ? (
                 <ShoppingItemContainer
                     item={item}
                     updateItem={newItem =>
@@ -73,23 +66,41 @@ export default function FrequentShoppingList() {
                     onAddToAnother={() => handleAddToCurrent(item)}
                     isCurrentScreen={false}
                 />
-            );
-        },
+            ) : (
+                <EmptyComponent />
+            ),
         [handleUpdateItem, handleAddToCurrent],
     );
 
     const renderHiddenItem = useCallback(
-        ({ item }: { item: DisplayItem }) => (
-            <View style={sharedStyles.rowBack}>
-                <TouchableOpacity
-                    style={sharedStyles.backRightBtn}
-                    onPress={() => handleDeleteItem(item, false)}
-                >
-                    <Text style={sharedStyles.backTextWhite}>削除</Text>
-                </TouchableOpacity>
-            </View>
-        ),
+        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) =>
+            openSections[section.title] ? (
+                <View style={sharedStyles.rowBack}>
+                    <TouchableOpacity
+                        style={sharedStyles.backRightBtn}
+                        onPress={() => handleDeleteItem(item, false)}
+                    >
+                        <Text style={sharedStyles.backTextWhite}>削除</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <EmptyComponent />
+            ),
         [handleDeleteItem],
+    );
+
+    const renderSectionHeader = useCallback(
+        ({ section: { title } }: { section: SectionListData<DisplayItem> }) => (
+            <TouchableOpacity onPress={() => toggleSection(title)}>
+                <View style={frequentShoppingListStyles.sectionHeader}>
+                    <Text style={frequentShoppingListStyles.sectionHeaderText}>
+                        {title}
+                    </Text>
+                    <Text>{openSections[title] ? '▲' : '▼'}</Text>
+                </View>
+            </TouchableOpacity>
+        ),
+        [],
     );
 
     return (
@@ -116,50 +127,14 @@ export default function FrequentShoppingList() {
 
                 <SwipeListView
                     useSectionList
-                    sections={CATEGORIES.map(category => ({
-                        title: category,
-                        data: groupedItems[category] || [],
-                    })).filter(section => section.data.length > 0)}
-                    renderItem={({
-                        item,
-                        section,
-                    }: SectionListRenderItemInfo<DisplayItem>) =>
-                        openSections[section.title] ? (
-                            renderItem({ item })
-                        ) : (
-                            <EmptyComponent />
-                        )
-                    }
-                    renderHiddenItem={({
-                        item,
-                        section,
-                    }: SectionListRenderItemInfo<DisplayItem>) =>
-                        openSections[section.title] ? (
-                            renderHiddenItem({ item })
-                        ) : (
-                            <EmptyComponent />
-                        )
-                    }
-                    renderSectionHeader={({ section: { title } }) => (
-                        <TouchableOpacity onPress={() => toggleSection(title)}>
-                            <View
-                                style={frequentShoppingListStyles.sectionHeader}
-                            >
-                                <Text
-                                    style={
-                                        frequentShoppingListStyles.sectionHeaderText
-                                    }
-                                >
-                                    {title}
-                                </Text>
-                                <Text>{openSections[title] ? '▲' : '▼'}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                    keyExtractor={item => item.id.toString()}
+                    sections={frequentItemSections}
+                    renderItem={renderItem}
+                    renderSectionHeader={renderSectionHeader}
+                    renderHiddenItem={renderHiddenItem}
                     rightOpenValue={-75}
                     disableRightSwipe
                     closeOnRowOpen={true}
+                    keyExtractor={item => item.id.toString()}
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}

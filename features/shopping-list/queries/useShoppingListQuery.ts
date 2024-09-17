@@ -3,6 +3,7 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { CATEGORIES } from '@/features/shopping-list/constants/category';
 
 export const useShoppingListQuery = () => {
     const { resultOfFetchAllItems, refreshing } = useShoppingItemsStore(
@@ -61,9 +62,16 @@ export const useShoppingListQuery = () => {
         );
     }, [frequentItems]);
 
+    const frequentItemSections = useMemo(() => {
+        return CATEGORIES.map(category => ({
+            title: category,
+            data: groupedItems[category] || [],
+        })).filter(section => section.data.length > 0);
+    }, [groupedItems]);
+
     return {
         currentItems,
-        groupedItems,
         refreshing,
+        frequentItemSections,
     };
 };

@@ -126,7 +126,6 @@ export default function BugReport() {
                             tintColor="#5cb85c"
                         />
                     }
-                    stickySectionHeadersEnabled={false}
                 />
             </View>
         </GestureHandlerRootView>

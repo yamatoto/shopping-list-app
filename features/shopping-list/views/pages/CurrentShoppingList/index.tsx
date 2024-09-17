@@ -84,18 +84,12 @@ export default function CurrentShoppingList() {
                 </View>
 
                 <SwipeListView
-                    contentContainerStyle={{ backgroundColor: '#f0f0f0' }}
-                    ItemSeparatorComponent={() => (
-                        <View
-                            style={{ height: 1, backgroundColor: '#f0f0f0' }}
-                        />
-                    )}
-                    closeOnRowOpen={true}
-                    rightOpenValue={-75}
                     data={currentItems}
                     renderItem={renderItem}
-                    renderHiddenItem={item => renderHiddenItem(item)}
+                    renderHiddenItem={renderHiddenItem}
+                    rightOpenValue={-75}
                     disableRightSwipe
+                    closeOnRowOpen={true}
                     keyExtractor={item => item.id.toString()}
                     refreshControl={
                         <RefreshControl
@@ -105,6 +99,12 @@ export default function CurrentShoppingList() {
                             tintColor="#5cb85c"
                         />
                     }
+                    contentContainerStyle={{ backgroundColor: '#f0f0f0' }}
+                    ItemSeparatorComponent={() => (
+                        <View
+                            style={{ height: 1, backgroundColor: '#f0f0f0' }}
+                        />
+                    )}
                 />
             </View>
         </GestureHandlerRootView>
