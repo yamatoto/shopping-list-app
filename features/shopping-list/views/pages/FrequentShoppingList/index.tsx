@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
     RefreshControl,
-    SectionList,
     Text,
     TextInput,
     TouchableOpacity,
@@ -17,7 +16,17 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
-
+const EmptyComponent = () => <View style={{ height: 0 }} />;
+type SectionListRenderItemInfo<T> = {
+    item: T;
+    index: number;
+    section: { title: string; data: T[] };
+    separators: {
+        highlight: () => void;
+        unhighlight: () => void;
+        updateProps: (select: 'leading' | 'trailing', newProps: any) => void;
+    };
+};
 export default function FrequentShoppingList() {
     const { groupedItems, refreshing } = useShoppingListQuery();
     const {
@@ -105,24 +114,31 @@ export default function FrequentShoppingList() {
                     </TouchableOpacity>
                 </View>
 
-                <SectionList
+                <SwipeListView
+                    useSectionList
                     sections={CATEGORIES.map(category => ({
                         title: category,
                         data: groupedItems[category] || [],
                     })).filter(section => section.data.length > 0)}
-                    renderItem={({ item, section }) =>
+                    renderItem={({
+                        item,
+                        section,
+                    }: SectionListRenderItemInfo<DisplayItem>) =>
                         openSections[section.title] ? (
-                            <SwipeListView
-                                data={[item]}
-                                renderItem={({ item }) => renderItem({ item })}
-                                renderHiddenItem={({ item }) =>
-                                    renderHiddenItem({ item })
-                                }
-                                rightOpenValue={-75}
-                                disableRightSwipe
-                                closeOnRowOpen={true}
-                            />
-                        ) : null
+                            renderItem({ item })
+                        ) : (
+                            <EmptyComponent />
+                        )
+                    }
+                    renderHiddenItem={({
+                        item,
+                        section,
+                    }: SectionListRenderItemInfo<DisplayItem>) =>
+                        openSections[section.title] ? (
+                            renderHiddenItem({ item })
+                        ) : (
+                            <EmptyComponent />
+                        )
                     }
                     renderSectionHeader={({ section: { title } }) => (
                         <TouchableOpacity onPress={() => toggleSection(title)}>
@@ -141,6 +157,9 @@ export default function FrequentShoppingList() {
                         </TouchableOpacity>
                     )}
                     keyExtractor={item => item.id.toString()}
+                    rightOpenValue={-75}
+                    disableRightSwipe
+                    closeOnRowOpen={true}
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
