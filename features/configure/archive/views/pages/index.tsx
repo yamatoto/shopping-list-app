@@ -53,16 +53,8 @@ export default function Archive() {
                     data={archiveItems}
                     renderItem={renderItem}
                     renderHiddenItem={renderHiddenItem}
-                    rightOpenValue={-75}
-                    disableRightSwipe
-                    closeOnRowOpen={true}
                     refreshing={refreshing}
                     handleRefresh={handleRefresh}
-                    ItemSeparatorComponent={() => (
-                        <View
-                            style={{ height: 1, backgroundColor: '#f0f0f0' }}
-                        />
-                    )}
                 />
             </View>
         </GestureHandlerRootView>

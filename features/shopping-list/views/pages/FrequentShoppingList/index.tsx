@@ -127,13 +127,10 @@ export default function FrequentShoppingList() {
                     useSectionList
                     sections={frequentItemSections}
                     renderItem={renderItem}
-                    renderSectionHeader={renderSectionHeader}
                     renderHiddenItem={renderHiddenItem}
+                    renderSectionHeader={renderSectionHeader}
                     refreshing={refreshing}
                     handleRefresh={handleRefresh}
-                    rightOpenValue={-75}
-                    disableRightSwipe
-                    closeOnRowOpen={true}
                 />
             </View>
         </GestureHandlerRootView>

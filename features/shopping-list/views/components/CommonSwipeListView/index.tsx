@@ -5,10 +5,9 @@ import {
     RefreshControl,
     SectionListData,
     SectionListRenderItemInfo,
-    ViewStyle,
+    View,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 type RenderItemInfo<T> =
     | ListRenderItem<T>
@@ -41,8 +40,6 @@ export type Props<T> = {
     rightOpenValue?: number;
     disableRightSwipe?: boolean;
     closeOnRowOpen?: boolean;
-    contentContainerStyle?: StyleProp<ViewStyle>;
-    ItemSeparatorComponent?: React.ComponentType<any> | null;
 };
 
 function CommonSwipeListView<T extends { id: string }>({
@@ -58,8 +55,6 @@ function CommonSwipeListView<T extends { id: string }>({
     rightOpenValue = -75,
     disableRightSwipe = true,
     closeOnRowOpen = true,
-    contentContainerStyle,
-    ItemSeparatorComponent,
 }: Props<T>) {
     const commonProps = {
         renderItem,
@@ -92,8 +87,9 @@ function CommonSwipeListView<T extends { id: string }>({
             {...commonProps}
             {...swipeProps}
             {...listProps}
-            contentContainerStyle={contentContainerStyle}
-            ItemSeparatorComponent={ItemSeparatorComponent}
+            ItemSeparatorComponent={() => (
+                <View style={{ height: 1, backgroundColor: '#f0f0f0' }} />
+            )}
         />
     );
 }

@@ -99,13 +99,6 @@ export default function BugReport() {
                         <Text style={sharedStyles.addButtonText}>追加</Text>
                     </TouchableOpacity>
                 </View>
-                {modalVisible && (
-                    <BugReportEditModal
-                        addBugReport={handleAddBugReport}
-                        visible={modalVisible}
-                        onClose={() => setModalVisible(false)}
-                    />
-                )}
 
                 <CommonSwipeListView
                     useSectionList
@@ -116,6 +109,14 @@ export default function BugReport() {
                     handleRefresh={handleRefresh}
                 />
             </View>
+
+            {modalVisible && (
+                <BugReportEditModal
+                    addBugReport={handleAddBugReport}
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                />
+            )}
         </GestureHandlerRootView>
     );
 }
