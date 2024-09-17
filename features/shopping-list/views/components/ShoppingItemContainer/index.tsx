@@ -5,22 +5,35 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
 import { shoppingItemContainerStyles } from '@/features/shopping-list/views/components/ShoppingItemContainer/styles';
+import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 
 type Props = {
+    screenLabel: ScreenLabel;
     item: DisplayItem;
-    updateItem: (updatedItem: Partial<DisplayItem>) => void;
-    onAddToAnother: () => void;
-    isCurrentScreen: boolean;
+    updateItem: (
+        item: DisplayItem,
+        updatedItem: Partial<DisplayItem>,
+        screenLabel: ScreenLabel,
+    ) => void;
+    onAddToAnother: (item: DisplayItem) => void;
+};
+const SCREEN_MAP = {
+    [SCREEN.CURRENT]: (item: DisplayItem) => ({
+        isAddedAnother: item.isFrequent,
+        anotherLabel: SCREEN.FREQUENT,
+    }),
+    [SCREEN.FREQUENT]: (item: DisplayItem) => ({
+        isAddedAnother: item.isCurrent,
+        anotherLabel: SCREEN.CURRENT,
+    }),
 };
 export default function ShoppingItemContainer({
+    screenLabel,
     item,
     updateItem,
     onAddToAnother,
-    isCurrentScreen,
 }: Props) {
-    const { isAddedAnother, anotherLabel } = isCurrentScreen
-        ? { isAddedAnother: item.isFrequent, anotherLabel: '定番' }
-        : { isAddedAnother: item.isCurrent, anotherLabel: '直近' };
+    const { isAddedAnother, anotherLabel } = SCREEN_MAP[screenLabel](item);
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
@@ -36,7 +49,7 @@ export default function ShoppingItemContainer({
                     flex: 1,
                 }}
             >
-                {isCurrentScreen && (
+                {screenLabel === SCREEN.CURRENT && (
                     <View style={shoppingItemContainerStyles.quantityContainer}>
                         <Text style={shoppingItemContainerStyles.quantityText}>
                             {item.quantity ?? 1}
@@ -45,11 +58,11 @@ export default function ShoppingItemContainer({
                 )}
                 {modalVisible && (
                     <ShoppingItemEditModal
+                        screenLabel={screenLabel}
                         updateItem={updateItem}
                         item={item}
                         visible={modalVisible}
                         onClose={() => setModalVisible(false)}
-                        isCurrent={isCurrentScreen}
                     />
                 )}
                 <Text style={sharedStyles.itemNameText}>{item.name}</Text>
@@ -57,7 +70,7 @@ export default function ShoppingItemContainer({
             <TouchableOpacity
                 onPress={e => {
                     e.stopPropagation(); // 子コンポーネントのタッチイベントが親に伝播しないようにする
-                    onAddToAnother();
+                    onAddToAnother(item);
                 }}
                 disabled={isAddedAnother}
                 style={[

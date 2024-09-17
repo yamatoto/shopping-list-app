@@ -10,6 +10,7 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
+import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 export default function CurrentShoppingList() {
     const { currentItems, refreshing, tempNewItemName } =
@@ -32,12 +33,10 @@ export default function CurrentShoppingList() {
         ({ item }: { item: DisplayItem }) => {
             return (
                 <ShoppingItemContainer
+                    screenLabel={SCREEN.CURRENT}
                     item={item}
-                    updateItem={newItem =>
-                        handleUpdateItem(item, newItem, '直近')
-                    }
-                    onAddToAnother={() => handleAddToFrequent(item)}
-                    isCurrentScreen={true}
+                    updateItem={handleUpdateItem}
+                    onAddToAnother={handleAddToFrequent}
                 />
             );
         },
@@ -46,7 +45,9 @@ export default function CurrentShoppingList() {
 
     const renderHiddenItem = useCallback(
         ({ item }: { item: DisplayItem }) => (
-            <HiddenDeleteButton onPress={() => handleDeleteItem(item, true)} />
+            <HiddenDeleteButton
+                onPress={() => handleDeleteItem(item, SCREEN.CURRENT)}
+            />
         ),
         [handleDeleteItem],
     );
@@ -55,7 +56,7 @@ export default function CurrentShoppingList() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
                 <ItemAddForm
-                    screen="直近"
+                    screenLabel={SCREEN.CURRENT}
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
                     onAdd={handleAddItem}

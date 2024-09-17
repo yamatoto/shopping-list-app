@@ -6,6 +6,7 @@ import { useArchiveItemStore } from '@/features/configure/archive/store/useArchi
 import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
+import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 export const useArchiveUsecase = () => {
     const { setResultOfFetchArchiveItems, setRefreshing } =
@@ -52,7 +53,7 @@ export const useArchiveUsecase = () => {
     const handleRestoreItem = useCallback(
         async (item: DisplayItem, isCurrent: boolean) => {
             const updatedUser = currentUser!.displayName;
-            const screen = isCurrent ? '直近' : '定番';
+            const screenLabel = isCurrent ? SCREEN.CURRENT : SCREEN.FREQUENT;
             try {
                 await ItemsRepository.updateItem(
                     {
@@ -61,11 +62,13 @@ export const useArchiveUsecase = () => {
                         isFrequent: !isCurrent,
                         updatedUser,
                     },
-                    `${screen}の買い物リストに「${item.name}」を追加しました。`,
+                    `${screenLabel}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast(`${screen}の買い物リストへの追加に失敗しました。`);
+                showToast(
+                    `${screenLabel}の買い物リストへの追加に失敗しました。`,
+                );
             }
 
             await fetchArchiveItems();

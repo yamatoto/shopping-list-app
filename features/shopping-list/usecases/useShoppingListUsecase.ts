@@ -6,6 +6,7 @@ import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
+import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 
 export const useShoppingListUsecase = () => {
     const {
@@ -33,14 +34,14 @@ export const useShoppingListUsecase = () => {
     }, [fetchAllItems]);
 
     const checkRegisteredItem = useCallback(
-        async (newItemName: string, screen: '直近' | '定番') => {
+        async (newItemName: string, screenLabel: ScreenLabel) => {
             const fetchedItem =
                 await ItemsRepository.findItemByName(newItemName);
             if (!fetchedItem) {
                 return { isDuplicated: false, registeredItem: null };
             }
             const { id, isCurrent, isFrequent } = fetchedItem.data();
-            if (screen === '直近') {
+            if (screenLabel === SCREEN.CURRENT) {
                 return {
                     isDuplicated: isCurrent,
                     registeredItem: { id, isCurrent, isFrequent },
@@ -56,13 +57,14 @@ export const useShoppingListUsecase = () => {
     );
 
     const handleAddItem = useCallback(
-        async (newItemName: string, screen: '直近' | '定番') => {
+        async (newItemName: string, screenLabel: ScreenLabel) => {
+            const isCurrentScreen = screenLabel === SCREEN.CURRENT;
             const trimmedItemName = newItemName.trim();
             if (!trimmedItemName) return;
             const createdUser = currentUser!.displayName;
             try {
                 const { isDuplicated, registeredItem } =
-                    await checkRegisteredItem(newItemName, screen);
+                    await checkRegisteredItem(newItemName, screenLabel);
                 if (isDuplicated) {
                     showToast(`${newItemName}はすでに登録されています。`);
                     return;
@@ -74,9 +76,9 @@ export const useShoppingListUsecase = () => {
                             id: registeredItem.id,
                             name: trimmedItemName,
                             isCurrent:
-                                screen === '直近' || registeredItem.isCurrent,
+                                isCurrentScreen || registeredItem.isCurrent,
                             isFrequent:
-                                screen === '定番' || registeredItem.isFrequent,
+                                !isCurrentScreen || registeredItem.isFrequent,
                             updatedUser: createdUser,
                         },
                         `${screen}の買い物リストに「${newItemName}」を追加しました。`,
@@ -89,18 +91,18 @@ export const useShoppingListUsecase = () => {
                     {
                         name: trimmedItemName,
                         quantity: 1,
-                        isCurrent: screen === '直近',
-                        isFrequent: screen === '定番',
+                        isCurrent: isCurrentScreen,
+                        isFrequent: !isCurrentScreen,
                         category: '未設定',
                         createdUser,
                         updatedUser: createdUser,
                     },
-                    `${screen}の買い物リストに「${trimmedItemName}」を追加しました。`,
+                    `${screenLabel}の買い物リストに「${trimmedItemName}」を追加しました。`,
                 );
                 setTempNewItemName('');
             } catch (error: any) {
                 console.error(error);
-                showToast(`${screen}の買い物リストの追加に失敗しました。`);
+                showToast(`${screenLabel}の買い物リストの追加に失敗しました。`);
                 return;
             }
 
@@ -144,7 +146,7 @@ export const useShoppingListUsecase = () => {
         async (
             beforeItem: DisplayItem,
             updateItem: Partial<DisplayItem>,
-            screen: '直近' | '定番',
+            screenLabel: ScreenLabel,
         ) => {
             const trimmedUpdateItem = trimItem(updateItem);
             const { name: trimmedUpdateName } = trimmedUpdateItem;
@@ -161,7 +163,7 @@ export const useShoppingListUsecase = () => {
                 ) {
                     const { isDuplicated } = await checkRegisteredItem(
                         trimmedUpdateName,
-                        screen,
+                        screenLabel,
                     );
                     if (isDuplicated) {
                         showToast(
@@ -177,11 +179,11 @@ export const useShoppingListUsecase = () => {
                         ...updateItem,
                         updatedUser: currentUser!.displayName,
                     },
-                    `${screen}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
+                    `${screenLabel}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast(`${screen}の買い物リストの更新に失敗しました。`);
+                showToast(`${screenLabel}の買い物リストの更新に失敗しました。`);
                 return;
             }
             await fetchAllItems();
@@ -190,18 +192,18 @@ export const useShoppingListUsecase = () => {
     );
 
     const handleDeleteItem = useCallback(
-        async ({ id, name }: DisplayItem, isCurrent: boolean) => {
+        async ({ id, name }: DisplayItem, screenLabel: ScreenLabel) => {
             const updatedUser = currentUser!.displayName;
             try {
                 await ItemsRepository.updateItem(
                     {
-                        ...(isCurrent
+                        ...(screenLabel === SCREEN.CURRENT
                             ? { isCurrent: false }
                             : { isFrequent: false }),
                         id,
                         updatedUser,
                     },
-                    `${isCurrent ? '直近' : '定番'}の買い物リストから「${name}」を削除しました。`,
+                    `${screenLabel}の買い物リストから「${name}」を削除しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -224,11 +226,13 @@ export const useShoppingListUsecase = () => {
                         isFrequent: true,
                         updatedUser,
                     },
-                    `定番の買い物リストに「${item.name}」を追加しました。`,
+                    `${SCREEN.FREQUENT}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast('定番の買い物リストへの追加に失敗しました。');
+                showToast(
+                    `${SCREEN.FREQUENT}の買い物リストへの追加に失敗しました。`,
+                );
                 return;
             }
 
@@ -247,11 +251,13 @@ export const useShoppingListUsecase = () => {
                         isCurrent: true,
                         updatedUser,
                     },
-                    `直近の買い物リストに「${item.name}」を追加しました。`,
+                    `${SCREEN.CURRENT}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast('直近の買い物リストへの追加に失敗しました。');
+                showToast(
+                    `${SCREEN.CURRENT}の買い物リストへの追加に失敗しました。`,
+                );
                 return;
             }
 

@@ -5,6 +5,7 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import { modalStyles } from '@/shared/styles/modalStyles';
 import Modal from '@/shared/components/Modal';
 import ModalVerticalButtons from '@/shared/components/ModalVerticalButtons';
+import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 type Props = {
     item: DisplayItem;
@@ -31,9 +32,9 @@ export default function ArchiveItemEditModal({
             </View>
             <ModalVerticalButtons
                 onSubmit1={() => handleConfirm(true)}
-                submitText1="直近に追加"
+                submitText1={`${SCREEN.CURRENT}に追加`}
                 onSubmit2={() => handleConfirm(false)}
-                submitText2="定番に追加"
+                submitText2={`${SCREEN.FREQUENT}に追加`}
                 onCancel={onClose}
             />
         </Modal>

@@ -14,27 +14,32 @@ import { modalStyles } from '@/shared/styles/modalStyles';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
 import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalTextInput from '@/shared/components/ModalTextInput';
-
-type Props = {
-    item: DisplayItem;
-    updateItem: (updatedItem: Partial<DisplayItem>) => void;
-    visible: boolean;
-    onClose: () => void;
-    isCurrent: boolean;
-};
+import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 
 const CATEGORY_SELECT_ITEMS = CATEGORIES.map(text => ({
     label: text,
     value: text,
 }));
 
+type Props = {
+    screenLabel: ScreenLabel;
+    item: DisplayItem;
+    updateItem: (
+        item: DisplayItem,
+        updatedItem: Partial<DisplayItem>,
+        screenLabel: ScreenLabel,
+    ) => void;
+    visible: boolean;
+    onClose: () => void;
+};
 export default function ShoppingItemEditModal({
+    screenLabel,
     item,
     updateItem,
     visible,
     onClose,
-    isCurrent,
 }: Props) {
+    const isCurrent = screenLabel === SCREEN.CURRENT;
     const [selectedCategory, setSelectedCategory] = useState(
         item.category || CATEGORIES[0],
     );
@@ -74,11 +79,15 @@ export default function ShoppingItemEditModal({
     const handleConfirm = async () => {
         const newQuantity = parseInt(tempQuantity, 10);
         if (!isNaN(newQuantity) && newQuantity > 0) {
-            updateItem({
-                ...(isCurrent ? { quantity: newQuantity } : {}),
-                name: tempName,
-                category: selectedCategory,
-            });
+            updateItem(
+                item,
+                {
+                    ...(isCurrent ? { quantity: newQuantity } : {}),
+                    name: tempName,
+                    category: selectedCategory,
+                },
+                screenLabel,
+            );
         }
         onClose();
     };

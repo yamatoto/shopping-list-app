@@ -18,6 +18,7 @@ import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
+import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 export default function FrequentShoppingList() {
     const { frequentItemSections, refreshing, openSections, tempNewItemName } =
@@ -41,12 +42,10 @@ export default function FrequentShoppingList() {
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
             return openSections[section.title] ? (
                 <ShoppingItemContainer
+                    screenLabel={SCREEN.FREQUENT}
                     item={item}
-                    updateItem={newItem =>
-                        handleUpdateItem(item, newItem, '定番')
-                    }
-                    onAddToAnother={() => handleAddToCurrent(item)}
-                    isCurrentScreen={false}
+                    updateItem={handleUpdateItem}
+                    onAddToAnother={handleAddToCurrent}
                 />
             ) : (
                 <EmptyComponent />
@@ -59,7 +58,7 @@ export default function FrequentShoppingList() {
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
             return openSections[section.title] ? (
                 <HiddenDeleteButton
-                    onPress={() => handleDeleteItem(item, false)}
+                    onPress={() => handleDeleteItem(item, SCREEN.FREQUENT)}
                 />
             ) : (
                 <EmptyComponent />
@@ -86,7 +85,7 @@ export default function FrequentShoppingList() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
                 <ItemAddForm
-                    screen="定番"
+                    screenLabel={SCREEN.FREQUENT}
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
                     onAdd={handleAddItem}
