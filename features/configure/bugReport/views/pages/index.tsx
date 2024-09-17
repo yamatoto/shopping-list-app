@@ -1,13 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    RefreshControl,
-    SectionListData,
-} from 'react-native';
+import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeRow } from 'react-native-swipe-list-view';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useBugReportQuery } from '@/features/configure/bugReport/queries/useBugReportQuery';
@@ -18,6 +12,7 @@ import BugReportEditModal from '@/features/configure/bugReport/views/components/
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
+import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function BugReport() {
     const { sections, refreshing } = useBugReportQuery();
@@ -112,20 +107,13 @@ export default function BugReport() {
                     />
                 )}
 
-                <SwipeListView
+                <CommonSwipeListView
                     useSectionList
                     sections={sections}
                     renderItem={renderItem}
                     renderSectionHeader={renderSectionHeader}
-                    keyExtractor={item => item.id.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={handleRefresh}
-                            colors={['#5cb85c']}
-                            tintColor="#5cb85c"
-                        />
-                    }
+                    refreshing={refreshing}
+                    handleRefresh={handleRefresh}
                 />
             </View>
         </GestureHandlerRootView>

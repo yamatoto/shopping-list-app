@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    RefreshControl,
     SectionListData,
     Text,
     TextInput,
     TouchableOpacity,
     View,
+    SectionListRenderItemInfo,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
@@ -17,8 +16,8 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
-import { SectionListRenderItemInfo } from '@/shared/components/types';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
+import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function FrequentShoppingList() {
     const { frequentItemSections, refreshing } = useShoppingListQuery();
@@ -124,24 +123,17 @@ export default function FrequentShoppingList() {
                     </TouchableOpacity>
                 </View>
 
-                <SwipeListView
+                <CommonSwipeListView
                     useSectionList
                     sections={frequentItemSections}
                     renderItem={renderItem}
                     renderSectionHeader={renderSectionHeader}
                     renderHiddenItem={renderHiddenItem}
+                    refreshing={refreshing}
+                    handleRefresh={handleRefresh}
                     rightOpenValue={-75}
                     disableRightSwipe
                     closeOnRowOpen={true}
-                    keyExtractor={item => item.id.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={handleRefresh}
-                            colors={['#5cb85c']}
-                            tintColor="#5cb85c"
-                        />
-                    }
                 />
             </View>
         </GestureHandlerRootView>

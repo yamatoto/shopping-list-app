@@ -1,13 +1,13 @@
 import React, { useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SwipeListView } from 'react-native-swipe-list-view';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { useArchiveQuery } from '@/features/configure/archive/queries/useArchiveQuery';
 import { useArchiveUsecase } from '@/features/configure/archive/usecases/useArchiveUsecase';
 import ArchiveItemContainer from '@/features/configure/archive/views/components/ArchiveItemContainer';
+import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function Archive() {
     const { archiveItems, refreshing } = useArchiveQuery();
@@ -49,23 +49,15 @@ export default function Archive() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <SwipeListView
+                <CommonSwipeListView
                     data={archiveItems}
                     renderItem={renderItem}
                     renderHiddenItem={renderHiddenItem}
                     rightOpenValue={-75}
                     disableRightSwipe
                     closeOnRowOpen={true}
-                    keyExtractor={item => item.id.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={handleRefresh}
-                            colors={['#5cb85c']}
-                            tintColor="#5cb85c"
-                        />
-                    }
-                    contentContainerStyle={{ backgroundColor: '#f0f0f0' }}
+                    refreshing={refreshing}
+                    handleRefresh={handleRefresh}
                     ItemSeparatorComponent={() => (
                         <View
                             style={{ height: 1, backgroundColor: '#f0f0f0' }}
