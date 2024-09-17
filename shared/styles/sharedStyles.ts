@@ -78,28 +78,6 @@ export const sharedStyles = StyleSheet.create({
         maxWidth: '60%',
         marginLeft: 15,
     },
-    rowBack: {
-        alignItems: 'center',
-        backgroundColor: '#f0f0f0',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-    },
-    backRightBtn: {
-        alignItems: 'center',
-        bottom: 0,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        width: 75,
-        right: 0,
-        backgroundColor: '#FF5252',
-    },
-    backTextWhite: {
-        color: '#FFF',
-        fontSize: dynamicFontSize,
-        fontWeight: 'bold',
-    },
 });
 
 export const pickerSelectStyles = StyleSheet.create({

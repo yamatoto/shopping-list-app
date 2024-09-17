@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
@@ -8,6 +8,7 @@ import { useArchiveQuery } from '@/features/configure/archive/queries/useArchive
 import { useArchiveUsecase } from '@/features/configure/archive/usecases/useArchiveUsecase';
 import ArchiveItemContainer from '@/features/configure/archive/views/components/ArchiveItemContainer';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
+import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 
 export default function Archive() {
     const { archiveItems, refreshing } = useArchiveQuery();
@@ -34,14 +35,7 @@ export default function Archive() {
 
     const renderHiddenItem = useCallback(
         ({ item }: { item: DisplayItem }) => (
-            <View style={sharedStyles.rowBack}>
-                <TouchableOpacity
-                    style={sharedStyles.backRightBtn}
-                    onPress={() => handleDeleteItem(item)}
-                >
-                    <Text style={sharedStyles.backTextWhite}>削除</Text>
-                </TouchableOpacity>
-            </View>
+            <HiddenDeleteButton onPress={() => handleDeleteItem(item)} />
         ),
         [handleDeleteItem],
     );

@@ -8,6 +8,7 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
+import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 
 export default function CurrentShoppingList() {
     const { currentItems, refreshing, tempNewItemName } =
@@ -44,14 +45,7 @@ export default function CurrentShoppingList() {
 
     const renderHiddenItem = useCallback(
         ({ item }: { item: DisplayItem }) => (
-            <View style={sharedStyles.rowBack}>
-                <TouchableOpacity
-                    style={sharedStyles.backRightBtn}
-                    onPress={() => handleDeleteItem(item, true)}
-                >
-                    <Text style={sharedStyles.backTextWhite}>削除</Text>
-                </TouchableOpacity>
-            </View>
+            <HiddenDeleteButton onPress={() => handleDeleteItem(item, true)} />
         ),
         [handleDeleteItem],
     );

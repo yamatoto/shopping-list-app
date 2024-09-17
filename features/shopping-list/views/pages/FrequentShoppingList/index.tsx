@@ -17,6 +17,7 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
+import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 
 export default function FrequentShoppingList() {
     const { frequentItemSections, refreshing, openSections, tempNewItemName } =
@@ -57,14 +58,9 @@ export default function FrequentShoppingList() {
     const renderHiddenItem = useCallback(
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
             return openSections[section.title] ? (
-                <View style={sharedStyles.rowBack}>
-                    <TouchableOpacity
-                        style={sharedStyles.backRightBtn}
-                        onPress={() => handleDeleteItem(item, false)}
-                    >
-                        <Text style={sharedStyles.backTextWhite}>削除</Text>
-                    </TouchableOpacity>
-                </View>
+                <HiddenDeleteButton
+                    onPress={() => handleDeleteItem(item, false)}
+                />
             ) : (
                 <EmptyComponent />
             );

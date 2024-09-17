@@ -13,6 +13,7 @@ import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
+import { EmptyComponent } from '@/shared/components/EmptyComponent';
 
 export default function BugReport() {
     const { sections, refreshing } = useBugReportQuery();
@@ -43,14 +44,14 @@ export default function BugReport() {
                     disableLeftSwipe={!canReject}
                     swipeToOpenPercent={30}
                 >
-                    <View style={sharedStyles.rowBack}>
-                        {canReject && (
-                            <HiddenItemWithModal
-                                item={item}
-                                onReject={handleRejectBugReport}
-                            />
-                        )}
-                    </View>
+                    {canReject ? (
+                        <HiddenItemWithModal
+                            item={item}
+                            onReject={handleRejectBugReport}
+                        />
+                    ) : (
+                        <EmptyComponent />
+                    )}
                     <View style={bugReportStyles.rowFront}>
                         <BugReportContainer
                             bugReport={item}
