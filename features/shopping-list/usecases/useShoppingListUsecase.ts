@@ -8,7 +8,8 @@ import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 
 export const useShoppingListUsecase = () => {
-    const { setResultOfFetchAllItems, setRefreshing } = useShoppingItemsStore();
+    const { setResultOfFetchAllItems, setRefreshing, setOpenSections } =
+        useShoppingItemsStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllItems = useCallback(async () => {
@@ -268,6 +269,13 @@ export const useShoppingListUsecase = () => {
         return () => unsubscribe();
     }, [fetchAllItems]);
 
+    const toggleSection = (category: string) => {
+        setOpenSections(prev => ({
+            ...prev,
+            [category]: !prev[category],
+        }));
+    };
+
     return {
         initialize,
         handleRefresh,
@@ -276,5 +284,6 @@ export const useShoppingListUsecase = () => {
         handleDeleteItem,
         handleAddToFrequent,
         handleAddToCurrent,
+        toggleSection,
     };
 };

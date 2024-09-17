@@ -6,12 +6,14 @@ import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
 import { CATEGORIES } from '@/features/shopping-list/constants/category';
 
 export const useShoppingListQuery = () => {
-    const { resultOfFetchAllItems, refreshing } = useShoppingItemsStore(
-        ({ resultOfFetchAllItems, refreshing }) => ({
-            resultOfFetchAllItems,
-            refreshing,
-        }),
-    );
+    const { resultOfFetchAllItems, refreshing, openSections } =
+        useShoppingItemsStore(
+            ({ resultOfFetchAllItems, refreshing, openSections }) => ({
+                resultOfFetchAllItems,
+                refreshing,
+                openSections,
+            }),
+        );
 
     const convertToClientItemFromServer = (
         fetchedItem: QueryDocumentSnapshot<ApiResponseItem>,
@@ -73,5 +75,6 @@ export const useShoppingListQuery = () => {
         currentItems,
         refreshing,
         frequentItemSections,
+        openSections,
     };
 };

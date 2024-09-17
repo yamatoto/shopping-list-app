@@ -11,7 +11,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
-import { CATEGORIES } from '@/features/shopping-list/constants/category';
 import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
@@ -20,7 +19,8 @@ import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function FrequentShoppingList() {
-    const { frequentItemSections, refreshing } = useShoppingListQuery();
+    const { frequentItemSections, refreshing, openSections } =
+        useShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -28,27 +28,9 @@ export default function FrequentShoppingList() {
         handleUpdateItem,
         handleDeleteItem,
         handleAddToCurrent,
+        toggleSection,
     } = useShoppingListUsecase();
     const [newItemName, setNewItemName] = useState('');
-
-    const [openSections, setOpenSections] = useState<{
-        [key: string]: boolean;
-    }>(
-        CATEGORIES.reduce(
-            (acc, category) => {
-                acc[category] = true;
-                return acc;
-            },
-            {} as { [key: string]: boolean },
-        ),
-    );
-
-    const toggleSection = (category: string) => {
-        setOpenSections(prev => ({
-            ...prev,
-            [category]: !prev[category],
-        }));
-    };
 
     useEffect(() => {
         initialize().then();
