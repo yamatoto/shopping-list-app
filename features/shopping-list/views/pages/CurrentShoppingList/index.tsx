@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -10,7 +10,8 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 
 export default function CurrentShoppingList() {
-    const { currentItems, refreshing } = useShoppingListQuery();
+    const { currentItems, refreshing, tempNewItemName } =
+        useShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -18,8 +19,8 @@ export default function CurrentShoppingList() {
         handleUpdateItem,
         handleDeleteItem,
         handleAddToFrequent,
+        setTempNewItemName,
     } = useShoppingListUsecase();
-    const [newItemName, setNewItemName] = useState('');
 
     useEffect(() => {
         initialize().then();
@@ -61,16 +62,15 @@ export default function CurrentShoppingList() {
                 <View style={sharedStyles.inputContainer}>
                     <TextInput
                         style={sharedStyles.input}
-                        value={newItemName}
-                        onChangeText={setNewItemName}
+                        value={tempNewItemName}
+                        onChangeText={setTempNewItemName}
                         placeholderTextColor="#888"
                         placeholder="新しい直近の買い物を追加"
                     />
                     <TouchableOpacity
                         style={sharedStyles.addButton}
                         onPress={() => {
-                            setNewItemName('');
-                            handleAddItem(newItemName, '直近').then();
+                            handleAddItem(tempNewItemName, '直近').then();
                         }}
                     >
                         <Text style={sharedStyles.addButtonText}>追加</Text>
