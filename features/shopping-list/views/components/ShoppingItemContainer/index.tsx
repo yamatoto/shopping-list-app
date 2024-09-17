@@ -6,15 +6,12 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
 import { shoppingItemContainerStyles } from '@/features/shopping-list/views/components/ShoppingItemContainer/styles';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
+import { InputValues } from '@/features/shopping-list/models/form';
 
 type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
-    updateItem: (
-        item: DisplayItem,
-        updatedItem: Partial<DisplayItem>,
-        screenLabel: ScreenLabel,
-    ) => void;
+    onConfirm: (values: InputValues) => void;
     onAddToAnother: (item: DisplayItem) => void;
 };
 const SCREEN_MAP = {
@@ -30,7 +27,7 @@ const SCREEN_MAP = {
 export default function ShoppingItemContainer({
     screenLabel,
     item,
-    updateItem,
+    onConfirm,
     onAddToAnother,
 }: Props) {
     const { isAddedAnother, anotherLabel } = SCREEN_MAP[screenLabel](item);
@@ -59,7 +56,7 @@ export default function ShoppingItemContainer({
                 {modalVisible && (
                     <ShoppingItemEditModal
                         screenLabel={screenLabel}
-                        updateItem={updateItem}
+                        onConfirm={onConfirm}
                         item={item}
                         visible={modalVisible}
                         onClose={() => setModalVisible(false)}

@@ -44,7 +44,9 @@ export default function FrequentShoppingList() {
                 <ShoppingItemContainer
                     screenLabel={SCREEN.FREQUENT}
                     item={item}
-                    updateItem={handleUpdateItem}
+                    onConfirm={values =>
+                        handleUpdateItem(item, values, SCREEN.FREQUENT)
+                    }
                     onAddToAnother={handleAddToCurrent}
                 />
             ) : (

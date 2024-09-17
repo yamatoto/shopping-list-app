@@ -15,3 +15,4 @@ export const CATEGORIES = [
     '日用品',
     'その他',
 ] as const;
+export type Category = (typeof CATEGORIES)[number];

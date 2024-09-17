@@ -7,6 +7,11 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
+import {
+    FormattedInputValues,
+    INPUT_KEY_LABELS,
+    InputValues,
+} from '@/features/shopping-list/models/form';
 
 export const useShoppingListUsecase = () => {
     const {
@@ -111,48 +116,63 @@ export const useShoppingListUsecase = () => {
         [currentUser, fetchAllItems],
     );
 
-    const trimItem = useCallback((item: Partial<DisplayItem>) => {
+    const trimItem = useCallback((item: InputValues) => {
         return Object.keys(item).reduce((acc, key) => {
-            const value = item[key as keyof DisplayItem];
-            if (typeof value === 'string') {
-                acc[key as keyof DisplayItem] = value.trim() as any;
-                return acc;
-            }
-
-            acc[key as keyof DisplayItem] = value as any;
+            const value = item[key as keyof InputValues];
+            acc[key as keyof InputValues] = value?.trim() as any;
             return acc;
-        }, {} as Partial<DisplayItem>);
+        }, {} as InputValues);
     }, []);
 
     const getChangedContent = useCallback(
-        (beforeItem: DisplayItem, updateItem: Partial<DisplayItem>) => {
-            return (Object.keys(updateItem) as Array<keyof DisplayItem>)
-                .filter(key => updateItem[key] !== beforeItem[key])
+        (beforeItem: DisplayItem, values: FormattedInputValues) => {
+            return (Object.keys(values) as Array<keyof InputValues>)
+                .filter(key => values[key] !== beforeItem[key])
                 .map(
                     key =>
-                        `${keyLabels[key]}: ${beforeItem[key]} → ${updateItem[key]}`,
+                        `${INPUT_KEY_LABELS[key]}: ${beforeItem[key]} → ${values[key]}`,
                 )
                 .join('\n');
         },
         [],
     );
 
-    const keyLabels: Partial<Record<keyof DisplayItem, string>> = {
-        name: '商品名',
-        quantity: '数量',
-        category: 'カテゴリー',
+    const formatInputValues = (
+        beforeItem: DisplayItem,
+        values: InputValues,
+        screenLabel: ScreenLabel,
+    ) => {
+        const targetValues =
+            screenLabel === SCREEN.FREQUENT
+                ? (() => {
+                      const { quantity: _, ...rest } = values;
+                      return rest;
+                  })()
+                : values;
+        const trimmedValues = trimItem(targetValues);
+        const { quantity, ...rest } = trimmedValues;
+        return {
+            id: beforeItem.id,
+            ...rest,
+            ...(quantity ? { quantity: parseInt(quantity, 10) } : {}),
+        };
     };
+
     const handleUpdateItem = useCallback(
         async (
             beforeItem: DisplayItem,
-            updateItem: Partial<DisplayItem>,
+            values: InputValues,
             screenLabel: ScreenLabel,
         ) => {
-            const trimmedUpdateItem = trimItem(updateItem);
-            const { name: trimmedUpdateName } = trimmedUpdateItem;
+            const formatedInputValues = formatInputValues(
+                beforeItem,
+                values,
+                screenLabel,
+            );
+            const { name: trimmedUpdateName } = formatedInputValues;
             const changedContent = getChangedContent(
                 beforeItem,
-                trimmedUpdateItem,
+                formatedInputValues,
             );
             if (!changedContent) return;
 
@@ -176,7 +196,7 @@ export const useShoppingListUsecase = () => {
                 await ItemsRepository.updateItem(
                     {
                         ...beforeItem,
-                        ...updateItem,
+                        ...formatedInputValues,
                         updatedUser: currentUser!.displayName,
                     },
                     `${screenLabel}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,

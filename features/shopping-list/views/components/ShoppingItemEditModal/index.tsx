@@ -15,6 +15,7 @@ import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
 import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalTextInput from '@/shared/components/ModalTextInput';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
+import { InputValues } from '@/features/shopping-list/models/form';
 
 const CATEGORY_SELECT_ITEMS = CATEGORIES.map(text => ({
     label: text,
@@ -24,18 +25,14 @@ const CATEGORY_SELECT_ITEMS = CATEGORIES.map(text => ({
 type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
-    updateItem: (
-        item: DisplayItem,
-        updatedItem: Partial<DisplayItem>,
-        screenLabel: ScreenLabel,
-    ) => void;
+    onConfirm: (values: InputValues) => void;
     visible: boolean;
     onClose: () => void;
 };
 export default function ShoppingItemEditModal({
     screenLabel,
     item,
-    updateItem,
+    onConfirm,
     visible,
     onClose,
 }: Props) {
@@ -77,18 +74,11 @@ export default function ShoppingItemEditModal({
     };
 
     const handleConfirm = async () => {
-        const newQuantity = parseInt(tempQuantity, 10);
-        if (!isNaN(newQuantity) && newQuantity > 0) {
-            updateItem(
-                item,
-                {
-                    ...(isCurrent ? { quantity: newQuantity } : {}),
-                    name: tempName,
-                    category: selectedCategory,
-                },
-                screenLabel,
-            );
-        }
+        onConfirm({
+            quantity: tempQuantity,
+            name: tempName,
+            category: selectedCategory,
+        });
         onClose();
     };
 
