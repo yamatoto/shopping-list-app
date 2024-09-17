@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     SectionListData,
     Text,
@@ -33,7 +33,15 @@ export default function FrequentShoppingList() {
 
     const [openSections, setOpenSections] = useState<{
         [key: string]: boolean;
-    }>({});
+    }>(
+        CATEGORIES.reduce(
+            (acc, category) => {
+                acc[category] = true;
+                return acc;
+            },
+            {} as { [key: string]: boolean },
+        ),
+    );
 
     const toggleSection = (category: string) => {
         setOpenSections(prev => ({
@@ -44,47 +52,43 @@ export default function FrequentShoppingList() {
 
     useEffect(() => {
         initialize().then();
-        const initialOpenSections = CATEGORIES.reduce(
-            (acc, category) => {
-                acc[category] = true;
-                return acc;
-            },
-            {} as { [key: string]: boolean },
-        );
-        setOpenSections(initialOpenSections);
     }, []);
 
-    const renderItem = ({
-        item,
-        section,
-    }: SectionListRenderItemInfo<DisplayItem>) =>
-        openSections[section.title] ? (
-            <ShoppingItemContainer
-                item={item}
-                updateItem={newItem => handleUpdateItem(item, newItem, '定番')}
-                onAddToAnother={() => handleAddToCurrent(item)}
-                isCurrentScreen={false}
-            />
-        ) : (
-            <EmptyComponent />
-        );
+    const renderItem = useCallback(
+        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
+            return openSections[section.title] ? (
+                <ShoppingItemContainer
+                    item={item}
+                    updateItem={newItem =>
+                        handleUpdateItem(item, newItem, '定番')
+                    }
+                    onAddToAnother={() => handleAddToCurrent(item)}
+                    isCurrentScreen={false}
+                />
+            ) : (
+                <EmptyComponent />
+            );
+        },
+        [openSections, handleUpdateItem, handleAddToCurrent],
+    );
 
-    const renderHiddenItem = ({
-        item,
-        section,
-    }: SectionListRenderItemInfo<DisplayItem>) =>
-        openSections[section.title] ? (
-            <View style={sharedStyles.rowBack}>
-                <TouchableOpacity
-                    style={sharedStyles.backRightBtn}
-                    onPress={() => handleDeleteItem(item, false)}
-                >
-                    <Text style={sharedStyles.backTextWhite}>削除</Text>
-                </TouchableOpacity>
-            </View>
-        ) : (
-            <EmptyComponent />
-        );
+    const renderHiddenItem = useCallback(
+        ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
+            return openSections[section.title] ? (
+                <View style={sharedStyles.rowBack}>
+                    <TouchableOpacity
+                        style={sharedStyles.backRightBtn}
+                        onPress={() => handleDeleteItem(item, false)}
+                    >
+                        <Text style={sharedStyles.backTextWhite}>削除</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <EmptyComponent />
+            );
+        },
+        [openSections, handleDeleteItem],
+    );
 
     const renderSectionHeader = ({
         section: { title },
