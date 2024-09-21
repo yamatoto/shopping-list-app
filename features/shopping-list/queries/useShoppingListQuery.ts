@@ -3,23 +3,29 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
-import { CATEGORIES } from '@/features/shopping-list/constants/category';
 
 export const useShoppingListQuery = () => {
-    const { resultOfFetchAllItems, refreshing, openSections, tempNewItemName } =
-        useShoppingItemsStore(
-            ({
-                resultOfFetchAllItems,
-                refreshing,
-                openSections,
-                tempNewItemName,
-            }) => ({
-                resultOfFetchAllItems,
-                refreshing,
-                openSections,
-                tempNewItemName,
-            }),
-        );
+    const {
+        resultOfFetchCategorySort,
+        resultOfFetchAllItems,
+        refreshing,
+        openSections,
+        tempNewItemName,
+    } = useShoppingItemsStore(
+        ({
+            resultOfFetchCategorySort,
+            resultOfFetchAllItems,
+            refreshing,
+            openSections,
+            tempNewItemName,
+        }) => ({
+            resultOfFetchCategorySort,
+            resultOfFetchAllItems,
+            refreshing,
+            openSections,
+            tempNewItemName,
+        }),
+    );
 
     const convertToClientItemFromServer = (
         fetchedItem: QueryDocumentSnapshot<ApiResponseItem>,
@@ -71,17 +77,43 @@ export const useShoppingListQuery = () => {
     }, [frequentItems]);
 
     const frequentItemSections = useMemo(() => {
-        return CATEGORIES.map(category => ({
-            title: category,
-            data: groupedItems[category] || [],
-        })).filter(section => section.data.length > 0);
-    }, [groupedItems]);
+        return resultOfFetchCategorySort
+            ?.data()
+            .categories.map(({ id, name }) => ({
+                title: name,
+                id,
+                data: groupedItems[id] || [],
+            }))
+            .filter(section => section.data.length > 0);
+    }, [groupedItems, resultOfFetchCategorySort]);
+
+    const categorySelectItems = useMemo(() => {
+        return (
+            resultOfFetchCategorySort?.data().categories.map(category => ({
+                label: category.name,
+                value: category.id,
+            })) ?? []
+        );
+    }, [resultOfFetchCategorySort]);
+
+    const formattedOpenSections = useMemo(() => {
+        return (
+            resultOfFetchCategorySort?.data().categories.reduce(
+                (acc, { id }) => {
+                    acc[id] = openSections.includes(id);
+                    return acc;
+                },
+                {} as { [key: string]: boolean },
+            ) ?? {}
+        );
+    }, [resultOfFetchCategorySort, openSections]);
 
     return {
         currentItems,
         refreshing,
         frequentItemSections,
-        openSections,
+        openSections: formattedOpenSections,
         tempNewItemName,
+        categorySelectItems,
     };
 };

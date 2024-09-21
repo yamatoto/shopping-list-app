@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { ApiResponseItem } from '@/shared/models/itemModel';
-import { CATEGORIES } from '@/features/shopping-list/constants/category';
+import { ApiResponseCategorySort } from '@/features/configure/category/models/categorySortModel';
 
 type ShoppingItemsStore = {
     resultOfFetchAllItems: QueryDocumentSnapshot<ApiResponseItem>[];
@@ -11,17 +11,21 @@ type ShoppingItemsStore = {
     ) => void;
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
-    openSections: { [p: string]: boolean };
-    setOpenSections: (
-        updater: (prevState: { [p: string]: boolean }) => {
-            [p: string]: boolean;
-        },
-    ) => void;
+    openSections: string[];
+    setOpenSections: (sections: string[]) => void;
     tempNewItemName: string;
     setTempNewItemName: (newItemName: string) => void;
+    resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null;
+    setResultOfFetchCategorySort: (
+        apiCategories: QueryDocumentSnapshot<ApiResponseCategorySort>,
+    ) => void;
 };
 
 export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
+    resultOfFetchCategorySort: null,
+    setResultOfFetchCategorySort: apiCategorySort => {
+        set({ resultOfFetchCategorySort: apiCategorySort });
+    },
     resultOfFetchAllItems: [],
     setResultOfFetchAllItems: apiItems => {
         set({ resultOfFetchAllItems: apiItems });
@@ -30,17 +34,20 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
     setRefreshing: (refreshing: boolean) => {
         set({ refreshing });
     },
-    openSections: CATEGORIES.reduce(
-        (acc, category) => {
-            acc[category] = true;
-            return acc;
-        },
-        {} as { [key: string]: boolean },
-    ),
-    setOpenSections: updater => {
-        set(state => ({
-            openSections: updater(state.openSections),
-        }));
+    openSections: [],
+    setOpenSections: (sections: string[]) => {
+        set(state => {
+            // 初期化時だけ全部セット
+            if (sections.length > 1) return { openSections: sections };
+
+            const section = sections[0];
+            if (state.openSections.includes(section)) {
+                return {
+                    openSections: state.openSections.filter(c => c !== section),
+                };
+            }
+            return { openSections: [...state.openSections, section] };
+        });
     },
     tempNewItemName: '',
     setTempNewItemName: tempNewItemName => {

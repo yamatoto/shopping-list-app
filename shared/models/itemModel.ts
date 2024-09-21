@@ -1,14 +1,12 @@
 import { Timestamp } from 'firebase/firestore';
 
-import { Category } from '@/features/shopping-list/constants/category';
-
 export interface ItemBase {
     // add時にはidは不要
     name: string;
     quantity: number;
     isCurrent: boolean;
     isFrequent: boolean;
-    category: Category;
+    category: string;
     createdUser: string;
     updatedUser: string;
     message?: string;

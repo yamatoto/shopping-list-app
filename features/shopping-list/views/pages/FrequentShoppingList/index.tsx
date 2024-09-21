@@ -22,8 +22,13 @@ import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 export default function FrequentShoppingList() {
-    const { frequentItemSections, refreshing, openSections, tempNewItemName } =
-        useShoppingListQuery();
+    const {
+        frequentItemSections,
+        refreshing,
+        openSections,
+        tempNewItemName,
+        categorySelectItems,
+    } = useShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -41,10 +46,11 @@ export default function FrequentShoppingList() {
 
     const renderItem = useCallback(
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
-            return openSections[section.title] ? (
+            return openSections[section.id] ? (
                 <ShoppingItemContainer
                     screenLabel={SCREEN.FREQUENT}
                     item={item}
+                    categorySelectItems={categorySelectItems}
                     onConfirm={values =>
                         handleUpdateItem(item, values, SCREEN.FREQUENT)
                     }
@@ -59,7 +65,7 @@ export default function FrequentShoppingList() {
 
     const renderHiddenItem = useCallback(
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
-            return openSections[section.title] ? (
+            return openSections[section.id] ? (
                 <HiddenDeleteButton
                     onPress={() => handleDeleteItem(item, SCREEN.FREQUENT)}
                 />
@@ -71,13 +77,13 @@ export default function FrequentShoppingList() {
     );
 
     const renderSectionHeader = useCallback(
-        ({ section: { title } }: { section: SectionListData<DisplayItem> }) => (
-            <TouchableOpacity onPress={() => toggleSection(title)}>
+        ({ section }: { section: SectionListData<DisplayItem> }) => (
+            <TouchableOpacity onPress={() => toggleSection(section.id)}>
                 <View style={frequentShoppingListStyles.sectionHeader}>
                     <Text style={frequentShoppingListStyles.sectionHeaderText}>
-                        {title}
+                        {section.title}
                     </Text>
-                    <Text>{openSections[title] ? '▲' : '▼'}</Text>
+                    <Text>{openSections[section.id] ? '▲' : '▼'}</Text>
                 </View>
             </TouchableOpacity>
         ),

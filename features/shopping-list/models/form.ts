@@ -1,4 +1,3 @@
-import { Category } from '@/features/shopping-list/constants/category';
 import { DisplayItem } from '@/shared/models/itemModel';
 
 export const INPUT_KEY_LABELS: Partial<Record<keyof DisplayItem, string>> = {
@@ -10,11 +9,11 @@ export const INPUT_KEY_LABELS: Partial<Record<keyof DisplayItem, string>> = {
 export type InputValues = {
     name: string;
     quantity?: string;
-    category: Category;
+    category: string;
 };
 
 export type FormattedInputValues = {
     name: string;
     quantity?: number;
-    category: Category;
+    category: string;
 };

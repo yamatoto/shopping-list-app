@@ -14,7 +14,7 @@ import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 export default function CurrentShoppingList() {
-    const { currentItems, refreshing, tempNewItemName } =
+    const { currentItems, refreshing, tempNewItemName, categorySelectItems } =
         useShoppingListQuery();
     const {
         initialize,
@@ -36,6 +36,7 @@ export default function CurrentShoppingList() {
                 <ShoppingItemContainer
                     screenLabel={SCREEN.CURRENT}
                     item={item}
+                    categorySelectItems={categorySelectItems}
                     onConfirm={values =>
                         handleUpdateItem(item, values, SCREEN.CURRENT)
                     }

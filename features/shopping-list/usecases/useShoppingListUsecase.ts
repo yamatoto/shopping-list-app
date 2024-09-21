@@ -12,6 +12,7 @@ import {
     INPUT_KEY_LABELS,
     InputValues,
 } from '@/features/shopping-list/models/form';
+import * as CategorySortRepository from '@/features/configure/category/api/categorySortRepository';
 
 export const useShoppingListUsecase = () => {
     const {
@@ -19,13 +20,19 @@ export const useShoppingListUsecase = () => {
         setRefreshing,
         setOpenSections,
         setTempNewItemName,
+        setResultOfFetchCategorySort,
     } = useShoppingItemsStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllItems = useCallback(async () => {
         try {
-            const items = await ItemsRepository.fetchAllItems();
+            const [items, categorySortApi] = await Promise.all([
+                ItemsRepository.fetchAllItems(),
+                CategorySortRepository.fetchCategorySort(),
+            ]);
+            setResultOfFetchCategorySort(categorySortApi);
             setResultOfFetchAllItems(items);
+            return categorySortApi;
         } catch (error: any) {
             console.error(error);
             showToast('買い物リストの取得に失敗しました。');
@@ -287,7 +294,10 @@ export const useShoppingListUsecase = () => {
     );
 
     const initialize = useCallback(async () => {
-        await fetchAllItems();
+        const categorySortApi = await fetchAllItems();
+        setOpenSections(
+            categorySortApi?.data().categories.map(({ id }) => id) ?? [],
+        );
     }, []);
 
     useEffect(() => {
@@ -302,10 +312,7 @@ export const useShoppingListUsecase = () => {
     }, [fetchAllItems]);
 
     const toggleSection = (category: string) => {
-        setOpenSections(prev => ({
-            ...prev,
-            [category]: !prev[category],
-        }));
+        setOpenSections([category]);
     };
 
     return {

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
-import { CATEGORIES } from '@/features/shopping-list/constants/category';
 import Modal from '@/shared/components/Modal';
 import { modalStyles } from '@/shared/styles/modalStyles';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
@@ -17,14 +16,10 @@ import ModalTextInput from '@/shared/components/ModalTextInput';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 import { InputValues } from '@/features/shopping-list/models/form';
 
-const CATEGORY_SELECT_ITEMS = CATEGORIES.map(text => ({
-    label: text,
-    value: text,
-}));
-
 type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
+    categorySelectItems: { label: string; value: string }[];
     onConfirm: (values: InputValues) => void;
     visible: boolean;
     onClose: () => void;
@@ -32,14 +27,13 @@ type Props = {
 export default function ShoppingItemEditModal({
     screenLabel,
     item,
+    categorySelectItems,
     onConfirm,
     visible,
     onClose,
 }: Props) {
     const isCurrent = screenLabel === SCREEN.CURRENT;
-    const [selectedCategory, setSelectedCategory] = useState(
-        item.category || CATEGORIES[0],
-    );
+    const [selectedCategory, setSelectedCategory] = useState(item.category);
 
     const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
     const [tempName, setTempName] = useState(item.name);
@@ -140,7 +134,7 @@ export default function ShoppingItemEditModal({
             <ModalPickerSelect
                 label="カテゴリ"
                 value={selectedCategory}
-                items={CATEGORY_SELECT_ITEMS}
+                items={categorySelectItems}
                 onValueChange={setSelectedCategory}
             />
             <ModalHorizontalButtons

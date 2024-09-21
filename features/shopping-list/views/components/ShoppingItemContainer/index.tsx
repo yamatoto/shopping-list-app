@@ -11,6 +11,7 @@ import { InputValues } from '@/features/shopping-list/models/form';
 type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
+    categorySelectItems: { label: string; value: string }[];
     onConfirm: (values: InputValues) => void;
     onAddToAnother: (item: DisplayItem) => void;
 };
@@ -27,6 +28,7 @@ const SCREEN_MAP = {
 export default function ShoppingItemContainer({
     screenLabel,
     item,
+    categorySelectItems,
     onConfirm,
     onAddToAnother,
 }: Props) {
@@ -58,6 +60,7 @@ export default function ShoppingItemContainer({
                         screenLabel={screenLabel}
                         onConfirm={onConfirm}
                         item={item}
+                        categorySelectItems={categorySelectItems}
                         visible={modalVisible}
                         onClose={() => setModalVisible(false)}
                     />
