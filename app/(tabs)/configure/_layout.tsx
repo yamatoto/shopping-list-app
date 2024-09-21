@@ -33,6 +33,13 @@ export default function ConfigureLayout() {
                 }}
             />
             <Stack.Screen
+                name="category"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'カテゴリー',
+                }}
+            />
+            <Stack.Screen
                 name="note"
                 options={{
                     headerShown: true,

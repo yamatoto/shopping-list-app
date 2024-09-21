@@ -38,6 +38,12 @@ export default function Configure({
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={configureStyles.button}
+                    onPress={() => handleRoute('category')}
+                >
+                    <Text style={configureStyles.buttonText}>カテゴリー</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={configureStyles.button}
                     onPress={() => handleRoute('note')}
                 >
                     <Text style={configureStyles.buttonText}>メモ</Text>
