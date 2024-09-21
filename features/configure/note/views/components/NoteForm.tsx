@@ -39,7 +39,7 @@ export default function NoteForm({
                 }}
                 editable={editable}
                 onContentSizeChange={handleChangeTextAreaHeight}
-                placeholderTextColor="#000"
+                placeholderTextColor="#bbb"
                 style={{ height: textAreaHeight }}
                 placeholder="メモを入力してください"
             />

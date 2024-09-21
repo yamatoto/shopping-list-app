@@ -67,9 +67,11 @@ export default function BugReportContainer({
                     <Text style={bugReportContainerStyles.contentText}>
                         {bugReport.content}
                     </Text>
-                    <Text style={bugReportContainerStyles.priorityText}>
-                        重要度: {PRIORITY_TO_LABEL[bugReport.priority]}
-                    </Text>
+                    {!bugReport.rejected && !bugReport.completed && (
+                        <Text style={bugReportContainerStyles.priorityText}>
+                            重要度: {PRIORITY_TO_LABEL[bugReport.priority]}
+                        </Text>
+                    )}
                 </View>
             </TouchableOpacity>
         </>

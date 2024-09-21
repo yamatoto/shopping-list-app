@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import {
-    DisplayBugReport,
+    DisplayFeatureRequest,
     PRIORITY,
     PriorityValue,
-} from '@/features/configure/bugReport/models/bugReportModel';
+} from '@/features/configure/featureRequest/models/featureRequestModel';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import Modal from '@/shared/components/Modal';
 import ModalTextArea from '@/shared/components/ModalTextArea';
@@ -12,36 +12,40 @@ import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
 
 type Props = {
-    bugReport?: DisplayBugReport;
-    addBugReport?: (content: string, priority: PriorityValue) => void;
-    updateBugReport?: (updatedItem: Partial<DisplayBugReport>) => void;
+    featureRequest?: DisplayFeatureRequest;
+    addFeatureRequest?: (content: string, priority: PriorityValue) => void;
+    updateFeatureRequest?: (
+        updatedItem: Partial<DisplayFeatureRequest>,
+    ) => void;
     visible: boolean;
     onClose: () => void;
 };
 
-export default function BugReportEditModal({
-    bugReport,
-    addBugReport,
-    updateBugReport,
+export default function FeatureRequestEditModal({
+    featureRequest,
+    addFeatureRequest,
+    updateFeatureRequest,
     visible,
     onClose,
 }: Props) {
     const { currentUser } = useFirebaseAuth();
     const [selectedPriority, setSelectedPriority] = useState(
-        bugReport?.priority || PRIORITY.HIGH.value,
+        featureRequest?.priority || PRIORITY.HIGH.value,
     );
 
-    const [tempContent, setTempContent] = useState(bugReport?.content ?? '');
+    const [tempContent, setTempContent] = useState(
+        featureRequest?.content ?? '',
+    );
     const [tempRejectedReason, setTempRejectedReason] = useState(
-        bugReport?.rejectedReason ?? '',
+        featureRequest?.rejectedReason ?? '',
     );
 
     const handleConfirm = async () => {
-        if (addBugReport) {
-            addBugReport(tempContent, selectedPriority);
+        if (addFeatureRequest) {
+            addFeatureRequest(tempContent, selectedPriority);
         }
-        if (updateBugReport) {
-            updateBugReport({
+        if (updateFeatureRequest) {
+            updateFeatureRequest({
                 content: tempContent,
                 rejectedReason: tempRejectedReason,
                 priority: selectedPriority,
@@ -53,21 +57,21 @@ export default function BugReportEditModal({
     return (
         <Modal visible={visible} onClose={onClose}>
             <ModalTextArea
-                label="バグ内容"
+                label="実装要望内容"
                 value={tempContent}
                 onChangeText={setTempContent}
-                placeholder="バグ内容を入力"
+                placeholder="実装要望の内容を入力"
             />
-            {!bugReport?.rejected && !bugReport?.completed && (
+            {!featureRequest?.rejected && !featureRequest?.completed && (
                 <ModalPickerSelect
-                    label="重要度"
+                    label="優先度"
                     value={selectedPriority}
                     items={Object.values(PRIORITY)}
                     onValueChange={setSelectedPriority}
                     disabled={!currentUser?.isDeveloper}
                 />
             )}
-            {bugReport?.rejected && (
+            {featureRequest?.rejected && (
                 <ModalTextArea
                     label="却下理由"
                     value={tempRejectedReason}

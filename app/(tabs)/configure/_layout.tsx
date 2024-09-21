@@ -12,13 +12,6 @@ export default function ConfigureLayout() {
                 }}
             />
             <Stack.Screen
-                name="note"
-                options={{
-                    headerShown: true,
-                    headerTitle: 'メモ',
-                }}
-            />
-            <Stack.Screen
                 name="archive"
                 options={{
                     headerShown: true,
@@ -26,10 +19,24 @@ export default function ConfigureLayout() {
                 }}
             />
             <Stack.Screen
+                name="featureRequest"
+                options={{
+                    headerShown: true,
+                    headerTitle: '実装要望',
+                }}
+            />
+            <Stack.Screen
                 name="bugReport"
                 options={{
                     headerShown: true,
                     headerTitle: 'バグ報告',
+                }}
+            />
+            <Stack.Screen
+                name="note"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'メモ',
                 }}
             />
         </Stack>

@@ -1,0 +1,28 @@
+import { StyleSheet } from 'react-native';
+
+export const featureRequestStyles = StyleSheet.create({
+    addButtonContainer: {
+        flexDirection: 'column',
+        marginBottom: 20,
+    },
+    addButton: {
+        width: 'auto',
+        backgroundColor: '#5cb85c',
+        padding: 12,
+        borderRadius: 5,
+        justifyContent: 'center',
+    },
+    sectionHeader: {
+        backgroundColor: '#f0f0f0',
+        padding: 10,
+    },
+    sectionHeaderText: {
+        fontWeight: 'bold',
+    },
+    rowFront: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        height: 'auto',
+        padding: 10,
+    },
+});

@@ -49,7 +49,7 @@ export const useBugReportUsecase = () => {
                         reporterName: createdUser,
                         updatedUserName: createdUser,
                     },
-                    `バグ報告「${newBugReportContent}」を追加しました。\n優先度:${PRIORITY_TO_LABEL[priorityValue]}`,
+                    `バグ報告「${newBugReportContent}」を追加しました。\n重要度:${PRIORITY_TO_LABEL[priorityValue]}`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -111,7 +111,7 @@ export const useBugReportUsecase = () => {
 
     const keyLabels: Partial<Record<keyof DisplayBugReport, string>> = {
         content: '内容',
-        priority: '優先度',
+        priority: '重要度',
         rejectedReason: '却下理由',
     };
     const getChangedContent = useCallback(
