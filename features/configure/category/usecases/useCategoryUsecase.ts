@@ -1,14 +1,15 @@
 import { useCallback, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useCategoryStore } from '@/features/configure/category/store/useCategoryStore';
-import * as CategoriesRepository from '@/features/configure/category/api/categoriesRepository';
-import { DisplayCategory } from '@/features/configure/category/models/categoryModel';
+import * as CategorySortRepository from '@/features/configure/category/api/categorySortRepository';
+import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
 
 export const useCategoryUsecase = () => {
     const {
-        setResultOfFetchCategories,
+        setResultOfFetchCategorySort,
         setRefreshing,
         setTempNewCategoryName,
     } = useCategoryStore();
@@ -16,8 +17,9 @@ export const useCategoryUsecase = () => {
 
     const fetchAllCategories = useCallback(async () => {
         try {
-            const categories = await CategoriesRepository.fetchAllCategories();
-            setResultOfFetchCategories(categories);
+            const categorySortApi =
+                await CategorySortRepository.fetchCategorySort();
+            setResultOfFetchCategorySort(categorySortApi);
         } catch (error: any) {
             console.error(error);
             showToast('カテゴリーリストの取得に失敗しました。');
@@ -34,25 +36,8 @@ export const useCategoryUsecase = () => {
         await fetchAllCategories();
     }, []);
 
-    const handleDeleteCategory = useCallback(
-        async ({ id, name }: DisplayCategory) => {
-            try {
-                await CategoriesRepository.deleteCategory(id);
-            } catch (error: any) {
-                console.error(error);
-                showToast(
-                    `カテゴリーリストの「${name}」の削除に失敗しました。`,
-                );
-                return;
-            }
-
-            await fetchAllCategories();
-        },
-        [currentUser, fetchAllCategories],
-    );
-
     useEffect(() => {
-        const unsubscribe = CategoriesRepository.setupCategoryListener(
+        const unsubscribe = CategorySortRepository.setupCategorySortListener(
             ({ message, updatedUserName }) => {
                 if (message) {
                     showToast(`${updatedUserName}${message}`);
@@ -64,25 +49,38 @@ export const useCategoryUsecase = () => {
         return () => unsubscribe();
     }, [fetchAllCategories]);
 
+    const checkCategoryExists = useCallback(async (newCategoryName: string) => {
+        const categorySortApi =
+            await CategorySortRepository.fetchCategorySort();
+        const fetchedCategories = categorySortApi.data().categories;
+        return {
+            exists: fetchedCategories.some(
+                ({ name }) => name === newCategoryName,
+            ),
+            categorySortApiId: categorySortApi.id,
+            fetchedCategories,
+        };
+    }, []);
+
     const handleAddCategory = useCallback(
         async (newCategoryName: string) => {
             if (!newCategoryName.trim()) return;
-            const createdUser = currentUser!.displayName;
             try {
-                const fetchedCategory =
-                    await CategoriesRepository.findCategoryByName(
-                        newCategoryName,
-                    );
-                if (fetchedCategory) {
+                const { exists, categorySortApiId, fetchedCategories } =
+                    await checkCategoryExists(newCategoryName);
+                if (exists) {
                     showToast(`${newCategoryName}はすでに登録されています。`);
                     return;
                 }
 
-                await CategoriesRepository.addCategory(
+                await CategorySortRepository.updateCategory(
+                    categorySortApiId,
                     {
-                        name: newCategoryName,
-                        createdUserName: createdUser,
-                        updatedUserName: createdUser,
+                        updatedUserName: currentUser!.displayName,
+                        categories: [
+                            ...fetchedCategories,
+                            { id: uuidv4(), name: newCategoryName },
+                        ],
                     },
                     `カテゴリー「${newCategoryName}」を追加しました。`,
                 );
@@ -99,23 +97,27 @@ export const useCategoryUsecase = () => {
     );
 
     const handleUpdateCategory = useCallback(
-        async (beforeCategory: DisplayCategory, updateCategoryName: string) => {
+        async (beforeCategory: CategoryModel, updateCategoryName: string) => {
             const trimmedName = updateCategoryName.trim();
             if (!trimmedName) return;
 
             try {
-                const fetchedCategory =
-                    await CategoriesRepository.findCategoryByName(trimmedName);
-                if (fetchedCategory) {
+                const { exists, categorySortApiId, fetchedCategories } =
+                    await checkCategoryExists(trimmedName);
+                if (exists) {
                     showToast(`${trimmedName}はすでに登録されています。`);
                     return;
                 }
 
-                await CategoriesRepository.updateCategory(
+                await CategorySortRepository.updateCategory(
+                    categorySortApiId,
                     {
-                        ...beforeCategory,
-                        ...{ name: trimmedName },
                         updatedUserName: currentUser!.displayName,
+                        categories: fetchedCategories.map(category =>
+                            category.id === beforeCategory.id
+                                ? { ...beforeCategory, name: trimmedName }
+                                : category,
+                        ),
                     },
                     `カテゴリーの「${beforeCategory.name}」を「${trimmedName}」に更新しました。`,
                 );
@@ -128,6 +130,34 @@ export const useCategoryUsecase = () => {
         },
         [currentUser, fetchAllCategories],
     );
+
+    const handleDeleteCategory = useCallback(
+        async ({ id, name }: CategoryModel) => {
+            try {
+                const categorySortApi =
+                    await CategorySortRepository.fetchCategorySort();
+                const fetchedCategories = categorySortApi.data().categories;
+                await CategorySortRepository.updateCategory(
+                    categorySortApi.id,
+                    {
+                        updatedUserName: currentUser!.displayName,
+                        categories: fetchedCategories.filter(
+                            category => category.id !== id,
+                        ),
+                    },
+                    `カテゴリーの「${name}」を削除しました。`,
+                );
+            } catch (error: any) {
+                console.error(error);
+                showToast(`カテゴリーの「${name}」の削除に失敗しました。`);
+                return;
+            }
+
+            await fetchAllCategories();
+        },
+        [currentUser, fetchAllCategories],
+    );
+
     return {
         initialize,
         handleRefresh,

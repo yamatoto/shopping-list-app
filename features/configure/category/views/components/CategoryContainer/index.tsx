@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import CategoryEditModal from '@/features/configure/category/views/components/CategoryEditModal';
-import { DisplayCategory } from '@/features/configure/category/models/categoryModel';
 import { categoryContainerStyles } from '@/features/configure/category/views/components/CategoryContainer/styles';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
+import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
 
 type Props = {
-    category: DisplayCategory;
-    updateCategory: (updatedCategoryName: string) => void;
+    category: CategoryModel;
+    onConfirm: (updatedCategoryName: string) => void;
 };
-export default function CategoryContainer({ category, updateCategory }: Props) {
+export default function CategoryContainer({ category, onConfirm }: Props) {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
@@ -18,8 +18,8 @@ export default function CategoryContainer({ category, updateCategory }: Props) {
             {modalVisible && (
                 <CategoryEditModal
                     category={category}
-                    updateCategory={updatedCategoryName => {
-                        updateCategory(updatedCategoryName);
+                    onConfirm={updatedCategoryName => {
+                        onConfirm(updatedCategoryName);
                         setModalVisible(false);
                     }}
                     visible={modalVisible}

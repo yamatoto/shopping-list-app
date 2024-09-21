@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
 
 import Modal from '@/shared/components/Modal';
-import { DisplayCategory } from '@/features/configure/category/models/categoryModel';
-import ModalTextArea from '@/shared/components/ModalTextArea';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
+import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
+import ModalTextInput from '@/shared/components/ModalTextInput';
 
 type Props = {
-    category?: DisplayCategory;
-    updateCategory: (updatedCategoryName: string) => void;
+    category?: CategoryModel;
+    onConfirm: (updatedCategoryName: string) => void;
     visible: boolean;
     onClose: () => void;
 };
 
 export default function CategoryEditModal({
     category,
-    updateCategory,
+    onConfirm,
     visible,
     onClose,
 }: Props) {
     const [tempName, setTempName] = useState(category?.name ?? '');
+    const handleConfirm = async () => {
+        onConfirm(tempName);
+        onClose();
+    };
 
     return (
         <Modal visible={visible} onClose={onClose}>
-            <ModalTextArea
+            <ModalTextInput
                 label="カテゴリー名"
                 value={tempName}
                 onChangeText={setTempName}
@@ -30,7 +34,7 @@ export default function CategoryEditModal({
             />
             <ModalHorizontalButtons
                 onCancel={onClose}
-                onSubmit={() => updateCategory(tempName)}
+                onSubmit={handleConfirm}
             />
         </Modal>
     );

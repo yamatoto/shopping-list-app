@@ -3702,6 +3702,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/uuid@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@types/uuid@npm:10.0.0"
+  checksum: e3958f8b0fe551c86c14431f5940c3470127293280830684154b91dc7eb3514aeb79fe3216968833cf79d4d1c67f580f054b5be2cd562bebf4f728913e73e944
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 21.0.3
   resolution: "@types/yargs-parser@npm:21.0.3"
@@ -6592,6 +6599,13 @@ __metadata:
   version: 3.1.1
   resolution: "exponential-backoff@npm:3.1.1"
   checksum: 3d21519a4f8207c99f7457287291316306255a328770d320b401114ec8481986e4e467e854cb9914dd965e0a1ca810a23ccb559c642c88f4c7f55c55778a9b48
+  languageName: node
+  linkType: hard
+
+"fast-base64-decode@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fast-base64-decode@npm:1.0.0"
+  checksum: 4c59eb1775a7f132333f296c5082476fdcc8f58d023c42ed6d378d2e2da4c328c7a71562f271181a725dd17cdaa8f2805346cc330cdbad3b8e4b9751508bd0a3
   languageName: node
   linkType: hard
 
@@ -10945,6 +10959,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-get-random-values@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "react-native-get-random-values@npm:1.11.0"
+  dependencies:
+    fast-base64-decode: ^1.0.0
+  peerDependencies:
+    react-native: ">=0.56"
+  checksum: 07729f70a007f7a3b8f98ebf687c1298ba288b87dd71d8ba385be6b5a377718b27b97547bbe1db6b225b83ee109dfce0b01721e6ed535d53892f3ac81e6bf975
+  languageName: node
+  linkType: hard
+
 "react-native-helmet-async@npm:2.0.4":
   version: 2.0.4
   resolution: "react-native-helmet-async@npm:2.0.4"
@@ -11808,6 +11833,7 @@ __metadata:
     "@types/jest": ^29.5.12
     "@types/react": ~18.2.45
     "@types/react-test-renderer": ^18.0.7
+    "@types/uuid": ^10.0.0
     "@typescript-eslint/eslint-plugin": ^8.0.1
     "@typescript-eslint/parser": ^8.0.1
     eslint: ^9.9.0
@@ -11838,6 +11864,7 @@ __metadata:
     react-native: 0.74.5
     react-native-draggable-flatlist: ^4.0.1
     react-native-gesture-handler: ~2.16.1
+    react-native-get-random-values: ^1.11.0
     react-native-paper: ^5.12.5
     react-native-picker-select: ^9.3.1
     react-native-reanimated: ~3.10.1
@@ -11848,6 +11875,7 @@ __metadata:
     react-native-web: ~0.19.10
     react-test-renderer: 18.2.0
     typescript: ~5.3.3
+    uuid: ^10.0.0
     zustand: ^4.5.5
   languageName: unknown
   linkType: soft
@@ -13100,6 +13128,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "uuid@npm:10.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 4b81611ade2885d2313ddd8dc865d93d8dccc13ddf901745edca8f86d99bc46d7a330d678e7532e7ebf93ce616679fb19b2e3568873ac0c14c999032acb25869
   languageName: node
   linkType: hard
 

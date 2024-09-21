@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 import { useEffect } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
+import 'react-native-get-random-values';
 import { useColorScheme } from '@/shared/styles/useColorScheme';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import SignInOrUpWithEmail from '@/shared/auth/SignInOrUpWithEmail';

@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseCategory } from '@/features/configure/category/models/categoryModel';
+import { ApiResponseCategorySort } from '@/features/configure/category/models/categorySortModel';
 
 type CategoryStore = {
-    resultOfFetchCategories: QueryDocumentSnapshot<ApiResponseCategory>[];
-    setResultOfFetchCategories: (
-        apiCategories: QueryDocumentSnapshot<ApiResponseCategory>[],
+    resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null;
+    setResultOfFetchCategorySort: (
+        apiCategories: QueryDocumentSnapshot<ApiResponseCategorySort>,
     ) => void;
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
@@ -15,9 +15,9 @@ type CategoryStore = {
 };
 
 export const useCategoryStore = create<CategoryStore>(set => ({
-    resultOfFetchCategories: [],
-    setResultOfFetchCategories: apiCategories => {
-        set({ resultOfFetchCategories: apiCategories });
+    resultOfFetchCategorySort: null,
+    setResultOfFetchCategorySort: apiCategorySort => {
+        set({ resultOfFetchCategorySort: apiCategorySort });
     },
     refreshing: false,
     setRefreshing: (refreshing: boolean) => {

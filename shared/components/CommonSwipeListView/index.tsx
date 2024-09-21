@@ -40,6 +40,7 @@ export type Props<T> = {
     rightOpenValue?: number;
     disableRightSwipe?: boolean;
     closeOnRowOpen?: boolean;
+    isSwipeDisabled?: boolean;
 };
 
 function CommonSwipeListView<T extends { id: string }>({

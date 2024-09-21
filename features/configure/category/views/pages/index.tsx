@@ -7,9 +7,9 @@ import { useCategoryQuery } from '@/features/configure/category/queries/useCateg
 import { useCategoryUsecase } from '@/features/configure/category/usecases/useCategoryUsecase';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import CategoryContainer from '@/features/configure/category/views/components/CategoryContainer';
-import { DisplayCategory } from '@/features/configure/category/models/categoryModel';
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { categoryStyles } from '@/features/configure/category/views/pages/styles';
+import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
 
 export default function Category() {
     const { categories, refreshing, tempNewCategoryName } = useCategoryQuery();
@@ -27,11 +27,11 @@ export default function Category() {
     }, []);
 
     const renderItem = useCallback(
-        ({ item }: { item: DisplayCategory }) => {
+        ({ item }: { item: CategoryModel }) => {
             return (
                 <CategoryContainer
                     category={item}
-                    updateCategory={updatedCategoryName =>
+                    onConfirm={updatedCategoryName =>
                         handleUpdateCategory(item, updatedCategoryName)
                     }
                 />
@@ -41,7 +41,7 @@ export default function Category() {
     );
 
     const renderHiddenItem = useCallback(
-        ({ item }: { item: DisplayCategory }) => (
+        ({ item }: { item: CategoryModel }) => (
             <HiddenDeleteButton onPress={() => handleDeleteCategory(item)} />
         ),
         [handleDeleteCategory],
