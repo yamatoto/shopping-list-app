@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
+import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
+
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useBugReportQuery } from '@/features/configure/bugReport/queries/useBugReportQuery';
 import { useBugReportUsecase } from '@/features/configure/bugReport/usecases/useBugReportUsecase';
@@ -12,7 +14,6 @@ import BugReportEditModal from '@/features/configure/bugReport/views/components/
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
-import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 
 export default function BugReport() {

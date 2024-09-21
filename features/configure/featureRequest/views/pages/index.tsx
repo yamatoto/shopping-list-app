@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
+import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
+
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useFeatureRequestQuery } from '@/features/configure/featureRequest/queries/useFeatureRequestQuery';
 import { useFeatureRequestUsecase } from '@/features/configure/featureRequest/usecases/useFeatureRequestUsecase';
@@ -11,7 +13,6 @@ import { DisplayFeatureRequest } from '@/features/configure/featureRequest/model
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { featureRequestStyles } from '@/features/configure/featureRequest/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/featureRequest/views/components/HiddenItemWithModal';
-import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import FeatureRequestEditModal from '@/features/configure/featureRequest/views/components/FeatureRequestEditModal';
 

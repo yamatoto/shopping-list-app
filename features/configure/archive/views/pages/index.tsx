@@ -2,12 +2,13 @@ import React, { useEffect, useCallback } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
+
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { useArchiveQuery } from '@/features/configure/archive/queries/useArchiveQuery';
 import { useArchiveUsecase } from '@/features/configure/archive/usecases/useArchiveUsecase';
 import ArchiveItemContainer from '@/features/configure/archive/views/components/ArchiveItemContainer';
-import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 
 export default function Archive() {

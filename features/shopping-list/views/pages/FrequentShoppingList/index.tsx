@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
+
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
 import { DisplayItem } from '@/shared/models/itemModel';
@@ -15,7 +17,6 @@ import ShoppingItemContainer from '@/features/shopping-list/views/components/Sho
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
-import CommonSwipeListView from '@/features/shopping-list/views/components/CommonSwipeListView';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
