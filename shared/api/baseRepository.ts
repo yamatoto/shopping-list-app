@@ -2,6 +2,7 @@ import {
     addDoc,
     collection,
     deleteDoc,
+    deleteField,
     doc,
     DocumentChange,
     getDocs,
@@ -12,6 +13,7 @@ import {
     Timestamp,
     updateDoc,
     where,
+    writeBatch,
 } from 'firebase/firestore';
 
 import { db } from '@/shared/config/firabase';
@@ -132,5 +134,32 @@ export class BaseRepository<T, E> {
     async delete(id: string): Promise<void> {
         const docRef = doc(db, this.collectionName, id);
         await deleteDoc(docRef);
+    }
+
+    async changeFieldName(
+        oldFieldName: string,
+        newFieldName: string,
+    ): Promise<void> {
+        const collectionName = this.collectionName;
+
+        const colRef = collection(this.db, collectionName);
+        const snapshot = await getDocs(colRef);
+
+        const batch = writeBatch(this.db);
+
+        snapshot.forEach(docSnapshot => {
+            const docRef = doc(db, collectionName, docSnapshot.id);
+            const data = docSnapshot.data();
+
+            if (data[oldFieldName]) {
+                batch.update(docRef, {
+                    [newFieldName]: data[oldFieldName],
+                    [oldFieldName]: deleteField(),
+                });
+            }
+        });
+
+        await batch.commit();
+        console.log('フィールド名の変更が完了しました');
     }
 }

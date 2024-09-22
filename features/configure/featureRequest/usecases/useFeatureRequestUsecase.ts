@@ -2,24 +2,23 @@ import { useCallback, useEffect } from 'react';
 
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
-import * as FeatureRequestsRepository from '@/features/configure/featureRequest/api/featureRequestsRepository';
+import { FeatureRequestsRepository } from '@/features/configure/featureRequest/api/featureRequestsRepository';
 import { useFeatureRequestStore } from '@/features/configure/featureRequest/store/useFeatureRequestStore';
 import {
     DisplayFeatureRequest,
     PRIORITY_TO_LABEL,
     PriorityValue,
 } from '@/features/configure/featureRequest/models/featureRequestModel';
-import { setupFeatureRequestListener } from '@/features/configure/featureRequest/api/featureRequestsRepository';
 
 export const useFeatureRequestUsecase = () => {
+    const featureRequestsRepository = new FeatureRequestsRepository();
     const { setResultOfFetchFeatureRequests, setRefreshing } =
         useFeatureRequestStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllFeatureRequests = useCallback(async () => {
         try {
-            const featureRequests =
-                await FeatureRequestsRepository.fetchAllFeatureRequests();
+            const featureRequests = await featureRequestsRepository.fetchAll();
             setResultOfFetchFeatureRequests(featureRequests);
         } catch (error: any) {
             console.error(error);
@@ -44,15 +43,15 @@ export const useFeatureRequestUsecase = () => {
         ) => {
             const createdUser = currentUser!.displayName;
             try {
-                await FeatureRequestsRepository.addFeatureRequest(
+                await featureRequestsRepository.add(
                     {
                         content: newFeatureRequestContent,
                         priority: priorityValue,
                         completed: false,
                         rejected: false,
                         rejectedReason: '',
-                        requesterName: createdUser,
-                        updatedUserName: createdUser,
+                        createdUser,
+                        updatedUser: createdUser,
                     },
                     `実装要望「${newFeatureRequestContent}」を追加しました。\n優先度:${PRIORITY_TO_LABEL[priorityValue]}`,
                 );
@@ -70,12 +69,12 @@ export const useFeatureRequestUsecase = () => {
     const handleCompleteFeatureRequestCheckToggle = useCallback(
         async ({ id, content, completed }: DisplayFeatureRequest) => {
             try {
-                await FeatureRequestsRepository.updateFeatureRequest(
+                await featureRequestsRepository.update(
                     {
                         id,
                         completed,
                         rejected: false,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `実装要望の「${content}」を${completed ? '修正' : '未'}完了にしました。`,
                 );
@@ -93,13 +92,13 @@ export const useFeatureRequestUsecase = () => {
     const handleRejectFeatureRequest = useCallback(
         async ({ id, content, rejectedReason }: DisplayFeatureRequest) => {
             try {
-                await FeatureRequestsRepository.updateFeatureRequest(
+                await featureRequestsRepository.update(
                     {
                         id,
                         completed: false,
                         rejected: true,
                         rejectedReason,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `実装要望の「${content}」を却下しました。`,
                 );
@@ -156,11 +155,11 @@ export const useFeatureRequestUsecase = () => {
             if (!changedContent) return;
 
             try {
-                await FeatureRequestsRepository.updateFeatureRequest(
+                await featureRequestsRepository.update(
                     {
                         ...beforeFeatureRequest,
                         ...updateFeatureRequest,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `実装要望の「${beforeFeatureRequest.content}」を更新しました。\n${changedContent}`,
                 );
@@ -175,10 +174,10 @@ export const useFeatureRequestUsecase = () => {
     );
 
     useEffect(() => {
-        const unsubscribe = setupFeatureRequestListener(
-            ({ message, updatedUserName }) => {
+        const unsubscribe = featureRequestsRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUserName}${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchAllFeatureRequests().then();

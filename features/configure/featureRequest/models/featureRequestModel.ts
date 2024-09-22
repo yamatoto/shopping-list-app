@@ -6,8 +6,8 @@ export interface FeatureRequestBase {
     completed: boolean;
     rejected: boolean;
     rejectedReason: string;
-    requesterName: string;
-    updatedUserName: string;
+    createdUser: string;
+    updatedUser: string;
 }
 
 export interface ApiResponseFeatureRequest extends FeatureRequestBase {
