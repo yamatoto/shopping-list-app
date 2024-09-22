@@ -2,9 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
-import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';
-import { setupItemListener } from '@/shared/api/itemsRepository';
 import { showToast } from '@/shared/helpers/toast';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 import {
@@ -14,21 +12,25 @@ import {
 } from '@/features/shopping-list/models/form';
 import * as CategorySortRepository from '@/shared/api/categorySortRepository';
 import { DEFAULT_CATEGORY } from '@/shared/models/categorySortModel';
+import { ItemsRepository } from '@/shared/api/itemsRepository';
 
 export const useShoppingListUsecase = () => {
+    const itemsRepository = new ItemsRepository();
+
     const {
         setResultOfFetchAllItems,
         setRefreshing,
         setOpenSections,
         setTempNewItemName,
         setResultOfFetchCategorySort,
+        resultOfFetchCategorySort,
     } = useShoppingItemsStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllItems = useCallback(async () => {
         try {
             const [items, categorySortApi] = await Promise.all([
-                ItemsRepository.fetchAllItems(),
+                itemsRepository.fetchAll(),
                 CategorySortRepository.fetchCategorySort(),
             ]);
             setResultOfFetchCategorySort(categorySortApi);
@@ -48,8 +50,7 @@ export const useShoppingListUsecase = () => {
 
     const checkRegisteredItem = useCallback(
         async (newItemName: string, screenLabel: ScreenLabel) => {
-            const fetchedItem =
-                await ItemsRepository.findItemByName(newItemName);
+            const fetchedItem = await itemsRepository.findByName(newItemName);
             if (!fetchedItem) {
                 return { isDuplicated: false, registeredItem: null };
             }
@@ -84,7 +85,7 @@ export const useShoppingListUsecase = () => {
                 }
 
                 if (registeredItem) {
-                    await ItemsRepository.updateItem(
+                    await itemsRepository.update(
                         {
                             id: registeredItem.id,
                             name: trimmedItemName,
@@ -100,13 +101,13 @@ export const useShoppingListUsecase = () => {
                     return;
                 }
 
-                await ItemsRepository.addItem(
+                await itemsRepository.add(
                     {
                         name: trimmedItemName,
                         quantity: 1,
                         isCurrent: isCurrentScreen,
                         isFrequent: !isCurrentScreen,
-                        category: DEFAULT_CATEGORY.id,
+                        categoryId: DEFAULT_CATEGORY.id,
                         createdUser,
                         updatedUser: createdUser,
                     },
@@ -136,10 +137,21 @@ export const useShoppingListUsecase = () => {
         (beforeItem: DisplayItem, values: FormattedInputValues) => {
             return (Object.keys(values) as Array<keyof InputValues>)
                 .filter(key => values[key] !== beforeItem[key])
-                .map(
-                    key =>
-                        `${INPUT_KEY_LABELS[key]}: ${beforeItem[key]} → ${values[key]}`,
-                )
+                .map(key => {
+                    if (key !== 'categoryId') {
+                        return `${INPUT_KEY_LABELS[key]}: ${beforeItem[key]} → ${values[key]}`;
+                    }
+
+                    const categories =
+                        resultOfFetchCategorySort?.data().categories;
+                    const beforeCategoryName = categories?.find(
+                        ({ id }) => id === beforeItem.categoryId,
+                    )?.name;
+                    const newCategoryName = categories?.find(
+                        ({ id }) => id === values.categoryId,
+                    )?.name;
+                    return `${INPUT_KEY_LABELS[key]}: ${beforeCategoryName} → ${newCategoryName}`;
+                })
                 .join('\n');
         },
         [],
@@ -201,7 +213,7 @@ export const useShoppingListUsecase = () => {
                     }
                 }
 
-                await ItemsRepository.updateItem(
+                await itemsRepository.update(
                     {
                         ...beforeItem,
                         ...formatedInputValues,
@@ -223,7 +235,7 @@ export const useShoppingListUsecase = () => {
         async ({ id, name }: DisplayItem, screenLabel: ScreenLabel) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await ItemsRepository.updateItem(
+                await itemsRepository.update(
                     {
                         ...(screenLabel === SCREEN.CURRENT
                             ? { isCurrent: false }
@@ -248,7 +260,7 @@ export const useShoppingListUsecase = () => {
         async (item: DisplayItem) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await ItemsRepository.updateItem(
+                await itemsRepository.update(
                     {
                         ...item,
                         isFrequent: true,
@@ -273,7 +285,7 @@ export const useShoppingListUsecase = () => {
         async (item: DisplayItem) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await ItemsRepository.updateItem(
+                await itemsRepository.update(
                     {
                         ...item,
                         isCurrent: true,
@@ -302,13 +314,15 @@ export const useShoppingListUsecase = () => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = setupItemListener(({ message, updatedUser }) => {
-            if (message) {
-                showToast(`${updatedUser}${message}`);
-            }
+        const unsubscribe = itemsRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
+                if (message) {
+                    showToast(`${updatedUser}${message}`);
+                }
 
-            fetchAllItems().then();
-        });
+                fetchAllItems().then();
+            },
+        );
         return () => unsubscribe();
     }, [fetchAllItems]);
 

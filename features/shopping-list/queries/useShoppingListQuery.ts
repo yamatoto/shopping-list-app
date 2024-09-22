@@ -65,11 +65,11 @@ export const useShoppingListQuery = () => {
     const groupedItems = useMemo(() => {
         return frequentItems.reduce(
             (acc, item) => {
-                const category = item.category;
-                if (!acc[category]) {
-                    acc[category] = [];
+                const categoryId = item.categoryId;
+                if (!acc[categoryId]) {
+                    acc[categoryId] = [];
                 }
-                acc[category].push(item);
+                acc[categoryId].push(item);
                 return acc;
             },
             {} as { [key: string]: DisplayItem[] },

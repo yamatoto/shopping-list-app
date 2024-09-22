@@ -3,19 +3,20 @@ import { useCallback, useEffect } from 'react';
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useArchiveItemStore } from '@/features/configure/archive/store/useArchiveStore';
-import * as ItemsRepository from '@/shared/api/itemsRepository';
 import { DisplayItem } from '@/shared/models/itemModel';
-import { setupItemListener } from '@/shared/api/itemsRepository';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
+import { ItemsRepository } from '@/shared/api/itemsRepository';
 
 export const useArchiveUsecase = () => {
+    const itemsRepository = new ItemsRepository();
+
     const { setResultOfFetchArchiveItems, setRefreshing } =
         useArchiveItemStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchArchiveItems = useCallback(async () => {
         try {
-            const items = await ItemsRepository.fetchArchiveItems();
+            const items = await itemsRepository.fetchArchiveItems();
             setResultOfFetchArchiveItems(items);
         } catch (error: any) {
             console.error(error);
@@ -36,7 +37,7 @@ export const useArchiveUsecase = () => {
     const handleDeleteItem = useCallback(
         async ({ id, name }: DisplayItem) => {
             try {
-                await ItemsRepository.deleteItem(id);
+                await itemsRepository.delete(id);
             } catch (error: any) {
                 console.error(error);
                 showToast(
@@ -55,7 +56,7 @@ export const useArchiveUsecase = () => {
             const updatedUser = currentUser!.displayName;
             const screenLabel = isCurrent ? SCREEN.CURRENT : SCREEN.FREQUENT;
             try {
-                await ItemsRepository.updateItem(
+                await itemsRepository.update(
                     {
                         ...item,
                         isCurrent,
@@ -77,13 +78,15 @@ export const useArchiveUsecase = () => {
     );
 
     useEffect(() => {
-        const unsubscribe = setupItemListener(({ message, updatedUser }) => {
-            if (message) {
-                showToast(`${updatedUser}${message}`);
-            }
+        const unsubscribe = itemsRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
+                if (message) {
+                    showToast(`${updatedUser}${message}`);
+                }
 
-            fetchArchiveItems().then();
-        });
+                fetchArchiveItems().then();
+            },
+        );
         return () => unsubscribe();
     }, [fetchArchiveItems]);
 
