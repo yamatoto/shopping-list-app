@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseCategorySort } from '@/features/configure/category/models/categorySortModel';
+import { ApiResponseCategorySort } from '@/shared/models/categorySortModel';
 
 type CategoryStore = {
     resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null;

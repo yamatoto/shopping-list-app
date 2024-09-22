@@ -65,7 +65,7 @@ export const useShoppingListQuery = () => {
     const groupedItems = useMemo(() => {
         return frequentItems.reduce(
             (acc, item) => {
-                const category = item.category || '未設定';
+                const category = item.category;
                 if (!acc[category]) {
                     acc[category] = [];
                 }

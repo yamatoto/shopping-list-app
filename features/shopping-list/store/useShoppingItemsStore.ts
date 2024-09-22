@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { ApiResponseItem } from '@/shared/models/itemModel';
-import { ApiResponseCategorySort } from '@/features/configure/category/models/categorySortModel';
+import { ApiResponseCategorySort } from '@/shared/models/categorySortModel';
 
 type ShoppingItemsStore = {
     resultOfFetchAllItems: QueryDocumentSnapshot<ApiResponseItem>[];

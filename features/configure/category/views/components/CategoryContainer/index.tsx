@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 
 import CategoryEditModal from '@/features/configure/category/views/components/CategoryEditModal';
 import { categoryContainerStyles } from '@/features/configure/category/views/components/CategoryContainer/styles';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
+import {
+    CategoryModel,
+    DEFAULT_CATEGORY_VALUE,
+} from '@/shared/models/categorySortModel';
 
 type Props = {
     category: CategoryModel;
@@ -12,6 +15,8 @@ type Props = {
 };
 export default function CategoryContainer({ category, onConfirm }: Props) {
     const [modalVisible, setModalVisible] = useState(false);
+
+    const isDefaultCategory = category.name === DEFAULT_CATEGORY_VALUE;
 
     return (
         <>
@@ -29,7 +34,13 @@ export default function CategoryContainer({ category, onConfirm }: Props) {
             <TouchableOpacity
                 style={[sharedStyles.itemContainer, { paddingRight: 0 }]}
                 activeOpacity={1}
-                onPress={() => setModalVisible(true)}
+                onPress={() => {
+                    if (isDefaultCategory) {
+                        Alert.alert(`${DEFAULT_CATEGORY_VALUE}は変更不可です`);
+                        return;
+                    }
+                    setModalVisible(true);
+                }}
             >
                 <View
                     style={{

@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useCategoryStore } from '@/features/configure/category/store/useCategoryStore';
-import * as CategorySortRepository from '@/features/configure/category/api/categorySortRepository';
-import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
+import * as CategorySortRepository from '@/shared/api/categorySortRepository';
+import { CategoryModel } from '@/shared/models/categorySortModel';
 
 export const useCategoryUsecase = () => {
     const {

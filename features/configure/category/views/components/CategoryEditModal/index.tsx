@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Modal from '@/shared/components/Modal';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
-import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
+import { CategoryModel } from '@/shared/models/categorySortModel';
 import ModalTextInput from '@/shared/components/ModalTextInput';
 
 type Props = {

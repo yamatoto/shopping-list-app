@@ -9,7 +9,7 @@ import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import CategoryContainer from '@/features/configure/category/views/components/CategoryContainer';
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { categoryStyles } from '@/features/configure/category/views/pages/styles';
-import { CategoryModel } from '@/features/configure/category/models/categorySortModel';
+import { CategoryModel } from '@/shared/models/categorySortModel';
 
 export default function Category() {
     const { categories, refreshing, tempNewCategoryName } = useCategoryQuery();

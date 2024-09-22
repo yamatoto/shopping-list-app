@@ -12,7 +12,8 @@ import {
     INPUT_KEY_LABELS,
     InputValues,
 } from '@/features/shopping-list/models/form';
-import * as CategorySortRepository from '@/features/configure/category/api/categorySortRepository';
+import * as CategorySortRepository from '@/shared/api/categorySortRepository';
+import { DEFAULT_CATEGORY_VALUE } from '@/shared/models/categorySortModel';
 
 export const useShoppingListUsecase = () => {
     const {
@@ -105,7 +106,7 @@ export const useShoppingListUsecase = () => {
                         quantity: 1,
                         isCurrent: isCurrentScreen,
                         isFrequent: !isCurrentScreen,
-                        category: '未設定',
+                        category: DEFAULT_CATEGORY_VALUE,
                         createdUser,
                         updatedUser: createdUser,
                     },

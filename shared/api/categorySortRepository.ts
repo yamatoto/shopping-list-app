@@ -14,7 +14,7 @@ import { db } from '@/shared/config/firabase';
 import {
     ApiResponseCategorySort,
     CategorySortBase,
-} from '@/features/configure/category/models/categorySortModel';
+} from '@/shared/models/categorySortModel';
 
 const collectionName = 'category-sort';
 
