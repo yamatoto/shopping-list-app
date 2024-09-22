@@ -177,7 +177,7 @@ export const useFeatureRequestUsecase = () => {
         const unsubscribe = featureRequestsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}${message}`);
+                    showToast(`${updatedUser}が${message}`);
                 }
 
                 fetchAllFeatureRequests().then();

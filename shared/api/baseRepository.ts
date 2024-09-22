@@ -18,6 +18,11 @@ import {
 
 import { db } from '@/shared/config/firabase';
 
+type ChangeMessageContent = {
+    updatedUser: string;
+    message?: string;
+    userName?: string;
+};
 export class BaseRepository<T, E> {
     protected readonly collectionName: string;
     protected readonly deleteMessage: string;
@@ -30,20 +35,19 @@ export class BaseRepository<T, E> {
     }
 
     private createHandleDocChange() {
-        return (
-            change: DocumentChange,
-        ): { updatedUser: string; message?: string } | null => {
+        return (change: DocumentChange): ChangeMessageContent | null => {
             const response = change.doc.data();
             return {
                 added:
                     response.updatedAt > Timestamp.fromMillis(this.now)
                         ? {
-                              updatedUser: `${response.updatedUser}が`,
+                              updatedUser: response.updatedUser,
                               message: response.message,
                           }
                         : null,
                 modified: {
-                    updatedUser: `${response.updatedUser}が`,
+                    userName: response.userName,
+                    updatedUser: response.updatedUser,
                     message: response.message,
                 },
                 removed: {
@@ -55,7 +59,7 @@ export class BaseRepository<T, E> {
     }
 
     setupUpdateListener = (
-        onChange: (change: { message?: string; updatedUser: string }) => void,
+        onChange: (change: ChangeMessageContent) => void,
     ) => {
         const collectionRef = query(collection(db, this.collectionName));
         const handleDocChange = this.createHandleDocChange();
@@ -127,7 +131,7 @@ export class BaseRepository<T, E> {
         await updateDoc(docRef, {
             ...rest,
             updatedAt: Timestamp.now(),
-            message,
+            ...{ ...(message ? { message } : {}) },
         });
     }
 

@@ -168,7 +168,7 @@ export const useBugReportUsecase = () => {
         const unsubscribe = bugReportsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}${message}`);
+                    showToast(`${updatedUser}が${message}`);
                 }
 
                 fetchAllBugReports().then();

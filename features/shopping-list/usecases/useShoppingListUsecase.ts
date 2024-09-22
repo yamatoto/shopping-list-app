@@ -318,7 +318,7 @@ export const useShoppingListUsecase = () => {
         const unsubscribe = itemsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}${message}`);
+                    showToast(`${updatedUser}が${message}`);
                 }
 
                 fetchAllItems().then();

@@ -4,14 +4,13 @@ import {
     TextInputContentSizeChangeEventData,
 } from 'react-native';
 
-import * as NoteRepository from '@/features/configure/note/api/noteRepository';
+import { NoteRepository } from '@/features/configure/note/api/noteRepository';
 import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
-import { ApiResponseNote } from '@/features/configure/note/models/noteModel';
-import { setupNoteListener } from '@/features/configure/note/api/noteRepository';
 import { showToast } from '@/shared/helpers/toast';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 
 export const useNoteUsecase = () => {
+    const noteRepository = new NoteRepository();
     const {
         setResultOfFetchNoteList,
         setDeveloperTextAreaHeight,
@@ -24,7 +23,7 @@ export const useNoteUsecase = () => {
 
     const fetchNoteList = useCallback(async () => {
         try {
-            const noteList = await NoteRepository.fetchNoteList();
+            const noteList = await noteRepository.fetchAll();
             setResultOfFetchNoteList(noteList);
         } catch (error: any) {
             console.error(error);
@@ -35,7 +34,7 @@ export const useNoteUsecase = () => {
     const handleUpdateNote = useCallback(
         async (noteId: string, content: string) => {
             try {
-                await NoteRepository.updateNote(noteId, content);
+                await noteRepository.update({ id: noteId, content });
                 setIsNoteChanged(false);
             } catch (error: any) {
                 console.error(error);
@@ -51,11 +50,12 @@ export const useNoteUsecase = () => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = setupNoteListener(change => {
-            const { userName } = change.doc.data() as ApiResponseNote;
-            showToast(`${userName}のメモが更新されました。`);
-            fetchNoteList().then();
-        });
+        const unsubscribe = noteRepository.setupUpdateListener(
+            ({ userName }) => {
+                showToast(`${userName}のメモが更新されました`);
+                fetchNoteList().then();
+            },
+        );
         return () => unsubscribe();
     }, [fetchNoteList]);
 
