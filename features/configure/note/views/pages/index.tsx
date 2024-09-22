@@ -1,9 +1,15 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Alert, SafeAreaView, ScrollView } from 'react-native';
+import {
+    Alert,
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    View,
+} from 'react-native';
 
-import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 import { useNoteUsecase } from '@/features/configure/note/usecases/useNoteUsecase';
 import NoteForm from '@/features/configure/note/views/components/NoteForm';
@@ -22,21 +28,20 @@ type NoteScreenNavigationProp = NativeStackNavigationProp<
 
 export default function Note() {
     const navigation = useNavigation<NoteScreenNavigationProp>();
-    const { currentUser } = useFirebaseAuth();
     const {
-        developerNote,
+        loginUsersNote,
         partnerNote,
         developerTextAreaHeight,
-        partnerTextAreaHeight,
         initialText,
         isNoteChanged,
+        refreshing,
     } = useNoteQuery();
     const {
         initialize,
         handleUpdateNote,
         handleChangeDeveloperTextAreaHeight,
-        handleChangePartnerTextAreaHeight,
         handleTextChange,
+        handleRefresh,
     } = useNoteUsecase();
 
     useFocusEffect(
@@ -84,33 +89,34 @@ export default function Note() {
 
     return (
         <SafeAreaView style={noteStyles.safeArea}>
-            <ScrollView contentContainerStyle={noteStyles.scrollViewContent}>
-                {developerNote?.content != null && (
+            <ScrollView
+                contentContainerStyle={noteStyles.scrollViewContent}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        colors={['#5cb85c']}
+                        tintColor="#5cb85c"
+                    />
+                }
+            >
+                {loginUsersNote?.content != null && (
                     <NoteForm
-                        note={developerNote}
+                        note={loginUsersNote}
                         textAreaHeight={developerTextAreaHeight}
                         handleChangeTextAreaHeight={
                             handleChangeDeveloperTextAreaHeight
                         }
-                        editable={
-                            currentUser?.email === developerNote.userEmail
-                        }
                         handleUpdateNote={handleUpdateNote}
                         onChangeText={handleTextChange}
                     />
                 )}
-                {partnerNote?.content != null && (
-                    <NoteForm
-                        note={partnerNote}
-                        textAreaHeight={partnerTextAreaHeight}
-                        handleChangeTextAreaHeight={
-                            handleChangePartnerTextAreaHeight
-                        }
-                        editable={currentUser?.email === partnerNote.userEmail}
-                        handleUpdateNote={handleUpdateNote}
-                        onChangeText={handleTextChange}
-                    />
-                )}
+                <View>
+                    <Text style={noteStyles.partnerNoteTitle}>
+                        {partnerNote?.displayName}のメモ
+                    </Text>
+                    <Text>{partnerNote?.content || 'メモはありません'}</Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );

@@ -16,22 +16,22 @@ export const useNoteQuery = () => {
     const {
         resultOfFetchNoteList,
         developerTextAreaHeight,
-        partnerTextAreaHeight,
         inputtingText,
         isNoteChanged,
+        refreshing,
     } = useNoteStore(
         ({
             resultOfFetchNoteList,
             developerTextAreaHeight,
-            partnerTextAreaHeight,
             inputtingText,
             isNoteChanged,
+            refreshing,
         }) => ({
             resultOfFetchNoteList,
             developerTextAreaHeight,
-            partnerTextAreaHeight,
             inputtingText,
             isNoteChanged,
+            refreshing,
         }),
     );
 
@@ -46,42 +46,43 @@ export const useNoteQuery = () => {
         };
     };
 
-    const { developerNote, partnerNote, initialText } = useMemo(() => {
-        const { developerNote, partnerNote } = resultOfFetchNoteList.reduce<{
-            developerNote: DisplayNote;
+    const { loginUsersNote, partnerNote, initialText } = useMemo(() => {
+        const { loginUsersNote, partnerNote } = resultOfFetchNoteList.reduce<{
+            loginUsersNote: DisplayNote;
             partnerNote: DisplayNote;
         }>(
             (acc, fetchedNote) => {
                 const converted = convertToClientNoteFromServer(fetchedNote);
+                const noteKey =
+                    currentUser?.displayName === converted.displayName
+                        ? 'loginUsersNote'
+                        : 'partnerNote';
                 return {
                     ...acc,
-                    [`${converted.userType}Note`]: converted,
+                    [noteKey]: converted,
                 };
             },
             {
-                developerNote: {} as DisplayNote,
+                loginUsersNote: {} as DisplayNote,
                 partnerNote: {} as DisplayNote,
             },
         );
 
         const initialText =
             currentUser?.email === DEVELOPER_EMAIL
-                ? developerNote.content
+                ? loginUsersNote.content
                 : partnerNote.content;
 
-        return { developerNote, partnerNote, initialText };
+        return { loginUsersNote, partnerNote, initialText };
     }, [resultOfFetchNoteList]);
 
     return {
-        developerNote,
+        loginUsersNote,
         partnerNote,
+        refreshing,
         developerTextAreaHeight: Math.max(
             MIN_TEXT_AREA_HEIGHT,
             developerTextAreaHeight,
-        ),
-        partnerTextAreaHeight: Math.max(
-            MIN_TEXT_AREA_HEIGHT,
-            partnerTextAreaHeight,
         ),
         inputtingText,
         initialText,

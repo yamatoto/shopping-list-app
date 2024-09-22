@@ -43,7 +43,7 @@ const createHandleDocChange =
             },
             removed: {
                 updatedUser: '',
-                message: `「${response.name}」がアーカイブから削除されました`,
+                message: `「${response.name}」がアーカイブ買い物リストから削除されました`,
             },
         }[change.type];
     };

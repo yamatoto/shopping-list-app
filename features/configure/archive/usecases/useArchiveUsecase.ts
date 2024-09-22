@@ -19,7 +19,7 @@ export const useArchiveUsecase = () => {
             setResultOfFetchArchiveItems(items);
         } catch (error: any) {
             console.error(error);
-            showToast('アーカイブアイテムリストの取得に失敗しました。');
+            showToast('アーカイブ買い物リストの取得に失敗しました。');
         }
     }, [currentUser]);
 
@@ -40,7 +40,7 @@ export const useArchiveUsecase = () => {
             } catch (error: any) {
                 console.error(error);
                 showToast(
-                    `アーカイブの買い物リストから「${name}」の削除に失敗しました。`,
+                    `アーカイブ買い物リストから「${name}」の削除に失敗しました。`,
                 );
                 return;
             }

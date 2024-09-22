@@ -15,7 +15,7 @@ export default function ConfigureLayout() {
                 name="archive"
                 options={{
                     headerShown: true,
-                    headerTitle: 'アーカイブ',
+                    headerTitle: 'アーカイブ買い物リスト',
                 }}
             />
             <Stack.Screen

@@ -15,9 +15,9 @@ export const useNoteUsecase = () => {
     const {
         setResultOfFetchNoteList,
         setDeveloperTextAreaHeight,
-        setPartnerTextAreaHeight,
         setInputtingText,
         setIsNoteChanged,
+        setRefreshing,
     } = useNoteStore();
 
     const { initialText } = useNoteQuery();
@@ -65,12 +65,6 @@ export const useNoteUsecase = () => {
         },
         [],
     );
-    const handleChangePartnerTextAreaHeight = useCallback(
-        (event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-            setPartnerTextAreaHeight(event.nativeEvent.contentSize.height);
-        },
-        [],
-    );
 
     const handleTextChange = useCallback(
         (text: string) => {
@@ -80,11 +74,17 @@ export const useNoteUsecase = () => {
         [setInputtingText],
     );
 
+    const handleRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await fetchNoteList();
+        setRefreshing(false);
+    }, [fetchNoteList]);
+
     return {
         initialize,
         handleUpdateNote,
         handleChangeDeveloperTextAreaHeight,
-        handleChangePartnerTextAreaHeight,
         handleTextChange,
+        handleRefresh,
     };
 };

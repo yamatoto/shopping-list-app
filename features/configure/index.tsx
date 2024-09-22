@@ -22,7 +22,9 @@ export default function Configure({
                     style={configureStyles.button}
                     onPress={() => handleRoute('archive')}
                 >
-                    <Text style={configureStyles.buttonText}>アーカイブ</Text>
+                    <Text style={configureStyles.buttonText}>
+                        アーカイブ買い物リスト
+                    </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={configureStyles.button}

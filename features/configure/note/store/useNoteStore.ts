@@ -10,14 +10,14 @@ type NoteStore = {
     ) => void;
     developerTextAreaHeight: number;
     setDeveloperTextAreaHeight: (height: number) => void;
-    partnerTextAreaHeight: number;
-    setPartnerTextAreaHeight: (height: number) => void;
     inputtingText: string;
     setInputtingText: (text: string) => void;
     initialText: string;
     setInitialText: (text: string) => void;
     isNoteChanged: boolean;
     setIsNoteChanged: (isChanged: boolean) => void;
+    refreshing: boolean;
+    setRefreshing: (refreshing: boolean) => void;
 };
 
 export const useNoteStore = create<NoteStore>(set => ({
@@ -28,10 +28,6 @@ export const useNoteStore = create<NoteStore>(set => ({
     developerTextAreaHeight: 0,
     setDeveloperTextAreaHeight: (height: number) => {
         set({ developerTextAreaHeight: height });
-    },
-    partnerTextAreaHeight: 0,
-    setPartnerTextAreaHeight: (height: number) => {
-        set({ partnerTextAreaHeight: height });
     },
     inputtingText: '',
     setInputtingText: text => {
@@ -44,5 +40,9 @@ export const useNoteStore = create<NoteStore>(set => ({
     isNoteChanged: false,
     setIsNoteChanged: isChanged => {
         set({ isNoteChanged: isChanged });
+    },
+    refreshing: false,
+    setRefreshing: (refreshing: boolean) => {
+        set({ refreshing });
     },
 }));

@@ -6,6 +6,7 @@ import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Comp
 import { DisplayNote } from '@/features/configure/note/models/noteModel';
 import ModalTextArea from '@/shared/components/ModalTextArea';
 import SubmitButton from '@/shared/components/SubmitButton';
+import { noteFormStyles } from '@/features/configure/note/views/components/styles';
 
 type Props = {
     note: DisplayNote;
@@ -13,7 +14,6 @@ type Props = {
     handleChangeTextAreaHeight: (
         e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>,
     ) => void;
-    editable: boolean;
     handleUpdateNote: (id: string, content: string) => void;
     onChangeText: (text: string) => void;
 };
@@ -22,14 +22,13 @@ export default function NoteForm({
     note: { id, displayName, content },
     textAreaHeight,
     handleChangeTextAreaHeight,
-    editable,
     handleUpdateNote,
     onChangeText,
 }: Props) {
     const [text, setText] = useState(content);
 
     return (
-        <View style={{ marginBottom: 20 }}>
+        <View style={noteFormStyles.formContainer}>
             <ModalTextArea
                 label={`${displayName}のメモ`}
                 value={text}
@@ -37,18 +36,16 @@ export default function NoteForm({
                     setText(text);
                     onChangeText(text);
                 }}
-                editable={editable}
+                editable={true}
                 onContentSizeChange={handleChangeTextAreaHeight}
                 placeholderTextColor="#bbb"
-                style={{ height: textAreaHeight }}
+                style={[noteFormStyles.textArea, { height: textAreaHeight }]}
                 placeholder="メモを入力してください"
             />
-            {editable && (
-                <SubmitButton
-                    title="更新"
-                    onPress={() => handleUpdateNote(id, text)}
-                />
-            )}
+            <SubmitButton
+                title="更新"
+                onPress={() => handleUpdateNote(id, text)}
+            />
         </View>
     );
 }
