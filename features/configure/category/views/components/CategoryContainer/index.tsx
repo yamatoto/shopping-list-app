@@ -6,7 +6,7 @@ import { categoryContainerStyles } from '@/features/configure/category/views/com
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import {
     CategoryModel,
-    DEFAULT_CATEGORY_VALUE,
+    DEFAULT_CATEGORY,
 } from '@/shared/models/categorySortModel';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 export default function CategoryContainer({ category, onConfirm }: Props) {
     const [modalVisible, setModalVisible] = useState(false);
 
-    const isDefaultCategory = category.name === DEFAULT_CATEGORY_VALUE;
+    const isDefaultCategory = category.id === DEFAULT_CATEGORY.id;
 
     return (
         <>
@@ -36,7 +36,7 @@ export default function CategoryContainer({ category, onConfirm }: Props) {
                 activeOpacity={1}
                 onPress={() => {
                     if (isDefaultCategory) {
-                        Alert.alert(`${DEFAULT_CATEGORY_VALUE}は変更不可です`);
+                        Alert.alert(`${DEFAULT_CATEGORY.name}は変更不可です`);
                         return;
                     }
                     setModalVisible(true);

@@ -52,8 +52,8 @@ export const useNoteUsecase = () => {
 
     useEffect(() => {
         const unsubscribe = setupNoteListener(change => {
-            const { displayName } = change.doc.data() as ApiResponseNote;
-            showToast(`${displayName}のメモが更新されました。`);
+            const { userName } = change.doc.data() as ApiResponseNote;
+            showToast(`${userName}のメモが更新されました。`);
             fetchNoteList().then();
         });
         return () => unsubscribe();

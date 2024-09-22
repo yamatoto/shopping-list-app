@@ -113,7 +113,7 @@ export default function Note() {
                 )}
                 <View>
                     <Text style={noteStyles.partnerNoteTitle}>
-                        {partnerNote?.displayName}のメモ
+                        {partnerNote?.userName}のメモ
                     </Text>
                     <Text>{partnerNote?.content || 'メモはありません'}</Text>
                 </View>

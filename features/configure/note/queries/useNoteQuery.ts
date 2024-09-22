@@ -54,7 +54,7 @@ export const useNoteQuery = () => {
             (acc, fetchedNote) => {
                 const converted = convertToClientNoteFromServer(fetchedNote);
                 const noteKey =
-                    currentUser?.displayName === converted.displayName
+                    currentUser?.displayName === converted.userName
                         ? 'loginUsersNote'
                         : 'partnerNote';
                 return {

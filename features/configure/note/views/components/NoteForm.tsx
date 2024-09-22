@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function NoteForm({
-    note: { id, displayName, content },
+    note: { id, userName, content },
     textAreaHeight,
     handleChangeTextAreaHeight,
     handleUpdateNote,
@@ -30,7 +30,7 @@ export default function NoteForm({
     return (
         <View style={noteFormStyles.formContainer}>
             <ModalTextArea
-                label={`${displayName}のメモ`}
+                label={`${userName}のメモ`}
                 value={text}
                 onChangeText={text => {
                     setText(text);
