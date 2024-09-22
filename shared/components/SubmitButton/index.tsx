@@ -7,11 +7,28 @@ type Props = {
     title: string;
     onPress: () => void;
     style?: StyleProp<TextStyle>;
+    disabled?: boolean;
 };
-export default function SubmitButton({ title, onPress, style }: Props) {
+export default function SubmitButton({
+    title,
+    onPress,
+    style,
+    disabled,
+}: Props) {
     return (
-        <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-            <Text style={styles.buttonText}>{title}</Text>
+        <TouchableOpacity
+            style={[styles.button, disabled && styles.buttonDisabled, style]}
+            onPress={onPress}
+            disabled={disabled}
+        >
+            <Text
+                style={[
+                    styles.buttonText,
+                    disabled && styles.buttonTextDisabled,
+                ]}
+            >
+                {title}
+            </Text>
         </TouchableOpacity>
     );
 }
@@ -24,9 +41,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#007AFF',
     },
+    buttonDisabled: {
+        backgroundColor: '#A9A9A9',
+    },
     buttonText: {
         color: '#fff',
         fontSize: 14,
         fontWeight: 'bold',
+    },
+    buttonTextDisabled: {
+        color: '#ccc',
     },
 });

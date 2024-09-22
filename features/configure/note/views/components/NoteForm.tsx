@@ -44,6 +44,7 @@ export default function NoteForm({
             />
             <SubmitButton
                 title="更新"
+                disabled={text === content}
                 onPress={() => handleUpdateNote(id, text)}
             />
         </View>
