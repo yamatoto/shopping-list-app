@@ -33,7 +33,7 @@ export default function ShoppingItemEditModal({
     onClose,
 }: Props) {
     const isCurrent = screenLabel === SCREEN.CURRENT;
-    const [selectedCategory, setSelectedCategory] = useState(item.category);
+    const [selectedCategory, setSelectedCategory] = useState(item.categoryId);
 
     const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
     const [tempName, setTempName] = useState(item.name);
@@ -71,7 +71,7 @@ export default function ShoppingItemEditModal({
         onConfirm({
             quantity: tempQuantity,
             name: tempName,
-            category: selectedCategory,
+            categoryId: selectedCategory,
         });
         onClose();
     };

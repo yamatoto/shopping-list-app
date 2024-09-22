@@ -6,7 +6,7 @@ export interface ItemBase {
     quantity: number;
     isCurrent: boolean;
     isFrequent: boolean;
-    category: string;
+    categoryId: string;
     createdUser: string;
     updatedUser: string;
     message?: string;
