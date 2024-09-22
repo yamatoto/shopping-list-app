@@ -46,7 +46,7 @@ export class BaseRepository<T, E> {
                 },
                 removed: {
                     updatedUser: '',
-                    message: `「${response.name}」が${this.deleteMessage}から削除されました`,
+                    message: `「${response.name ?? response.content}」が${this.deleteMessage}から削除されました`,
                 },
             }[change.type];
         };
@@ -72,10 +72,21 @@ export class BaseRepository<T, E> {
         );
     };
 
+    protected getOrderByFields(): {
+        field: string;
+        direction: 'asc' | 'desc';
+    }[] {
+        return [{ field: 'updatedAt', direction: 'desc' }];
+    }
+
     async fetchAll(): Promise<QueryDocumentSnapshot<T>[]> {
+        const orderByConditions = this.getOrderByFields().map(
+            ({ field, direction }) => orderBy(field, direction),
+        );
+
         const q = query(
             collection(db, this.collectionName),
-            orderBy('updatedAt', 'desc'),
+            ...orderByConditions,
         );
         const { docs } = await getDocs(q);
         return docs as QueryDocumentSnapshot<T>[];

@@ -2,22 +2,22 @@ import { useCallback, useEffect } from 'react';
 
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
-import * as BugReportsRepository from '@/features/configure/bugReport/api/bugReportsRepository';
+import { BugReportsRepository } from '@/features/configure/bugReport/api/bugReportsRepository';
 import { useBugReportStore } from '@/features/configure/bugReport/store/useBugReportStore';
 import {
     DisplayBugReport,
     PRIORITY_TO_LABEL,
     PriorityValue,
 } from '@/features/configure/bugReport/models/bugReportModel';
-import { setupBugReportListener } from '@/features/configure/bugReport/api/bugReportsRepository';
 
 export const useBugReportUsecase = () => {
+    const bugReportsRepository = new BugReportsRepository();
     const { setResultOfFetchBugReports, setRefreshing } = useBugReportStore();
     const { currentUser } = useFirebaseAuth();
 
     const fetchAllBugReports = useCallback(async () => {
         try {
-            const bugReports = await BugReportsRepository.fetchAllBugReports();
+            const bugReports = await bugReportsRepository.fetchAll();
             setResultOfFetchBugReports(bugReports);
         } catch (error: any) {
             console.error(error);
@@ -39,15 +39,15 @@ export const useBugReportUsecase = () => {
         async (newBugReportContent: string, priorityValue: PriorityValue) => {
             const createdUser = currentUser!.displayName;
             try {
-                await BugReportsRepository.addBugReport(
+                await bugReportsRepository.add(
                     {
                         content: newBugReportContent,
                         priority: priorityValue,
                         completed: false,
                         rejected: false,
                         rejectedReason: '',
-                        reporterName: createdUser,
-                        updatedUserName: createdUser,
+                        createdUser,
+                        updatedUser: createdUser,
                     },
                     `バグ報告「${newBugReportContent}」を追加しました。\n重要度:${PRIORITY_TO_LABEL[priorityValue]}`,
                 );
@@ -65,12 +65,12 @@ export const useBugReportUsecase = () => {
     const handleCompleteBugReportCheckToggle = useCallback(
         async ({ id, content, completed }: DisplayBugReport) => {
             try {
-                await BugReportsRepository.updateBugReport(
+                await bugReportsRepository.update(
                     {
                         id,
                         completed,
                         rejected: false,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `バグ報告の「${content}」を${completed ? '修正' : '未'}完了にしました。`,
                 );
@@ -88,13 +88,13 @@ export const useBugReportUsecase = () => {
     const handleRejectBugReport = useCallback(
         async ({ id, content, rejectedReason }: DisplayBugReport) => {
             try {
-                await BugReportsRepository.updateBugReport(
+                await bugReportsRepository.update(
                     {
                         id,
                         completed: false,
                         rejected: true,
                         rejectedReason,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `バグ報告の「${content}」を却下しました。`,
                 );
@@ -146,11 +146,11 @@ export const useBugReportUsecase = () => {
             if (!changedContent) return;
 
             try {
-                await BugReportsRepository.updateBugReport(
+                await bugReportsRepository.update(
                     {
                         ...beforeBugReport,
                         ...updateBugReport,
-                        updatedUserName: currentUser!.displayName,
+                        updatedUser: currentUser!.displayName,
                     },
                     `バグ報告の「${beforeBugReport.content}」を更新しました。\n${changedContent}`,
                 );
@@ -165,10 +165,10 @@ export const useBugReportUsecase = () => {
     );
 
     useEffect(() => {
-        const unsubscribe = setupBugReportListener(
-            ({ message, updatedUserName }) => {
+        const unsubscribe = bugReportsRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUserName}${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchAllBugReports().then();

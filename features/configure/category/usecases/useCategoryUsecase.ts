@@ -156,6 +156,19 @@ export const useCategoryUsecase = () => {
         [currentUser, fetchAllCategories],
     );
 
+    useEffect(() => {
+        const unsubscribe = categorySortRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
+                if (message) {
+                    showToast(`${updatedUser}${message}`);
+                }
+
+                fetchAllCategories().then();
+            },
+        );
+        return () => unsubscribe();
+    }, [fetchAllCategories]);
+
     return {
         initialize,
         handleRefresh,

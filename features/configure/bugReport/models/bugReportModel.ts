@@ -6,8 +6,8 @@ export interface BugReportBase {
     completed: boolean;
     rejected: boolean;
     rejectedReason: string;
-    reporterName: string;
-    updatedUserName: string;
+    createdUser: string;
+    updatedUser: string;
 }
 
 export interface ApiResponseBugReport extends BugReportBase {
