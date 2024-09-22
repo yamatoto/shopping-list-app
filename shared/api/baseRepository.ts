@@ -22,7 +22,7 @@ export class BaseRepository<T, E> {
     protected readonly now = Date.now();
     protected readonly db = db;
 
-    constructor(collectionName: string, deleteMessage: string) {
+    constructor(collectionName: string, deleteMessage: string = '') {
         this.collectionName = collectionName;
         this.deleteMessage = deleteMessage;
     }
@@ -79,6 +79,11 @@ export class BaseRepository<T, E> {
         );
         const { docs } = await getDocs(q);
         return docs as QueryDocumentSnapshot<T>[];
+    }
+
+    async fetchOne(): Promise<QueryDocumentSnapshot<T>> {
+        const { docs } = await getDocs(collection(db, this.collectionName));
+        return docs[0] as QueryDocumentSnapshot<T>;
     }
 
     async findByName(name: string): Promise<QueryDocumentSnapshot<T> | null> {

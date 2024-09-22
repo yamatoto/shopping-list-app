@@ -4,10 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { showToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useCategoryStore } from '@/features/configure/category/store/useCategoryStore';
-import * as CategorySortRepository from '@/shared/api/categorySortRepository';
+import { CategorySortRepository } from '@/shared/api/categorySortRepository';
 import { CategoryModel } from '@/shared/models/categorySortModel';
 
 export const useCategoryUsecase = () => {
+    const categorySortRepository = new CategorySortRepository();
     const {
         setResultOfFetchCategorySort,
         setRefreshing,
@@ -17,8 +18,7 @@ export const useCategoryUsecase = () => {
 
     const fetchAllCategories = useCallback(async () => {
         try {
-            const categorySortApi =
-                await CategorySortRepository.fetchCategorySort();
+            const categorySortApi = await categorySortRepository.fetchOne();
             setResultOfFetchCategorySort(categorySortApi);
         } catch (error: any) {
             console.error(error);
@@ -37,10 +37,10 @@ export const useCategoryUsecase = () => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = CategorySortRepository.setupCategorySortListener(
-            ({ message, updatedUserName }) => {
+        const unsubscribe = categorySortRepository.setupUpdateListener(
+            ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUserName}${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchAllCategories().then();
@@ -50,8 +50,7 @@ export const useCategoryUsecase = () => {
     }, [fetchAllCategories]);
 
     const checkCategoryExists = useCallback(async (newCategoryName: string) => {
-        const categorySortApi =
-            await CategorySortRepository.fetchCategorySort();
+        const categorySortApi = await categorySortRepository.fetchOne();
         const fetchedCategories = categorySortApi.data().categories;
         return {
             exists: fetchedCategories.some(
@@ -73,10 +72,10 @@ export const useCategoryUsecase = () => {
                     return;
                 }
 
-                await CategorySortRepository.updateCategory(
-                    categorySortApiId,
+                await categorySortRepository.update(
                     {
-                        updatedUserName: currentUser!.displayName,
+                        id: categorySortApiId,
+                        updatedUser: currentUser!.displayName,
                         categories: [
                             ...fetchedCategories,
                             { id: uuidv4(), name: newCategoryName },
@@ -109,10 +108,10 @@ export const useCategoryUsecase = () => {
                     return;
                 }
 
-                await CategorySortRepository.updateCategory(
-                    categorySortApiId,
+                await categorySortRepository.update(
                     {
-                        updatedUserName: currentUser!.displayName,
+                        id: categorySortApiId,
+                        updatedUser: currentUser!.displayName,
                         categories: fetchedCategories.map(category =>
                             category.id === beforeCategory.id
                                 ? { ...beforeCategory, name: trimmedName }
@@ -134,13 +133,12 @@ export const useCategoryUsecase = () => {
     const handleDeleteCategory = useCallback(
         async ({ id, name }: CategoryModel) => {
             try {
-                const categorySortApi =
-                    await CategorySortRepository.fetchCategorySort();
+                const categorySortApi = await categorySortRepository.fetchOne();
                 const fetchedCategories = categorySortApi.data().categories;
-                await CategorySortRepository.updateCategory(
-                    categorySortApi.id,
+                await categorySortRepository.update(
                     {
-                        updatedUserName: currentUser!.displayName,
+                        id: categorySortApi.id,
+                        updatedUser: currentUser!.displayName,
                         categories: fetchedCategories.filter(
                             category => category.id !== id,
                         ),

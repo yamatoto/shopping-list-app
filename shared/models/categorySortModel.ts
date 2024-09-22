@@ -4,6 +4,7 @@ export const DEFAULT_CATEGORY = {
     id: '99311936-c1bb-47b1-9b1a-68a2eace3d5c',
     name: '未設定',
 };
+
 export interface CategoryModel {
     id: string;
     name: string;
@@ -11,7 +12,7 @@ export interface CategoryModel {
 
 export interface CategorySortBase {
     categories: CategoryModel[];
-    updatedUserName: string;
+    updatedUser: string;
 }
 
 export interface ApiResponseCategorySort extends CategorySortBase {

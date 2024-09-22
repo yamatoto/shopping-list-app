@@ -10,12 +10,13 @@ import {
     INPUT_KEY_LABELS,
     InputValues,
 } from '@/features/shopping-list/models/form';
-import * as CategorySortRepository from '@/shared/api/categorySortRepository';
+import { CategorySortRepository } from '@/shared/api/categorySortRepository';
 import { DEFAULT_CATEGORY } from '@/shared/models/categorySortModel';
 import { ItemsRepository } from '@/shared/api/itemsRepository';
 
 export const useShoppingListUsecase = () => {
     const itemsRepository = new ItemsRepository();
+    const categorySortRepository = new CategorySortRepository();
 
     const {
         setResultOfFetchAllItems,
@@ -31,7 +32,7 @@ export const useShoppingListUsecase = () => {
         try {
             const [items, categorySortApi] = await Promise.all([
                 itemsRepository.fetchAll(),
-                CategorySortRepository.fetchCategorySort(),
+                categorySortRepository.fetchOne(),
             ]);
             setResultOfFetchCategorySort(categorySortApi);
             setResultOfFetchAllItems(items);
