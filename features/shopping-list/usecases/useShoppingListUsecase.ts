@@ -13,10 +13,18 @@ import {
 import { CategorySortRepository } from '@/shared/api/categorySortRepository';
 import { DEFAULT_CATEGORY } from '@/shared/models/categorySortModel';
 import { ItemsRepository } from '@/shared/api/itemsRepository';
+import { RakutenItemsRepository } from '@/shared/api/rakutenItemsRepository';
+import { AmazonItemsRepository } from '@/shared/api/amazonItemsRepository';
+import {
+    SHOPPING_PLATFORM,
+    ShoppingPlatform,
+} from '@/shared/constants/shoppingPlatform';
 
 export const useShoppingListUsecase = () => {
-    const itemsRepository = new ItemsRepository();
     const categorySortRepository = new CategorySortRepository();
+    const itemsRepository = new ItemsRepository();
+    const rakutenItemsRepository = new RakutenItemsRepository();
+    const amazonItemsRepository = new AmazonItemsRepository();
 
     const {
         setResultOfFetchAllItems,
@@ -25,17 +33,34 @@ export const useShoppingListUsecase = () => {
         setTempNewItemName,
         setResultOfFetchCategorySort,
         resultOfFetchCategorySort,
+        setSelectedShoppingPlatform,
+        setResultOfFetchAllRakutenItems,
+        setResultOfFetchAllAmazonItems,
+        selectedShoppingPlatform,
     } = useShoppingItemsStore();
     const { currentUser } = useFirebaseAuth();
 
+    const getRepository = useCallback(() => {
+        return {
+            [SHOPPING_PLATFORM.SUPER]: itemsRepository,
+            [SHOPPING_PLATFORM.RAKUTEN]: rakutenItemsRepository,
+            [SHOPPING_PLATFORM.AMAZON]: amazonItemsRepository,
+        }[selectedShoppingPlatform];
+    }, [selectedShoppingPlatform]);
+
     const fetchAllItems = useCallback(async () => {
         try {
-            const [items, categorySortApi] = await Promise.all([
-                itemsRepository.fetchAll(),
-                categorySortRepository.fetchOne(),
-            ]);
+            const [categorySortApi, items, rakutenItems, amazonItems] =
+                await Promise.all([
+                    categorySortRepository.fetchOne(),
+                    itemsRepository.fetchAll(),
+                    rakutenItemsRepository.fetchAll(),
+                    amazonItemsRepository.fetchAll(),
+                ]);
             setResultOfFetchCategorySort(categorySortApi);
             setResultOfFetchAllItems(items);
+            setResultOfFetchAllRakutenItems(rakutenItems);
+            setResultOfFetchAllAmazonItems(amazonItems);
             return categorySortApi;
         } catch (error: any) {
             console.error(error);
@@ -51,7 +76,7 @@ export const useShoppingListUsecase = () => {
 
     const checkRegisteredItem = useCallback(
         async (newItemName: string, screenLabel: ScreenLabel) => {
-            const fetchedItem = await itemsRepository.findByName(newItemName);
+            const fetchedItem = await getRepository().findByName(newItemName);
             if (!fetchedItem) {
                 return { isDuplicated: false, registeredItem: null };
             }
@@ -68,7 +93,7 @@ export const useShoppingListUsecase = () => {
                 registeredItem: { id, isCurrent, isFrequent },
             };
         },
-        [],
+        [selectedShoppingPlatform],
     );
 
     const handleAddItem = useCallback(
@@ -81,12 +106,14 @@ export const useShoppingListUsecase = () => {
                 const { isDuplicated, registeredItem } =
                     await checkRegisteredItem(newItemName, screenLabel);
                 if (isDuplicated) {
-                    showToast(`${newItemName}はすでに登録されています。`);
+                    showToast(
+                        `${selectedShoppingPlatform}に${newItemName}はすでに登録されています。`,
+                    );
                     return;
                 }
 
                 if (registeredItem) {
-                    await itemsRepository.update(
+                    await getRepository().update(
                         {
                             id: registeredItem.id,
                             name: trimmedItemName,
@@ -96,13 +123,13 @@ export const useShoppingListUsecase = () => {
                                 !isCurrentScreen || registeredItem.isFrequent,
                             updatedUser: createdUser,
                         },
-                        `${screen}の買い物リストに「${newItemName}」を追加しました。`,
+                        `${selectedShoppingPlatform}の${screen}の買い物リストに「${newItemName}」を追加しました。`,
                     );
                     setTempNewItemName('');
                     return;
                 }
 
-                await itemsRepository.add(
+                await getRepository().add(
                     {
                         name: trimmedItemName,
                         quantity: 1,
@@ -112,27 +139,29 @@ export const useShoppingListUsecase = () => {
                         createdUser,
                         updatedUser: createdUser,
                     },
-                    `${screenLabel}の買い物リストに「${trimmedItemName}」を追加しました。`,
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストに「${trimmedItemName}」を追加しました。`,
                 );
                 setTempNewItemName('');
             } catch (error: any) {
                 console.error(error);
-                showToast(`${screenLabel}の買い物リストの追加に失敗しました。`);
+                showToast(
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストの追加に失敗しました。`,
+                );
                 return;
             }
 
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems],
+        [currentUser, fetchAllItems, selectedShoppingPlatform],
     );
 
-    const trimItem = useCallback((item: InputValues) => {
+    const trimItem = (item: InputValues) => {
         return Object.keys(item).reduce((acc, key) => {
             const value = item[key as keyof InputValues];
             acc[key as keyof InputValues] = value?.trim() as any;
             return acc;
         }, {} as InputValues);
-    }, []);
+    };
 
     const getChangedContent = useCallback(
         (beforeItem: DisplayItem, values: FormattedInputValues) => {
@@ -196,7 +225,6 @@ export const useShoppingListUsecase = () => {
                 formatedInputValues,
             );
             if (!changedContent) return;
-
             try {
                 if (
                     trimmedUpdateName &&
@@ -208,35 +236,37 @@ export const useShoppingListUsecase = () => {
                     );
                     if (isDuplicated) {
                         showToast(
-                            `${trimmedUpdateName}はすでに登録されています。`,
+                            `${selectedShoppingPlatform}に${trimmedUpdateName}はすでに登録されています。`,
                         );
                         return;
                     }
                 }
 
-                await itemsRepository.update(
+                await getRepository().update(
                     {
                         ...beforeItem,
                         ...formatedInputValues,
                         updatedUser: currentUser!.displayName,
                     },
-                    `${screenLabel}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストの「${beforeItem.name}」を更新しました。\n${changedContent}`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast(`${screenLabel}の買い物リストの更新に失敗しました。`);
+                showToast(
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストの更新に失敗しました。`,
+                );
                 return;
             }
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems],
+        [currentUser, fetchAllItems, selectedShoppingPlatform],
     );
 
     const handleDeleteItem = useCallback(
         async ({ id, name }: DisplayItem, screenLabel: ScreenLabel) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await itemsRepository.update(
+                await getRepository().update(
                     {
                         ...(screenLabel === SCREEN.CURRENT
                             ? { isCurrent: false }
@@ -244,67 +274,69 @@ export const useShoppingListUsecase = () => {
                         id,
                         updatedUser,
                     },
-                    `${screenLabel}の買い物リストから「${name}」を削除しました。`,
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストから「${name}」を削除しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
-                showToast('買い物リストの削除に失敗しました。');
+                showToast(
+                    `${selectedShoppingPlatform}の買い物リストの削除に失敗しました。`,
+                );
                 return;
             }
 
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems],
+        [currentUser, fetchAllItems, selectedShoppingPlatform],
     );
 
     const handleAddToFrequent = useCallback(
         async (item: DisplayItem) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await itemsRepository.update(
+                await getRepository().update(
                     {
                         ...item,
                         isFrequent: true,
                         updatedUser,
                     },
-                    `${SCREEN.FREQUENT}の買い物リストに「${item.name}」を追加しました。`,
+                    `${selectedShoppingPlatform}の${SCREEN.FREQUENT}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
                 showToast(
-                    `${SCREEN.FREQUENT}の買い物リストへの追加に失敗しました。`,
+                    `${selectedShoppingPlatform}の${SCREEN.FREQUENT}の買い物リストへの追加に失敗しました。`,
                 );
                 return;
             }
 
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems],
+        [currentUser, fetchAllItems, selectedShoppingPlatform],
     );
 
     const handleAddToCurrent = useCallback(
         async (item: DisplayItem) => {
             const updatedUser = currentUser!.displayName;
             try {
-                await itemsRepository.update(
+                await getRepository().update(
                     {
                         ...item,
                         isCurrent: true,
                         updatedUser,
                     },
-                    `${SCREEN.CURRENT}の買い物リストに「${item.name}」を追加しました。`,
+                    `${selectedShoppingPlatform}の${SCREEN.CURRENT}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
                 showToast(
-                    `${SCREEN.CURRENT}の買い物リストへの追加に失敗しました。`,
+                    `${selectedShoppingPlatform}の${SCREEN.CURRENT}の買い物リストへの追加に失敗しました。`,
                 );
                 return;
             }
 
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems],
+        [currentUser, fetchAllItems, selectedShoppingPlatform],
     );
 
     const initialize = useCallback(async () => {
@@ -315,20 +347,41 @@ export const useShoppingListUsecase = () => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = itemsRepository.setupUpdateListener(
+        const unsubscribeItems = itemsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
-                if (message) {
-                    showToast(`${updatedUser}が${message}`);
-                }
-
+                showToast(`${updatedUser}${message}`);
                 fetchAllItems().then();
             },
         );
-        return () => unsubscribe();
+        const unsubscribeRakutenItems =
+            rakutenItemsRepository.setupUpdateListener(
+                ({ message, updatedUser }) => {
+                    showToast(`${updatedUser}${message}`);
+                    fetchAllItems().then();
+                },
+            );
+        const unsubscribeAmazonItems =
+            amazonItemsRepository.setupUpdateListener(
+                ({ message, updatedUser }) => {
+                    showToast(`${updatedUser}${message}`);
+                    fetchAllItems().then();
+                },
+            );
+        return () => {
+            unsubscribeItems();
+            unsubscribeRakutenItems();
+            unsubscribeAmazonItems();
+        };
     }, [fetchAllItems]);
 
     const toggleSection = (category: string) => {
         setOpenSections([category]);
+    };
+
+    const handleShoppingPlatformSelect = (
+        shoppingPlatform: ShoppingPlatform,
+    ) => {
+        setSelectedShoppingPlatform(shoppingPlatform);
     };
 
     return {
@@ -341,5 +394,6 @@ export const useShoppingListUsecase = () => {
         handleAddToCurrent,
         toggleSection,
         setTempNewItemName,
+        handleShoppingPlatformSelect,
     };
 };

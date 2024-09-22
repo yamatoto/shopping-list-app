@@ -3,10 +3,26 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { ApiResponseItem } from '@/shared/models/itemModel';
 import { ApiResponseCategorySort } from '@/shared/models/categorySortModel';
+import {
+    ShoppingPlatform,
+    SHOPPING_PLATFORM,
+} from '@/shared/constants/shoppingPlatform';
 
 type ShoppingItemsStore = {
+    resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null;
+    setResultOfFetchCategorySort: (
+        apiCategories: QueryDocumentSnapshot<ApiResponseCategorySort>,
+    ) => void;
     resultOfFetchAllItems: QueryDocumentSnapshot<ApiResponseItem>[];
     setResultOfFetchAllItems: (
+        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
+    ) => void;
+    resultOfFetchAllRakutenItems: QueryDocumentSnapshot<ApiResponseItem>[];
+    setResultOfFetchAllRakutenItems: (
+        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
+    ) => void;
+    resultOfFetchAllAmazonItems: QueryDocumentSnapshot<ApiResponseItem>[];
+    setResultOfFetchAllAmazonItems: (
         apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
     ) => void;
     refreshing: boolean;
@@ -15,9 +31,9 @@ type ShoppingItemsStore = {
     setOpenSections: (sections: string[]) => void;
     tempNewItemName: string;
     setTempNewItemName: (newItemName: string) => void;
-    resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null;
-    setResultOfFetchCategorySort: (
-        apiCategories: QueryDocumentSnapshot<ApiResponseCategorySort>,
+    selectedShoppingPlatform: ShoppingPlatform;
+    setSelectedShoppingPlatform: (
+        selectedShoppingPlatform: ShoppingPlatform,
     ) => void;
 };
 
@@ -29,6 +45,14 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
     resultOfFetchAllItems: [],
     setResultOfFetchAllItems: apiItems => {
         set({ resultOfFetchAllItems: apiItems });
+    },
+    resultOfFetchAllRakutenItems: [],
+    setResultOfFetchAllRakutenItems: apiItems => {
+        set({ resultOfFetchAllRakutenItems: apiItems });
+    },
+    resultOfFetchAllAmazonItems: [],
+    setResultOfFetchAllAmazonItems: apiItems => {
+        set({ resultOfFetchAllAmazonItems: apiItems });
     },
     refreshing: false,
     setRefreshing: (refreshing: boolean) => {
@@ -52,5 +76,9 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
     tempNewItemName: '',
     setTempNewItemName: tempNewItemName => {
         set({ tempNewItemName });
+    },
+    selectedShoppingPlatform: SHOPPING_PLATFORM.SUPER,
+    setSelectedShoppingPlatform: platform => {
+        set({ selectedShoppingPlatform: platform });
     },
 }));

@@ -40,7 +40,7 @@ export const useCategoryUsecase = () => {
         const unsubscribe = categorySortRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}が${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchAllCategories().then();
@@ -160,7 +160,7 @@ export const useCategoryUsecase = () => {
         const unsubscribe = categorySortRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}が${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchAllCategories().then();

@@ -12,10 +12,16 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
+import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 
 export default function CurrentShoppingList() {
-    const { currentItems, refreshing, tempNewItemName, categorySelectItems } =
-        useShoppingListQuery();
+    const {
+        currentItems,
+        refreshing,
+        tempNewItemName,
+        categorySelectItems,
+        selectedShoppingPlatform,
+    } = useShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -24,6 +30,7 @@ export default function CurrentShoppingList() {
         handleDeleteItem,
         handleAddToFrequent,
         setTempNewItemName,
+        handleShoppingPlatformSelect,
     } = useShoppingListUsecase();
 
     useEffect(() => {
@@ -64,6 +71,11 @@ export default function CurrentShoppingList() {
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
                     onAdd={handleAddItem}
+                />
+
+                <ShoppingPlatformButtons
+                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    onSelect={handleShoppingPlatformSelect}
                 />
 
                 <CommonSwipeListView

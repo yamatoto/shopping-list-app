@@ -6,18 +6,46 @@ import { useArchiveItemStore } from '@/features/configure/archive/store/useArchi
 import { DisplayItem } from '@/shared/models/itemModel';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import { ItemsRepository } from '@/shared/api/itemsRepository';
+import {
+    SHOPPING_PLATFORM,
+    ShoppingPlatform,
+} from '@/shared/constants/shoppingPlatform';
+import { RakutenItemsRepository } from '@/shared/api/rakutenItemsRepository';
+import { AmazonItemsRepository } from '@/shared/api/amazonItemsRepository';
 
 export const useArchiveUsecase = () => {
     const itemsRepository = new ItemsRepository();
+    const rakutenItemsRepository = new RakutenItemsRepository();
+    const amazonItemsRepository = new AmazonItemsRepository();
 
-    const { setResultOfFetchArchiveItems, setRefreshing } =
-        useArchiveItemStore();
+    const {
+        setResultOfFetchArchiveItems,
+        setResultOfFetchAllRakutenItems,
+        setResultOfFetchAllAmazonItems,
+        setRefreshing,
+        setSelectedShoppingPlatform,
+        selectedShoppingPlatform,
+    } = useArchiveItemStore();
     const { currentUser } = useFirebaseAuth();
+
+    const getRepository = () => {
+        return {
+            [SHOPPING_PLATFORM.SUPER]: itemsRepository,
+            [SHOPPING_PLATFORM.RAKUTEN]: rakutenItemsRepository,
+            [SHOPPING_PLATFORM.AMAZON]: amazonItemsRepository,
+        }[selectedShoppingPlatform];
+    };
 
     const fetchArchiveItems = useCallback(async () => {
         try {
-            const items = await itemsRepository.fetchArchiveItems();
+            const [items, rakutenItems, amazonItems] = await Promise.all([
+                itemsRepository.fetchArchiveItems(),
+                rakutenItemsRepository.fetchArchiveItems(),
+                amazonItemsRepository.fetchArchiveItems(),
+            ]);
             setResultOfFetchArchiveItems(items);
+            setResultOfFetchAllRakutenItems(rakutenItems);
+            setResultOfFetchAllAmazonItems(amazonItems);
         } catch (error: any) {
             console.error(error);
             showToast('アーカイブ買い物リストの取得に失敗しました。');
@@ -37,7 +65,7 @@ export const useArchiveUsecase = () => {
     const handleDeleteItem = useCallback(
         async ({ id, name }: DisplayItem) => {
             try {
-                await itemsRepository.delete(id);
+                await getRepository().delete(id);
             } catch (error: any) {
                 console.error(error);
                 showToast(
@@ -48,7 +76,7 @@ export const useArchiveUsecase = () => {
 
             await fetchArchiveItems();
         },
-        [currentUser, fetchArchiveItems],
+        [currentUser, fetchArchiveItems, selectedShoppingPlatform],
     );
 
     const handleRestoreItem = useCallback(
@@ -56,44 +84,69 @@ export const useArchiveUsecase = () => {
             const updatedUser = currentUser!.displayName;
             const screenLabel = isCurrent ? SCREEN.CURRENT : SCREEN.FREQUENT;
             try {
-                await itemsRepository.update(
+                await getRepository().update(
                     {
                         ...item,
                         isCurrent,
                         isFrequent: !isCurrent,
                         updatedUser,
                     },
-                    `${screenLabel}の買い物リストに「${item.name}」を追加しました。`,
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストに「${item.name}」を追加しました。`,
                 );
             } catch (error: any) {
                 console.error(error);
                 showToast(
-                    `${screenLabel}の買い物リストへの追加に失敗しました。`,
+                    `${selectedShoppingPlatform}の${screenLabel}の買い物リストへの追加に失敗しました。`,
                 );
             }
 
             await fetchArchiveItems();
         },
-        [currentUser, fetchArchiveItems],
+        [currentUser, fetchArchiveItems, selectedShoppingPlatform],
     );
 
     useEffect(() => {
-        const unsubscribe = itemsRepository.setupUpdateListener(
+        const unsubscribeItems = itemsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 if (message) {
-                    showToast(`${updatedUser}が${message}`);
+                    showToast(`${updatedUser}${message}`);
                 }
 
                 fetchArchiveItems().then();
             },
         );
-        return () => unsubscribe();
+        const unsubscribeRakutenItems =
+            rakutenItemsRepository.setupUpdateListener(
+                ({ message, updatedUser }) => {
+                    showToast(`${updatedUser}${message}`);
+                    fetchArchiveItems().then();
+                },
+            );
+        const unsubscribeAmazonItems =
+            amazonItemsRepository.setupUpdateListener(
+                ({ message, updatedUser }) => {
+                    showToast(`${updatedUser}${message}`);
+                    fetchArchiveItems().then();
+                },
+            );
+        return () => {
+            unsubscribeItems();
+            unsubscribeRakutenItems();
+            unsubscribeAmazonItems();
+        };
     }, [fetchArchiveItems]);
+
+    const handleShoppingPlatformSelect = (
+        shoppingPlatform: ShoppingPlatform,
+    ) => {
+        setSelectedShoppingPlatform(shoppingPlatform);
+    };
 
     return {
         initialize,
         handleRefresh,
         handleDeleteItem,
         handleRestoreItem,
+        handleShoppingPlatformSelect,
     };
 };

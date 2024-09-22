@@ -20,6 +20,7 @@ import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
+import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 
 export default function FrequentShoppingList() {
     const {
@@ -28,6 +29,7 @@ export default function FrequentShoppingList() {
         openSections,
         tempNewItemName,
         categorySelectItems,
+        selectedShoppingPlatform,
     } = useShoppingListQuery();
     const {
         initialize,
@@ -38,6 +40,7 @@ export default function FrequentShoppingList() {
         handleAddToCurrent,
         toggleSection,
         setTempNewItemName,
+        handleShoppingPlatformSelect,
     } = useShoppingListUsecase();
 
     useEffect(() => {
@@ -98,6 +101,11 @@ export default function FrequentShoppingList() {
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
                     onAdd={handleAddItem}
+                />
+
+                <ShoppingPlatformButtons
+                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    onSelect={handleShoppingPlatformSelect}
                 />
 
                 <CommonSwipeListView

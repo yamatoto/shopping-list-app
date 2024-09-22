@@ -10,9 +10,12 @@ import {
 import { BaseRepository } from '@/shared/api/baseRepository';
 import { ApiResponseItem, ItemBase } from '@/shared/models/itemModel';
 
-export class ItemsRepository extends BaseRepository<ApiResponseItem, ItemBase> {
+export class RakutenItemsRepository extends BaseRepository<
+    ApiResponseItem,
+    ItemBase
+> {
     constructor() {
-        super('items', 'スーパーのアーカイブ買い物リスト');
+        super('rakuten-items', '楽天アーカイブ買い物リスト');
     }
 
     async fetchArchiveItems(): Promise<

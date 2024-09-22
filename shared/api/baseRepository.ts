@@ -41,13 +41,13 @@ export class BaseRepository<T, E> {
                 added:
                     response.updatedAt > Timestamp.fromMillis(this.now)
                         ? {
-                              updatedUser: response.updatedUser,
+                              updatedUser: `${response.updatedUser}が`,
                               message: response.message,
                           }
                         : null,
                 modified: {
                     userName: response.userName,
-                    updatedUser: response.updatedUser,
+                    updatedUser: `${response.updatedUser}が`,
                     message: response.message,
                 },
                 removed: {

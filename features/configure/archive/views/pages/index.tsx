@@ -10,11 +10,18 @@ import { useArchiveQuery } from '@/features/configure/archive/queries/useArchive
 import { useArchiveUsecase } from '@/features/configure/archive/usecases/useArchiveUsecase';
 import ArchiveItemContainer from '@/features/configure/archive/views/components/ArchiveItemContainer';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
+import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 
 export default function Archive() {
-    const { archiveItems, refreshing } = useArchiveQuery();
-    const { initialize, handleRefresh, handleDeleteItem, handleRestoreItem } =
-        useArchiveUsecase();
+    const { archiveItems, refreshing, selectedShoppingPlatform } =
+        useArchiveQuery();
+    const {
+        initialize,
+        handleRefresh,
+        handleDeleteItem,
+        handleRestoreItem,
+        handleShoppingPlatformSelect,
+    } = useArchiveUsecase();
 
     useEffect(() => {
         initialize().then();
@@ -44,6 +51,10 @@ export default function Archive() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
+                <ShoppingPlatformButtons
+                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    onSelect={handleShoppingPlatformSelect}
+                />
                 <CommonSwipeListView
                     data={archiveItems}
                     renderItem={renderItem}

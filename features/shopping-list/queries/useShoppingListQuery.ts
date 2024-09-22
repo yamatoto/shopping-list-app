@@ -3,6 +3,7 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { SHOPPING_PLATFORM } from '@/shared/constants/shoppingPlatform';
 
 export const useShoppingListQuery = () => {
     const {
@@ -11,6 +12,9 @@ export const useShoppingListQuery = () => {
         refreshing,
         openSections,
         tempNewItemName,
+        selectedShoppingPlatform,
+        resultOfFetchAllRakutenItems,
+        resultOfFetchAllAmazonItems,
     } = useShoppingItemsStore(
         ({
             resultOfFetchCategorySort,
@@ -18,12 +22,18 @@ export const useShoppingListQuery = () => {
             refreshing,
             openSections,
             tempNewItemName,
+            selectedShoppingPlatform,
+            resultOfFetchAllRakutenItems,
+            resultOfFetchAllAmazonItems,
         }) => ({
             resultOfFetchCategorySort,
             resultOfFetchAllItems,
             refreshing,
             openSections,
             tempNewItemName,
+            selectedShoppingPlatform,
+            resultOfFetchAllRakutenItems,
+            resultOfFetchAllAmazonItems,
         }),
     );
 
@@ -39,28 +49,35 @@ export const useShoppingListQuery = () => {
         };
     };
 
-    const { currentItems, frequentItems } = useMemo(
-        () =>
-            resultOfFetchAllItems.reduce<{
-                currentItems: DisplayItem[];
-                frequentItems: DisplayItem[];
-            }>(
-                (acc, fetchedItem) => {
-                    const converted =
-                        convertToClientItemFromServer(fetchedItem);
-                    return {
-                        currentItems: converted.isCurrent
-                            ? [...acc.currentItems, converted]
-                            : acc.currentItems,
-                        frequentItems: converted.isFrequent
-                            ? [...acc.frequentItems, converted]
-                            : acc.frequentItems,
-                    };
-                },
-                { currentItems: [], frequentItems: [] },
-            ),
-        [resultOfFetchAllItems],
-    );
+    const { currentItems, frequentItems } = useMemo(() => {
+        const allItems = {
+            [SHOPPING_PLATFORM.SUPER]: resultOfFetchAllItems,
+            [SHOPPING_PLATFORM.RAKUTEN]: resultOfFetchAllRakutenItems,
+            [SHOPPING_PLATFORM.AMAZON]: resultOfFetchAllAmazonItems,
+        }[selectedShoppingPlatform];
+        return allItems.reduce<{
+            currentItems: DisplayItem[];
+            frequentItems: DisplayItem[];
+        }>(
+            (acc, fetchedItem) => {
+                const converted = convertToClientItemFromServer(fetchedItem);
+                return {
+                    currentItems: converted.isCurrent
+                        ? [...acc.currentItems, converted]
+                        : acc.currentItems,
+                    frequentItems: converted.isFrequent
+                        ? [...acc.frequentItems, converted]
+                        : acc.frequentItems,
+                };
+            },
+            { currentItems: [], frequentItems: [] },
+        );
+    }, [
+        selectedShoppingPlatform,
+        resultOfFetchAllItems,
+        resultOfFetchAllRakutenItems,
+        resultOfFetchAllAmazonItems,
+    ]);
 
     const groupedItems = useMemo(() => {
         return frequentItems.reduce(
@@ -115,5 +132,6 @@ export const useShoppingListQuery = () => {
         openSections: formattedOpenSections,
         tempNewItemName,
         categorySelectItems,
+        selectedShoppingPlatform,
     };
 };

@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 export const itemAddFormStyles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
-        marginBottom: 20,
     },
     input: {
         flex: 1,
