@@ -1,7 +1,12 @@
 import React from 'react';
-import { Modal as RNModal, TouchableOpacity, View } from 'react-native';
+import {
+    Modal as RNModal,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from 'react-native';
 
-import { modalStyles } from '@/shared/components/Modal/modalStyles';
+import { modalStyles } from '@/shared/components/Modal/styles';
 
 type Props = {
     visible: boolean;
@@ -21,7 +26,10 @@ export default function Modal({ visible, onClose, children }: Props) {
                 activeOpacity={1}
                 onPressOut={onClose}
             >
-                <View style={modalStyles.modalView}>{children}</View>
+                {/* モーダル内部のタッチでモーダル閉じないように */}
+                <TouchableWithoutFeedback>
+                    <View style={modalStyles.modalView}>{children}</View>
+                </TouchableWithoutFeedback>
             </TouchableOpacity>
         </RNModal>
     );
