@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
+    Keyboard,
     NativeSyntheticEvent,
     Text,
     TextInput,
     TextInputContentSizeChangeEventData,
+    TouchableWithoutFeedback,
     View,
 } from 'react-native';
 import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
@@ -33,20 +35,30 @@ export default function ModalTextArea({
     onContentSizeChange,
     placeholderTextColor,
 }: Props) {
+    const inputRef = useRef<TextInput>(null);
+
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+        inputRef.current?.blur();
+    };
+
     return (
-        <View style={modalStyles.itemContainer}>
-            <Text style={modalStyles.label}>{label}</Text>
-            <TextInput
-                style={[modalStyles.areaInput, style]}
-                multiline
-                numberOfLines={4}
-                onChangeText={onChangeText}
-                value={value}
-                placeholder={placeholder ?? ''}
-                placeholderTextColor={placeholderTextColor || '#888'}
-                editable={editable}
-                onContentSizeChange={onContentSizeChange}
-            />
-        </View>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <View style={modalStyles.itemContainer}>
+                <Text style={modalStyles.label}>{label}</Text>
+                <TextInput
+                    ref={inputRef}
+                    style={[modalStyles.areaInput, style]}
+                    multiline
+                    numberOfLines={4}
+                    onChangeText={onChangeText}
+                    value={value}
+                    placeholder={placeholder ?? ''}
+                    placeholderTextColor={placeholderTextColor || '#888'}
+                    editable={editable}
+                    onContentSizeChange={onContentSizeChange}
+                />
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
