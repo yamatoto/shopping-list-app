@@ -80,7 +80,8 @@ export const useShoppingListUsecase = () => {
             if (!fetchedItem) {
                 return { isDuplicated: false, registeredItem: null };
             }
-            const { id, isCurrent, isFrequent } = fetchedItem.data();
+            const id = fetchedItem.id;
+            const { isCurrent, isFrequent } = fetchedItem.data();
             if (screenLabel === SCREEN.CURRENT) {
                 return {
                     isDuplicated: isCurrent,
