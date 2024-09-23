@@ -28,7 +28,7 @@ export default function BugReportEditModal({
 }: Props) {
     const { currentUser } = useFirebaseAuth();
     const [selectedPriority, setSelectedPriority] = useState(
-        bugReport?.priority || PRIORITY.HIGH.value,
+        bugReport?.priority || PRIORITY.NOT_SET.value,
     );
 
     const [tempContent, setTempContent] = useState(bugReport?.content ?? '');

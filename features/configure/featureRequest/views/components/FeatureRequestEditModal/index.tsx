@@ -30,7 +30,7 @@ export default function FeatureRequestEditModal({
 }: Props) {
     const { currentUser } = useFirebaseAuth();
     const [selectedPriority, setSelectedPriority] = useState(
-        featureRequest?.priority || PRIORITY.HIGH.value,
+        featureRequest?.priority || PRIORITY.NOT_SET.value,
     );
 
     const [tempContent, setTempContent] = useState(
