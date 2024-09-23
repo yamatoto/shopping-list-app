@@ -1,5 +1,5 @@
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { itemAddFormStyles } from '@/features/shopping-list/views/components/ItemAddForm/styles';
@@ -17,9 +17,19 @@ export default function ItemAddForm({
     onAdd,
     screenLabel,
 }: Props) {
+    const inputRef = useRef<TextInput>(null);
+
+    const handleAdd = () => {
+        if (inputRef.current) {
+            inputRef.current.blur();
+        }
+        onAdd(tempNewItemName, screenLabel);
+    };
+
     return (
         <View style={itemAddFormStyles.inputContainer}>
             <TextInput
+                ref={inputRef}
                 style={itemAddFormStyles.input}
                 value={tempNewItemName}
                 onChangeText={setTempNewItemName}
@@ -28,7 +38,7 @@ export default function ItemAddForm({
             />
             <TouchableOpacity
                 style={sharedStyles.addButton}
-                onPress={() => onAdd(tempNewItemName, screenLabel)}
+                onPress={handleAdd}
             >
                 <Text style={sharedStyles.addButtonText}>追加</Text>
             </TouchableOpacity>
