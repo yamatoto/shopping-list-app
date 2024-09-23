@@ -74,6 +74,12 @@ export const modalStyles = StyleSheet.create({
         padding: 10,
         textAlignVertical: 'top',
     },
+    textViewArea: {
+        height: 100,
+        width: '100%',
+        paddingVertical: 10,
+        textAlignVertical: 'top',
+    },
     itemContainer: {
         marginVertical: 10,
         width: '100%',

@@ -10,6 +10,7 @@ import Modal from '@/shared/components/Modal';
 import ModalTextArea from '@/shared/components/ModalTextArea';
 import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
+import ModalTextView from '@/shared/components/ModalTextView';
 
 type Props = {
     featureRequest?: DisplayFeatureRequest;
@@ -72,14 +73,20 @@ export default function FeatureRequestEditModal({
                         onValueChange={setSelectedPriority}
                     />
                 )}
-            {currentUser?.isDeveloper && featureRequest?.rejected && (
-                <ModalTextArea
-                    label="却下理由"
-                    value={tempRejectedReason}
-                    onChangeText={setTempRejectedReason}
-                    placeholder="却下理由を入力"
-                />
-            )}
+            {featureRequest?.rejected &&
+                (currentUser?.isDeveloper ? (
+                    <ModalTextArea
+                        label="却下理由"
+                        value={tempRejectedReason}
+                        onChangeText={setTempRejectedReason}
+                        placeholder="却下理由を入力"
+                    />
+                ) : (
+                    <ModalTextView
+                        label="却下理由"
+                        value={tempRejectedReason}
+                    />
+                ))}
             <ModalHorizontalButtons
                 onCancel={onClose}
                 onSubmit={handleConfirm}
