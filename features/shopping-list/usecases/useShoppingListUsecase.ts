@@ -123,7 +123,7 @@ export const useShoppingListUsecase = () => {
                                 !isCurrentScreen || registeredItem.isFrequent,
                             updatedUser: createdUser,
                         },
-                        `${selectedShoppingPlatform}の${screen}の買い物リストに「${newItemName}」を追加しました。`,
+                        `${selectedShoppingPlatform}の${screenLabel}の買い物リストに「${newItemName}」を追加しました。`,
                     );
                     setTempNewItemName('');
                     return;
