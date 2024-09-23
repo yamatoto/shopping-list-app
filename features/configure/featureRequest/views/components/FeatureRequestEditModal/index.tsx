@@ -62,22 +62,22 @@ export default function FeatureRequestEditModal({
                 onChangeText={setTempContent}
                 placeholder="実装要望の内容を入力"
             />
-            {!featureRequest?.rejected && !featureRequest?.completed && (
-                <ModalPickerSelect
-                    label="優先度"
-                    value={selectedPriority}
-                    items={Object.values(PRIORITY)}
-                    onValueChange={setSelectedPriority}
-                    disabled={!currentUser?.isDeveloper}
-                />
-            )}
-            {featureRequest?.rejected && (
+            {currentUser?.isDeveloper &&
+                !featureRequest?.rejected &&
+                !featureRequest?.completed && (
+                    <ModalPickerSelect
+                        label="優先度"
+                        value={selectedPriority}
+                        items={Object.values(PRIORITY)}
+                        onValueChange={setSelectedPriority}
+                    />
+                )}
+            {currentUser?.isDeveloper && featureRequest?.rejected && (
                 <ModalTextArea
                     label="却下理由"
                     value={tempRejectedReason}
                     onChangeText={setTempRejectedReason}
                     placeholder="却下理由を入力"
-                    editable={currentUser?.isDeveloper}
                 />
             )}
             <ModalHorizontalButtons

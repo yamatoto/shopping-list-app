@@ -58,22 +58,22 @@ export default function BugReportEditModal({
                 onChangeText={setTempContent}
                 placeholder="バグ内容を入力"
             />
-            {!bugReport?.rejected && !bugReport?.completed && (
-                <ModalPickerSelect
-                    label="重要度"
-                    value={selectedPriority}
-                    items={Object.values(PRIORITY)}
-                    onValueChange={setSelectedPriority}
-                    disabled={!currentUser?.isDeveloper}
-                />
-            )}
-            {bugReport?.rejected && (
+            {currentUser?.isDeveloper &&
+                !bugReport?.rejected &&
+                !bugReport?.completed && (
+                    <ModalPickerSelect
+                        label="重要度"
+                        value={selectedPriority}
+                        items={Object.values(PRIORITY)}
+                        onValueChange={setSelectedPriority}
+                    />
+                )}
+            {currentUser?.isDeveloper && bugReport?.rejected && (
                 <ModalTextArea
                     label="却下理由"
                     value={tempRejectedReason}
                     onChangeText={setTempRejectedReason}
                     placeholder="却下理由を入力"
-                    editable={currentUser?.isDeveloper}
                 />
             )}
             <ModalHorizontalButtons
