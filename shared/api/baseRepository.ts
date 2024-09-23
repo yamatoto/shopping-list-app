@@ -82,7 +82,7 @@ export class BaseRepository<T, E> {
         field: string;
         direction: 'asc' | 'desc';
     }[] {
-        return [{ field: 'updatedAt', direction: 'desc' }];
+        return [{ field: 'createdAt', direction: 'desc' }];
     }
 
     async fetchAll(): Promise<QueryDocumentSnapshot<T>[]> {
