@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 import { TextInputContentSizeChangeEventData } from 'react-native/Libraries/Components/TextInput/TextInput';
 
+import ButtonSubmit from '@/shared/components/ButtonSubmit';
 import { DisplayNote } from '@/features/configure/note/models/noteModel';
 import ModalTextArea from '@/shared/components/ModalTextArea';
-import SubmitButton from '@/shared/components/SubmitButton';
 import { noteFormStyles } from '@/features/configure/note/views/components/styles';
 
 type Props = {
@@ -42,7 +42,7 @@ export default function NoteForm({
                 style={[noteFormStyles.textArea, { height: textAreaHeight }]}
                 placeholder="メモを入力してください"
             />
-            <SubmitButton
+            <ButtonSubmit
                 title="更新"
                 disabled={text === content}
                 onPress={() => handleUpdateNote(id, text)}

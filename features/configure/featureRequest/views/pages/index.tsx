@@ -17,6 +17,7 @@ import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { featureRequestStyles } from '@/features/configure/featureRequest/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/featureRequest/views/components/HiddenItemWithModal';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
+import ButtonAdd from '@/shared/components/ButtonAdd';
 
 export default function FeatureRequest() {
     const { sections, refreshing } = useFeatureRequestQuery();
@@ -96,14 +97,11 @@ export default function FeatureRequest() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
                 <View style={featureRequestStyles.addButtonContainer}>
-                    <TouchableOpacity
-                        style={featureRequestStyles.addButton}
+                    <ButtonAdd
                         onPress={() => {
                             setModalVisible(true);
                         }}
-                    >
-                        <Text style={sharedStyles.addButtonText}>追加</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
 
                 <CommonSwipeListView

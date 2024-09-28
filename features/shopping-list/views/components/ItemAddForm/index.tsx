@@ -1,9 +1,10 @@
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import React, { useRef } from 'react';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { itemAddFormStyles } from '@/features/shopping-list/views/components/ItemAddForm/styles';
 import { ScreenLabel } from '@/features/shopping-list/constants/screen';
+import ButtonAdd from '@/shared/components/ButtonAdd';
 
 type Props = {
     screenLabel: ScreenLabel;
@@ -36,12 +37,7 @@ export default function ItemAddForm({
                 placeholderTextColor="#888"
                 placeholder={`新しい${screenLabel}の買い物を追加`}
             />
-            <TouchableOpacity
-                style={sharedStyles.addButton}
-                onPress={handleAdd}
-            >
-                <Text style={sharedStyles.addButtonText}>追加</Text>
-            </TouchableOpacity>
+            <ButtonAdd style={sharedStyles.addButton} onPress={handleAdd} />
         </View>
     );
 }

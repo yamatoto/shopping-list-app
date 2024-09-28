@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
+import ButtonSubmit from '@/shared/components/ButtonSubmit';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
-import SubmitButton from '@/shared/components/SubmitButton';
 
 export default function SignInOrUpWithEmail() {
     const [email, setEmail] = useState('');
@@ -43,8 +43,8 @@ export default function SignInOrUpWithEmail() {
                 onChangeText={setPassword}
                 secureTextEntry
             />
-            <SubmitButton title="ログイン" onPress={handleSignIn} />
-            <SubmitButton
+            <ButtonSubmit title="ログイン" onPress={handleSignIn} />
+            <ButtonSubmit
                 title="アカウント新規登録"
                 onPress={handleSignUp}
                 style={{ marginTop: 10 }}

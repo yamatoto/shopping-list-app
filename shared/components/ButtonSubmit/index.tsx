@@ -9,7 +9,7 @@ type Props = {
     style?: StyleProp<TextStyle>;
     disabled?: boolean;
 };
-export default function SubmitButton({
+export default function ButtonSubmit({
     title,
     onPress,
     style,

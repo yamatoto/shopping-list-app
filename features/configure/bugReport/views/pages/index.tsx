@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
+import { View, Text, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
@@ -17,6 +17,7 @@ import {
     DisplayBugReport,
 } from '@/shared/models/requestModel';
 import RequestEditModal from '@/shared/components/RequestEditModal';
+import ButtonAdd from '@/shared/components/ButtonAdd';
 
 export default function BugReport() {
     const { sections, refreshing } = useBugReportQuery();
@@ -94,14 +95,11 @@ export default function BugReport() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
                 <View style={bugReportStyles.addButtonContainer}>
-                    <TouchableOpacity
-                        style={bugReportStyles.addButton}
+                    <ButtonAdd
                         onPress={() => {
                             setModalVisible(true);
                         }}
-                    >
-                        <Text style={sharedStyles.addButtonText}>追加</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
 
                 <CommonSwipeListView

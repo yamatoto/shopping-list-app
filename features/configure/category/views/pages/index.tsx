@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { sharedStyles } from '@/shared/styles/sharedStyles';
@@ -10,6 +10,7 @@ import CategoryContainer from '@/features/configure/category/views/components/Ca
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { categoryStyles } from '@/features/configure/category/views/pages/styles';
 import { CategoryModel } from '@/shared/models/categorySortModel';
+import ButtonAdd from '@/shared/components/ButtonAdd';
 
 export default function Category() {
     const { categories, refreshing, tempNewCategoryName } = useCategoryQuery();
@@ -56,14 +57,11 @@ export default function Category() {
                         value={tempNewCategoryName}
                         onChangeText={setTempNewCategoryName}
                         placeholderTextColor="#888"
-                        placeholder={`カテゴリ名を追加`}
+                        placeholder="カテゴリ名を追加"
                     />
-                    <TouchableOpacity
-                        style={sharedStyles.addButton}
+                    <ButtonAdd
                         onPress={() => handleAddCategory(tempNewCategoryName)}
-                    >
-                        <Text style={sharedStyles.addButtonText}>追加</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
 
                 <CommonSwipeListView

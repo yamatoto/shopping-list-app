@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 
+import ButtonSubmit from '@/shared/components/ButtonSubmit';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
-import SubmitButton from '@/shared/components/SubmitButton';
 
 export default function SignOut() {
     const { signOut } = useFirebaseAuth();
@@ -29,7 +29,7 @@ export default function SignOut() {
 
     return (
         <View style={styles.container}>
-            <SubmitButton title={'ログアウト'} onPress={handleSignOut} />
+            <ButtonSubmit title={'ログアウト'} onPress={handleSignOut} />
         </View>
     );
 }
