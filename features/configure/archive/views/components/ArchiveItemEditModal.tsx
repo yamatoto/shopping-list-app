@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import { DisplayItem } from '@/shared/models/itemModel';
 import { modalStyles } from '@/shared/styles/modalStyles';
 import Modal from '@/shared/components/Modal';
-import ModalVerticalButtons from '@/shared/components/ModalVerticalButtons';
+import ModalButtonContainerVertical from '@/shared/components/ModalButtonContainerVertical';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 
 type Props = {
@@ -30,7 +30,7 @@ export default function ArchiveItemEditModal({
             <View style={modalStyles.itemContainer}>
                 <Text style={modalStyles.label}>{item.name}</Text>
             </View>
-            <ModalVerticalButtons
+            <ModalButtonContainerVertical
                 onSubmit1={() => handleConfirm(true)}
                 submitText1={`${SCREEN.CURRENT}に追加`}
                 onSubmit2={() => handleConfirm(false)}

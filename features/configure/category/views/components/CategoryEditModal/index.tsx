@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Modal from '@/shared/components/Modal';
-import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
+import ModalButtonContainerHorizontal from '@/shared/components/ModalButtonContainerHorizontal';
 import { CategoryModel } from '@/shared/models/categorySortModel';
 import ModalTextInput from '@/shared/components/ModalTextInput';
 
@@ -32,7 +32,7 @@ export default function CategoryEditModal({
                 onChangeText={setTempName}
                 placeholder="カテゴリー名を入力"
             />
-            <ModalHorizontalButtons
+            <ModalButtonContainerHorizontal
                 onCancel={onClose}
                 onSubmit={handleConfirm}
             />

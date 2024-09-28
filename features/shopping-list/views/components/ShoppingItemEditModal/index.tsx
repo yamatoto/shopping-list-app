@@ -10,7 +10,7 @@ import {
 import { DisplayItem } from '@/shared/models/itemModel';
 import Modal from '@/shared/components/Modal';
 import { modalStyles } from '@/shared/styles/modalStyles';
-import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
+import ModalButtonContainerHorizontal from '@/shared/components/ModalButtonContainerHorizontal';
 import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalTextInput from '@/shared/components/ModalTextInput';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
@@ -137,7 +137,7 @@ export default function ShoppingItemEditModal({
                 items={categorySelectItems}
                 onValueChange={setSelectedCategory}
             />
-            <ModalHorizontalButtons
+            <ModalButtonContainerHorizontal
                 onCancel={onClose}
                 onSubmit={handleConfirm}
             />

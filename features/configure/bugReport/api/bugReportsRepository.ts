@@ -1,12 +1,9 @@
 import { BaseRepository } from '@/shared/api/baseRepository';
-import {
-    ApiResponseBugReport,
-    BugReportBase,
-} from '@/features/configure/bugReport/models/bugReportModel';
+import { ApiResponseBugReport, BugReport } from '@/shared/models/requestModel';
 
 export class BugReportsRepository extends BaseRepository<
     ApiResponseBugReport,
-    BugReportBase
+    BugReport
 > {
     constructor() {
         super('bug-reports', 'バグ報告');

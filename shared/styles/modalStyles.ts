@@ -28,6 +28,10 @@ export const modalStyles = StyleSheet.create({
     cancelButton: {
         backgroundColor: '#f44336',
     },
+    buttonContainerOnlyView: {
+        width: '100%',
+        marginVertical: 10,
+    },
     buttonContainerHorizontal: {
         flexDirection: 'row',
         justifyContent: 'space-between',

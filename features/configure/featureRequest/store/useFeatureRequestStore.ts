@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseFeatureRequest } from '@/features/configure/featureRequest/models/featureRequestModel';
+import { ApiResponseFeatureRequest } from '@/shared/models/requestModel';
 
 type FeatureRequestStore = {
     resultOfFetchFeatureRequests: QueryDocumentSnapshot<ApiResponseFeatureRequest>[];

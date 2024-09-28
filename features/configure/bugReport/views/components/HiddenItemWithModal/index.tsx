@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 
 import ModalTextArea from '@/shared/components/ModalTextArea';
-import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
 import Modal from '@/shared/components/Modal';
-import ModalHorizontalButtons from '@/shared/components/ModalHorizontalButtons';
+import ModalButtonContainerHorizontal from '@/shared/components/ModalButtonContainerHorizontal';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
+import { DisplayBugReport } from '@/shared/models/requestModel';
+
 type Props = {
     item: DisplayBugReport;
     onReject: (item: DisplayBugReport) => void;
@@ -26,7 +27,7 @@ const HiddenItemWithModal = React.memo(({ item, onReject }: Props) => {
                 onChangeText={setRejectReason}
                 placeholder="却下理由を入力"
             />
-            <ModalHorizontalButtons
+            <ModalButtonContainerHorizontal
                 onCancel={() => setModalVisible(false)}
                 onSubmit={confirmReject}
             />

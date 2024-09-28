@@ -5,10 +5,10 @@ import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { BugReportsRepository } from '@/features/configure/bugReport/api/bugReportsRepository';
 import { useBugReportStore } from '@/features/configure/bugReport/store/useBugReportStore';
 import {
+    BUF_REPORT_PRIORITY_TO_LABEL,
+    BugReportPriorityValue,
     DisplayBugReport,
-    PRIORITY_TO_LABEL,
-    PriorityValue,
-} from '@/features/configure/bugReport/models/bugReportModel';
+} from '@/shared/models/requestModel';
 
 export const useBugReportUsecase = () => {
     const bugReportsRepository = new BugReportsRepository();
@@ -36,7 +36,10 @@ export const useBugReportUsecase = () => {
     }, []);
 
     const handleAddBugReport = useCallback(
-        async (newBugReportContent: string, priorityValue: PriorityValue) => {
+        async (
+            newBugReportContent: string,
+            priorityValue: BugReportPriorityValue,
+        ) => {
             const createdUser = currentUser!.displayName;
             try {
                 await bugReportsRepository.add(
@@ -49,7 +52,7 @@ export const useBugReportUsecase = () => {
                         createdUser,
                         updatedUser: createdUser,
                     },
-                    `バグ報告「${newBugReportContent}」を追加しました。\n重要度:${PRIORITY_TO_LABEL[priorityValue]}`,
+                    `バグ報告「${newBugReportContent}」を追加しました。\n重要度:${BUF_REPORT_PRIORITY_TO_LABEL[priorityValue]}`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -125,7 +128,7 @@ export const useBugReportUsecase = () => {
                 .filter(key => updateBugReport[key] !== beforeBugReport[key])
                 .map(key => {
                     if (key === 'priority') {
-                        return `${keyLabels[key]}: ${PRIORITY_TO_LABEL[beforeBugReport[key]]} → ${PRIORITY_TO_LABEL[updateBugReport[key]!]}`;
+                        return `${keyLabels[key]}: ${BUF_REPORT_PRIORITY_TO_LABEL[beforeBugReport[key]]} → ${BUF_REPORT_PRIORITY_TO_LABEL[updateBugReport[key]!]}`;
                     }
                     return `${keyLabels[key]}: ${beforeBugReport[key]} → ${updateBugReport[key]}`;
                 })

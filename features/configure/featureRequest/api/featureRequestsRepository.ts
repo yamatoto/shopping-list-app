@@ -1,12 +1,12 @@
 import { BaseRepository } from '@/shared/api/baseRepository';
 import {
     ApiResponseFeatureRequest,
-    FeatureRequestBase,
-} from '@/features/configure/featureRequest/models/featureRequestModel';
+    FeatureRequest,
+} from '@/shared/models/requestModel';
 
 export class FeatureRequestsRepository extends BaseRepository<
     ApiResponseFeatureRequest,
-    FeatureRequestBase
+    FeatureRequest
 > {
     constructor() {
         super('feature-requests', '実装要望');

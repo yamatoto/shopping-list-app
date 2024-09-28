@@ -3,18 +3,20 @@ import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
-import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
-
+import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useBugReportQuery } from '@/features/configure/bugReport/queries/useBugReportQuery';
 import { useBugReportUsecase } from '@/features/configure/bugReport/usecases/useBugReportUsecase';
 import BugReportContainer from '@/features/configure/bugReport/views/components/BugReportContainer';
-import { DisplayBugReport } from '@/features/configure/bugReport/models/bugReportModel';
-import BugReportEditModal from '@/features/configure/bugReport/views/components/BugReportEditModal';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { bugReportStyles } from '@/features/configure/bugReport/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/bugReport/views/components/HiddenItemWithModal';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
+import {
+    BUF_REPORT_PRIORITY,
+    DisplayBugReport,
+} from '@/shared/models/requestModel';
+import RequestEditModal from '@/shared/components/RequestEditModal';
 
 export default function BugReport() {
     const { sections, refreshing } = useBugReportQuery();
@@ -113,10 +115,12 @@ export default function BugReport() {
             </View>
 
             {modalVisible && (
-                <BugReportEditModal
-                    addBugReport={handleAddBugReport}
+                <RequestEditModal
+                    contentLabel="バグ内容"
+                    addRequest={handleAddBugReport}
                     visible={modalVisible}
                     onClose={() => setModalVisible(false)}
+                    priorities={BUF_REPORT_PRIORITY}
                 />
             )}
         </GestureHandlerRootView>

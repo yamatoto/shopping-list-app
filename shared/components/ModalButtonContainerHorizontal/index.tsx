@@ -8,7 +8,7 @@ type Props = {
     onSubmit: () => void;
     submitText?: string;
 };
-export default function ModalHorizontalButtons({
+export default function ModalButtonContainerHorizontal({
     onCancel,
     onSubmit,
     submitText = '送信',

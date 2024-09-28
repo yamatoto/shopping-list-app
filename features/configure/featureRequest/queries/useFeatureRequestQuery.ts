@@ -5,7 +5,7 @@ import { useFeatureRequestStore } from '@/features/configure/featureRequest/stor
 import {
     ApiResponseFeatureRequest,
     DisplayFeatureRequest,
-} from '@/features/configure/featureRequest/models/featureRequestModel';
+} from '@/shared/models/requestModel';
 
 export const useFeatureRequestQuery = () => {
     const { resultOfFetchFeatureRequests, refreshing } = useFeatureRequestStore(

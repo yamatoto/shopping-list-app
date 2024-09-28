@@ -10,7 +10,7 @@ type Props = {
     submitText2: string;
     onCancel: () => void;
 };
-export default function ModalVerticalButtons({
+export default function ModalButtonContainerVertical({
     onCancel,
     onSubmit1,
     onSubmit2,

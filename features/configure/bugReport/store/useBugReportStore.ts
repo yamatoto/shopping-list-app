@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { ApiResponseBugReport } from '@/features/configure/bugReport/models/bugReportModel';
+import { ApiResponseBugReport } from '@/shared/models/requestModel';
 
 type BugReportStore = {
     resultOfFetchBugReports: QueryDocumentSnapshot<ApiResponseBugReport>[];

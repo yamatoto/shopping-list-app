@@ -3,18 +3,20 @@ import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
-import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
-
+import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
+import RequestEditModal from '@/shared/components/RequestEditModal';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { useFeatureRequestQuery } from '@/features/configure/featureRequest/queries/useFeatureRequestQuery';
 import { useFeatureRequestUsecase } from '@/features/configure/featureRequest/usecases/useFeatureRequestUsecase';
 import FeatureRequestContainer from '@/features/configure/featureRequest/views/components/FeatureRequestContainer';
-import { DisplayFeatureRequest } from '@/features/configure/featureRequest/models/featureRequestModel';
+import {
+    DisplayFeatureRequest,
+    FEATURE_REQUEST_PRIORITY,
+} from '@/shared/models/requestModel';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { featureRequestStyles } from '@/features/configure/featureRequest/views/pages/styles';
 import HiddenItemWithModal from '@/features/configure/featureRequest/views/components/HiddenItemWithModal';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
-import FeatureRequestEditModal from '@/features/configure/featureRequest/views/components/FeatureRequestEditModal';
 
 export default function FeatureRequest() {
     const { sections, refreshing } = useFeatureRequestQuery();
@@ -115,10 +117,12 @@ export default function FeatureRequest() {
             </View>
 
             {modalVisible && (
-                <FeatureRequestEditModal
-                    addFeatureRequest={handleAddFeatureRequest}
+                <RequestEditModal
+                    contentLabel="実装要望内容"
+                    addRequest={handleAddFeatureRequest}
                     visible={modalVisible}
                     onClose={() => setModalVisible(false)}
+                    priorities={FEATURE_REQUEST_PRIORITY}
                 />
             )}
         </GestureHandlerRootView>

@@ -6,9 +6,9 @@ import { FeatureRequestsRepository } from '@/features/configure/featureRequest/a
 import { useFeatureRequestStore } from '@/features/configure/featureRequest/store/useFeatureRequestStore';
 import {
     DisplayFeatureRequest,
-    PRIORITY_TO_LABEL,
-    PriorityValue,
-} from '@/features/configure/featureRequest/models/featureRequestModel';
+    FEATURE_REQUEST_PRIORITY_TO_LABEL,
+    FeatureRequestPriorityValue,
+} from '@/shared/models/requestModel';
 
 export const useFeatureRequestUsecase = () => {
     const featureRequestsRepository = new FeatureRequestsRepository();
@@ -39,7 +39,7 @@ export const useFeatureRequestUsecase = () => {
     const handleAddFeatureRequest = useCallback(
         async (
             newFeatureRequestContent: string,
-            priorityValue: PriorityValue,
+            priorityValue: FeatureRequestPriorityValue,
         ) => {
             const createdUser = currentUser!.displayName;
             try {
@@ -53,7 +53,7 @@ export const useFeatureRequestUsecase = () => {
                         createdUser,
                         updatedUser: createdUser,
                     },
-                    `実装要望「${newFeatureRequestContent}」を追加しました。\n優先度:${PRIORITY_TO_LABEL[priorityValue]}`,
+                    `実装要望「${newFeatureRequestContent}」を追加しました。\n優先度:${FEATURE_REQUEST_PRIORITY_TO_LABEL[priorityValue]}`,
                 );
             } catch (error: any) {
                 console.error(error);
@@ -134,7 +134,7 @@ export const useFeatureRequestUsecase = () => {
                 )
                 .map(key => {
                     if (key === 'priority') {
-                        return `${keyLabels[key]}: ${PRIORITY_TO_LABEL[beforeFeatureRequest[key]]} → ${PRIORITY_TO_LABEL[updateFeatureRequest[key]!]}`;
+                        return `${keyLabels[key]}: ${FEATURE_REQUEST_PRIORITY_TO_LABEL[beforeFeatureRequest[key]]} → ${FEATURE_REQUEST_PRIORITY_TO_LABEL[updateFeatureRequest[key]!]}`;
                     }
                     return `${keyLabels[key]}: ${beforeFeatureRequest[key]} → ${updateFeatureRequest[key]}`;
                 })
