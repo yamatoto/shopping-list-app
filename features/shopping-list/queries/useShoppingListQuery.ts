@@ -102,7 +102,7 @@ export const useShoppingListQuery = () => {
                 data: groupedItems[id] || [],
             }))
             .filter(section => section.data.length > 0);
-    }, [groupedItems, resultOfFetchCategorySort]);
+    }, [groupedItems]);
 
     const categorySelectItems = useMemo(() => {
         return (

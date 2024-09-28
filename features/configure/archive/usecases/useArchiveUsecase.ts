@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useArchiveItemStore } from '@/features/configure/archive/store/useArchiveStore';
 import { DisplayItem } from '@/shared/models/itemModel';
@@ -14,6 +14,7 @@ import { RakutenItemsRepository } from '@/shared/api/rakutenItemsRepository';
 import { AmazonItemsRepository } from '@/shared/api/amazonItemsRepository';
 
 export const useArchiveUsecase = () => {
+    const { showToast } = useToast();
     const itemsRepository = new ItemsRepository();
     const rakutenItemsRepository = new RakutenItemsRepository();
     const amazonItemsRepository = new AmazonItemsRepository();

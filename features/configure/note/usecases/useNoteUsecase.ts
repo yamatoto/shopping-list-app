@@ -6,10 +6,11 @@ import {
 
 import { NoteRepository } from '@/features/configure/note/api/noteRepository';
 import { useNoteStore } from '@/features/configure/note/store/useNoteStore';
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 
 export const useNoteUsecase = () => {
+    const { showToast } = useToast();
     const noteRepository = new NoteRepository();
     const {
         setResultOfFetchNoteList,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { BugReportsRepository } from '@/features/configure/bugReport/api/bugReportsRepository';
 import { useBugReportStore } from '@/features/configure/bugReport/store/useBugReportStore';
@@ -11,6 +11,7 @@ import {
 } from '@/shared/models/requestModel';
 
 export const useBugReportUsecase = () => {
+    const { showToast } = useToast();
     const bugReportsRepository = new BugReportsRepository();
     const { setResultOfFetchBugReports, setRefreshing } = useBugReportStore();
     const { currentUser } = useFirebaseAuth();

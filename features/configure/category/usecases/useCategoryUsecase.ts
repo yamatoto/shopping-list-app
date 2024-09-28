@@ -1,13 +1,14 @@
 import { useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { useCategoryStore } from '@/features/configure/category/store/useCategoryStore';
 import { CategorySortRepository } from '@/shared/api/categorySortRepository';
 import { CategoryModel } from '@/shared/models/categorySortModel';
 
 export const useCategoryUsecase = () => {
+    const { showToast } = useToast();
     const categorySortRepository = new CategorySortRepository();
     const {
         setResultOfFetchCategorySort,
@@ -35,19 +36,6 @@ export const useCategoryUsecase = () => {
     const initialize = useCallback(async () => {
         await fetchAllCategories();
     }, []);
-
-    useEffect(() => {
-        const unsubscribe = categorySortRepository.setupUpdateListener(
-            ({ message, updatedUser }) => {
-                if (message) {
-                    showToast(`${updatedUser}${message}`);
-                }
-
-                fetchAllCategories().then();
-            },
-        );
-        return () => unsubscribe();
-    }, [fetchAllCategories]);
 
     const checkCategoryExists = useCallback(async (newCategoryName: string) => {
         const categorySortApi = await categorySortRepository.fetchOne();

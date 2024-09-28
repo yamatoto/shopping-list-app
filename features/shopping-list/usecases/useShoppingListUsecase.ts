@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { DisplayItem } from '@/shared/models/itemModel';
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 import {
     FormattedInputValues,
@@ -25,7 +25,7 @@ export const useShoppingListUsecase = () => {
     const itemsRepository = new ItemsRepository();
     const rakutenItemsRepository = new RakutenItemsRepository();
     const amazonItemsRepository = new AmazonItemsRepository();
-
+    const { showToast } = useToast();
     const {
         setResultOfFetchAllItems,
         setRefreshing,
@@ -65,6 +65,16 @@ export const useShoppingListUsecase = () => {
         } catch (error: any) {
             console.error(error);
             showToast('買い物リストの取得に失敗しました。');
+        }
+    }, [currentUser]);
+
+    const fetchCategorySortApi = useCallback(async () => {
+        try {
+            const categorySortApi = await categorySortRepository.fetchOne();
+            setResultOfFetchCategorySort(categorySortApi);
+        } catch (error: any) {
+            console.error(error);
+            showToast('カテゴリーリストの取得に失敗しました。');
         }
     }, [currentUser]);
 
@@ -348,6 +358,11 @@ export const useShoppingListUsecase = () => {
     }, []);
 
     useEffect(() => {
+        const unsubscribeCategories =
+            categorySortRepository.setupUpdateListener(() => {
+                fetchCategorySortApi().then();
+            });
+
         const unsubscribeItems = itemsRepository.setupUpdateListener(
             ({ message, updatedUser }) => {
                 showToast(`${updatedUser}${message}`);
@@ -369,6 +384,7 @@ export const useShoppingListUsecase = () => {
                 },
             );
         return () => {
+            unsubscribeCategories();
             unsubscribeItems();
             unsubscribeRakutenItems();
             unsubscribeAmazonItems();

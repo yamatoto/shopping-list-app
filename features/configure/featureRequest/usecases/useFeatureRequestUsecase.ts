@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { showToast } from '@/shared/helpers/toast';
+import { useToast } from '@/shared/helpers/toast';
 import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import { FeatureRequestsRepository } from '@/features/configure/featureRequest/api/featureRequestsRepository';
 import { useFeatureRequestStore } from '@/features/configure/featureRequest/store/useFeatureRequestStore';
@@ -11,6 +11,7 @@ import {
 } from '@/shared/models/requestModel';
 
 export const useFeatureRequestUsecase = () => {
+    const { showToast } = useToast();
     const featureRequestsRepository = new FeatureRequestsRepository();
     const { setResultOfFetchFeatureRequests, setRefreshing } =
         useFeatureRequestStore();
