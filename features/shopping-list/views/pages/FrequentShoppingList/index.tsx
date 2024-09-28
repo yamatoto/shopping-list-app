@@ -63,7 +63,12 @@ export default function FrequentShoppingList() {
                 <EmptyComponent />
             );
         },
-        [openSections, handleUpdateItem, handleAddToCurrent],
+        [
+            openSections,
+            handleUpdateItem,
+            handleAddToCurrent,
+            categorySelectItems,
+        ],
     );
 
     const renderHiddenItem = useCallback(

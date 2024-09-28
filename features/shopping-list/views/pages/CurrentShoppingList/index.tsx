@@ -51,7 +51,7 @@ export default function CurrentShoppingList() {
                 />
             );
         },
-        [handleUpdateItem, handleAddToFrequent],
+        [handleUpdateItem, handleAddToFrequent, categorySelectItems],
     );
 
     const renderHiddenItem = useCallback(
