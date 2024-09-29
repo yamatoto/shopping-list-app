@@ -4,8 +4,8 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { ApiResponseItem } from '@/shared/models/itemModel';
 import { ApiResponseCategorySort } from '@/shared/models/categorySortModel';
 import {
-    ShoppingPlatform,
     SHOPPING_PLATFORM,
+    ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
 
 type ShoppingItemsStore = {
@@ -17,23 +17,15 @@ type ShoppingItemsStore = {
     setResultOfFetchAllItems: (
         apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
     ) => void;
-    resultOfFetchAllRakutenItems: QueryDocumentSnapshot<ApiResponseItem>[];
-    setResultOfFetchAllRakutenItems: (
-        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
-    ) => void;
-    resultOfFetchAllAmazonItems: QueryDocumentSnapshot<ApiResponseItem>[];
-    setResultOfFetchAllAmazonItems: (
-        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
-    ) => void;
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
     openSections: string[];
     setOpenSections: (sections: string[]) => void;
     tempNewItemName: string;
     setTempNewItemName: (newItemName: string) => void;
-    selectedShoppingPlatform: ShoppingPlatform;
-    setSelectedShoppingPlatform: (
-        selectedShoppingPlatform: ShoppingPlatform,
+    selectedShoppingPlatformId: ShoppingPlatformId;
+    setSelectedShoppingPlatformId: (
+        selectedShoppingPlatform: ShoppingPlatformId,
     ) => void;
 };
 
@@ -45,14 +37,6 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
     resultOfFetchAllItems: [],
     setResultOfFetchAllItems: apiItems => {
         set({ resultOfFetchAllItems: apiItems });
-    },
-    resultOfFetchAllRakutenItems: [],
-    setResultOfFetchAllRakutenItems: apiItems => {
-        set({ resultOfFetchAllRakutenItems: apiItems });
-    },
-    resultOfFetchAllAmazonItems: [],
-    setResultOfFetchAllAmazonItems: apiItems => {
-        set({ resultOfFetchAllAmazonItems: apiItems });
     },
     refreshing: false,
     setRefreshing: (refreshing: boolean) => {
@@ -77,8 +61,8 @@ export const useShoppingItemsStore = create<ShoppingItemsStore>(set => ({
     setTempNewItemName: tempNewItemName => {
         set({ tempNewItemName });
     },
-    selectedShoppingPlatform: SHOPPING_PLATFORM.SUPER,
-    setSelectedShoppingPlatform: platform => {
-        set({ selectedShoppingPlatform: platform });
+    selectedShoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    setSelectedShoppingPlatformId: platform => {
+        set({ selectedShoppingPlatformId: platform });
     },
 }));

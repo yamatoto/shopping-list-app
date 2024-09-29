@@ -24,7 +24,7 @@ const SCREEN_MAP = {
         isAddedAnother: item.isCurrent,
         anotherLabel: SCREEN.CURRENT,
     }),
-};
+} as const;
 export default function ShoppingItemContainer({
     screenLabel,
     item,

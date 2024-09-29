@@ -13,7 +13,7 @@ import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 
 export default function Archive() {
-    const { archiveItems, refreshing, selectedShoppingPlatform } =
+    const { archiveItems, refreshing, selectedShoppingPlatformId } =
         useArchiveQuery();
     const {
         initialize,
@@ -52,7 +52,7 @@ export default function Archive() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
                 <ShoppingPlatformButtons
-                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    selectedShoppingPlatformId={selectedShoppingPlatformId}
                     onSelect={handleShoppingPlatformSelect}
                 />
                 <CommonSwipeListView

@@ -29,7 +29,7 @@ export default function FrequentShoppingList() {
         openSections,
         tempNewItemName,
         categorySelectItems,
-        selectedShoppingPlatform,
+        selectedShoppingPlatformId,
     } = useShoppingListQuery();
     const {
         initialize,
@@ -109,7 +109,7 @@ export default function FrequentShoppingList() {
                 />
 
                 <ShoppingPlatformButtons
-                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    selectedShoppingPlatformId={selectedShoppingPlatformId}
                     onSelect={handleShoppingPlatformSelect}
                 />
 

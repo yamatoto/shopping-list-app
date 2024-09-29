@@ -1,5 +1,10 @@
 import { Timestamp } from 'firebase/firestore';
 
+import {
+    ShoppingPlatformDetailId,
+    ShoppingPlatformId,
+} from '@/shared/constants/shoppingPlatform';
+
 export interface ItemBase {
     // add時にはidは不要
     name: string;
@@ -10,6 +15,8 @@ export interface ItemBase {
     createdUser: string;
     updatedUser: string;
     message?: string;
+    shoppingPlatformId: ShoppingPlatformId;
+    shoppingPlatformDetailId: ShoppingPlatformDetailId;
 }
 
 export interface ApiResponseItem extends ItemBase {

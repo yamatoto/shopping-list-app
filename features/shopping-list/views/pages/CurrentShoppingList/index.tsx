@@ -2,8 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
-
+import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
 import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
 import { DisplayItem } from '@/shared/models/itemModel';
@@ -20,7 +19,7 @@ export default function CurrentShoppingList() {
         refreshing,
         tempNewItemName,
         categorySelectItems,
-        selectedShoppingPlatform,
+        selectedShoppingPlatformId,
     } = useShoppingListQuery();
     const {
         initialize,
@@ -74,7 +73,7 @@ export default function CurrentShoppingList() {
                 />
 
                 <ShoppingPlatformButtons
-                    selectedShoppingPlatform={selectedShoppingPlatform}
+                    selectedShoppingPlatformId={selectedShoppingPlatformId}
                     onSelect={handleShoppingPlatformSelect}
                 />
 

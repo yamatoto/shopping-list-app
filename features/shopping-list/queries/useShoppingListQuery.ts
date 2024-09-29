@@ -3,7 +3,6 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
-import { SHOPPING_PLATFORM } from '@/shared/constants/shoppingPlatform';
 
 export const useShoppingListQuery = () => {
     const {
@@ -12,9 +11,7 @@ export const useShoppingListQuery = () => {
         refreshing,
         openSections,
         tempNewItemName,
-        selectedShoppingPlatform,
-        resultOfFetchAllRakutenItems,
-        resultOfFetchAllAmazonItems,
+        selectedShoppingPlatformId,
     } = useShoppingItemsStore(
         ({
             resultOfFetchCategorySort,
@@ -22,18 +19,14 @@ export const useShoppingListQuery = () => {
             refreshing,
             openSections,
             tempNewItemName,
-            selectedShoppingPlatform,
-            resultOfFetchAllRakutenItems,
-            resultOfFetchAllAmazonItems,
+            selectedShoppingPlatformId,
         }) => ({
             resultOfFetchCategorySort,
             resultOfFetchAllItems,
             refreshing,
             openSections,
             tempNewItemName,
-            selectedShoppingPlatform,
-            resultOfFetchAllRakutenItems,
-            resultOfFetchAllAmazonItems,
+            selectedShoppingPlatformId,
         }),
     );
 
@@ -50,34 +43,35 @@ export const useShoppingListQuery = () => {
     };
 
     const { currentItems, frequentItems } = useMemo(() => {
-        const allItems = {
-            [SHOPPING_PLATFORM.SUPER]: resultOfFetchAllItems,
-            [SHOPPING_PLATFORM.RAKUTEN]: resultOfFetchAllRakutenItems,
-            [SHOPPING_PLATFORM.AMAZON]: resultOfFetchAllAmazonItems,
-        }[selectedShoppingPlatform];
-        return allItems.reduce<{
-            currentItems: DisplayItem[];
-            frequentItems: DisplayItem[];
-        }>(
-            (acc, fetchedItem) => {
-                const converted = convertToClientItemFromServer(fetchedItem);
-                return {
-                    currentItems: converted.isCurrent
-                        ? [...acc.currentItems, converted]
-                        : acc.currentItems,
-                    frequentItems: converted.isFrequent
-                        ? [...acc.frequentItems, converted]
-                        : acc.frequentItems,
-                };
-            },
-            { currentItems: [], frequentItems: [] },
-        );
-    }, [
-        selectedShoppingPlatform,
-        resultOfFetchAllItems,
-        resultOfFetchAllRakutenItems,
-        resultOfFetchAllAmazonItems,
-    ]);
+        return resultOfFetchAllItems
+            .filter(
+                item =>
+                    item.data().shoppingPlatformId ===
+                    selectedShoppingPlatformId,
+            )
+            .reduce<{
+                currentItems: DisplayItem[];
+                frequentItems: DisplayItem[];
+            }>(
+                (acc, fetchedItem) => {
+                    const converted =
+                        convertToClientItemFromServer(fetchedItem);
+                    return {
+                        ...acc,
+                        currentItems: converted.isCurrent
+                            ? [...acc.currentItems, converted]
+                            : acc.currentItems,
+                        frequentItems: converted.isFrequent
+                            ? [...acc.frequentItems, converted]
+                            : acc.frequentItems,
+                    };
+                },
+                {
+                    currentItems: [],
+                    frequentItems: [],
+                },
+            );
+    }, [selectedShoppingPlatformId, resultOfFetchAllItems]);
 
     const groupedItems = useMemo(() => {
         return frequentItems.reduce(
@@ -127,11 +121,11 @@ export const useShoppingListQuery = () => {
 
     return {
         currentItems,
-        refreshing,
         frequentItemSections,
+        refreshing,
         openSections: formattedOpenSections,
         tempNewItemName,
         categorySelectItems,
-        selectedShoppingPlatform,
+        selectedShoppingPlatformId,
     };
 };

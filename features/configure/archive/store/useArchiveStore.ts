@@ -4,7 +4,7 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { ApiResponseItem } from '@/shared/models/itemModel';
 import {
     SHOPPING_PLATFORM,
-    ShoppingPlatform,
+    ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
 
 type ArchiveItemStore = {
@@ -12,20 +12,11 @@ type ArchiveItemStore = {
     setResultOfFetchArchiveItems: (
         apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
     ) => void;
-    resultOfFetchAllRakutenItems: QueryDocumentSnapshot<ApiResponseItem>[];
-    setResultOfFetchAllRakutenItems: (
-        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
-    ) => void;
-    resultOfFetchAllAmazonItems: QueryDocumentSnapshot<ApiResponseItem>[];
-    setResultOfFetchAllAmazonItems: (
-        apiItems: QueryDocumentSnapshot<ApiResponseItem>[],
-    ) => void;
-
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
-    selectedShoppingPlatform: ShoppingPlatform;
-    setSelectedShoppingPlatform: (
-        selectedShoppingPlatform: ShoppingPlatform,
+    selectedShoppingPlatformId: ShoppingPlatformId;
+    setSelectedShoppingPlatformId: (
+        selectedShoppingPlatformId: ShoppingPlatformId,
     ) => void;
 };
 
@@ -34,20 +25,12 @@ export const useArchiveItemStore = create<ArchiveItemStore>(set => ({
     setResultOfFetchArchiveItems: apiItems => {
         set({ resultOfFetchArchiveItems: apiItems });
     },
-    resultOfFetchAllRakutenItems: [],
-    setResultOfFetchAllRakutenItems: apiItems => {
-        set({ resultOfFetchAllRakutenItems: apiItems });
-    },
-    resultOfFetchAllAmazonItems: [],
-    setResultOfFetchAllAmazonItems: apiItems => {
-        set({ resultOfFetchAllAmazonItems: apiItems });
-    },
     refreshing: false,
     setRefreshing: (refreshing: boolean) => {
         set({ refreshing });
     },
-    selectedShoppingPlatform: SHOPPING_PLATFORM.SUPER,
-    setSelectedShoppingPlatform: selectedShoppingPlatform => {
-        set({ selectedShoppingPlatform });
+    selectedShoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    setSelectedShoppingPlatformId: selectedShoppingPlatformId => {
+        set({ selectedShoppingPlatformId });
     },
 }));

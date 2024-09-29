@@ -2,19 +2,17 @@ import { TouchableOpacity, Text, View } from 'react-native';
 import React from 'react';
 
 import {
-    SHOPPING_PLATFORM,
-    ShoppingPlatform,
+    SHOPPING_PLATFORM_LIST,
+    ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
 import { shoppingPlatformButtonsStyles } from '@/features/shopping-list/views/components/ShoppingPlatformButtons/styles';
 
-const SHOPPING_PLATFORMS = Object.values(SHOPPING_PLATFORM);
-
 type Props = {
-    selectedShoppingPlatform: ShoppingPlatform;
-    onSelect: (shoppingPlatform: ShoppingPlatform) => void;
+    selectedShoppingPlatformId: ShoppingPlatformId;
+    onSelect: (shoppingPlatformId: ShoppingPlatformId) => void;
 };
 export default function ShoppingPlatformButtons({
-    selectedShoppingPlatform,
+    selectedShoppingPlatformId,
     onSelect,
 }: Props) {
     return (
@@ -23,17 +21,17 @@ export default function ShoppingPlatformButtons({
                 shoppingPlatformButtonsStyles.shoppingPlatformButtonsContainer
             }
         >
-            {SHOPPING_PLATFORMS.map(platform => {
-                const isSelected = selectedShoppingPlatform === platform;
+            {SHOPPING_PLATFORM_LIST.map(platform => {
+                const isSelected = selectedShoppingPlatformId === platform.id;
                 return (
                     <TouchableOpacity
-                        key={platform}
+                        key={platform.id}
                         style={[
                             shoppingPlatformButtonsStyles.button,
                             isSelected &&
                                 shoppingPlatformButtonsStyles.selectedButton,
                         ]}
-                        onPress={() => onSelect(platform)}
+                        onPress={() => onSelect(platform.id)}
                     >
                         <Text
                             style={[
@@ -42,7 +40,7 @@ export default function ShoppingPlatformButtons({
                                     shoppingPlatformButtonsStyles.selectedButtonText,
                             ]}
                         >
-                            {platform}
+                            {platform.label}
                         </Text>
                     </TouchableOpacity>
                 );
