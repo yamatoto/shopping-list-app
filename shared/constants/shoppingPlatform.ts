@@ -21,10 +21,22 @@ export const SHOPPING_PLATFORM_TO_ID_MAP: {
 } as const;
 
 export const SHOPPING_PLATFORM_DETAIL = {
-    NOT_SET: { id: 'NotSet', label: '未設定' },
-    SUPER: { id: 'S1', label: 'スーパー' },
-    AMAZON: { id: 'N1', label: 'Amazon' },
-    RAKUTEN: { id: 'N2', label: '楽天' },
+    NOT_SET: { id: 'NotSet', label: '未設定', shoppingPlatformId: 0 },
+    SUPER: {
+        id: 'S1',
+        label: 'スーパー',
+        shoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    },
+    AMAZON: {
+        id: 'N1',
+        label: 'Amazon',
+        shoppingPlatformId: SHOPPING_PLATFORM.NET.id,
+    },
+    RAKUTEN: {
+        id: 'N2',
+        label: '楽天',
+        shoppingPlatformId: SHOPPING_PLATFORM.NET.id,
+    },
 } as const;
 export type ShoppingPlatformDetailId =
     (typeof SHOPPING_PLATFORM_DETAIL)[keyof typeof SHOPPING_PLATFORM_DETAIL]['id'];

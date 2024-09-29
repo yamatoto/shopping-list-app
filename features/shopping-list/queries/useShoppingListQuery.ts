@@ -127,12 +127,14 @@ export const useShoppingListQuery = () => {
         openSections: formattedOpenSections,
         tempNewItemName,
         categorySelectItems,
-        shoppingPlatformDetailSelectItems: SHOPPING_PLATFORM_DETAIL_LIST.map(
-            platform => ({
-                value: platform.id,
-                label: platform.label,
-            }),
-        ),
+        shoppingPlatformDetailSelectItems: SHOPPING_PLATFORM_DETAIL_LIST.filter(
+            ({ shoppingPlatformId }) =>
+                shoppingPlatformId === selectedShoppingPlatformId ||
+                shoppingPlatformId === 0,
+        ).map(platform => ({
+            value: platform.id,
+            label: platform.label,
+        })),
         selectedShoppingPlatformId,
     };
 };
