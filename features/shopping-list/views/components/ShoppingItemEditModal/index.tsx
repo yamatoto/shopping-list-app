@@ -13,6 +13,7 @@ type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
     categorySelectItems: { label: string; value: string }[];
+    shoppingPlatformDetailSelectItems: { label: string; value: string }[];
     onConfirm: (values: InputValues) => void;
     visible: boolean;
     onClose: () => void;
@@ -21,12 +22,15 @@ export default function ShoppingItemEditModal({
     screenLabel,
     item,
     categorySelectItems,
+    shoppingPlatformDetailSelectItems,
     onConfirm,
     visible,
     onClose,
 }: Props) {
     const isCurrent = screenLabel === SCREEN.CURRENT;
     const [selectedCategory, setSelectedCategory] = useState(item.categoryId);
+    const [selectedShoppingPlatformDetail, setSelectedShoppingPlatformDetail] =
+        useState(item.shoppingPlatformDetailId);
 
     const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
     const [tempName, setTempName] = useState(item.name);
@@ -36,6 +40,7 @@ export default function ShoppingItemEditModal({
             quantity: tempQuantity,
             name: tempName,
             categoryId: selectedCategory,
+            shoppingPlatformDetailId: selectedShoppingPlatformDetail,
         });
         onClose();
     };
@@ -63,6 +68,12 @@ export default function ShoppingItemEditModal({
                 value={selectedCategory}
                 items={categorySelectItems}
                 onValueChange={setSelectedCategory}
+            />
+            <ModalPickerSelect
+                label="ショップ"
+                value={selectedShoppingPlatformDetail}
+                items={shoppingPlatformDetailSelectItems}
+                onValueChange={setSelectedShoppingPlatformDetail}
             />
             <ModalButtonContainerHorizontal
                 onCancel={onClose}

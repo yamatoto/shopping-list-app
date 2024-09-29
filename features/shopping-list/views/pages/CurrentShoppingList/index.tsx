@@ -19,6 +19,7 @@ export default function CurrentShoppingList() {
         refreshing,
         tempNewItemName,
         categorySelectItems,
+        shoppingPlatformDetailSelectItems,
         selectedShoppingPlatformId,
     } = useShoppingListQuery();
     const {
@@ -43,6 +44,9 @@ export default function CurrentShoppingList() {
                     screenLabel={SCREEN.CURRENT}
                     item={item}
                     categorySelectItems={categorySelectItems}
+                    shoppingPlatformDetailSelectItems={
+                        shoppingPlatformDetailSelectItems
+                    }
                     onConfirm={values =>
                         handleUpdateItem(item, values, SCREEN.CURRENT)
                     }

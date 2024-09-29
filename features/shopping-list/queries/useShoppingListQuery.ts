@@ -3,6 +3,7 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { SHOPPING_PLATFORM_DETAIL_LIST } from '@/shared/constants/shoppingPlatform';
 
 export const useShoppingListQuery = () => {
     const {
@@ -126,6 +127,12 @@ export const useShoppingListQuery = () => {
         openSections: formattedOpenSections,
         tempNewItemName,
         categorySelectItems,
+        shoppingPlatformDetailSelectItems: SHOPPING_PLATFORM_DETAIL_LIST.map(
+            platform => ({
+                value: platform.id,
+                label: platform.label,
+            }),
+        ),
         selectedShoppingPlatformId,
     };
 };

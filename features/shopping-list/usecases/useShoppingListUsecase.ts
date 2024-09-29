@@ -15,6 +15,7 @@ import { DEFAULT_CATEGORY } from '@/shared/models/categorySortModel';
 import { ItemsRepository } from '@/shared/api/itemsRepository';
 import {
     SHOPPING_PLATFORM_DETAIL,
+    SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP,
     SHOPPING_PLATFORM_TO_LABEL_MAP,
     ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
@@ -159,29 +160,40 @@ export const useShoppingListUsecase = () => {
         }, {} as InputValues);
     };
 
-    const getChangedContent = useCallback(
-        (beforeItem: DisplayItem, values: FormattedInputValues) => {
-            return (Object.keys(values) as Array<keyof InputValues>)
-                .filter(key => values[key] !== beforeItem[key])
-                .map(key => {
-                    if (key !== 'categoryId') {
-                        return `${INPUT_KEY_LABELS[key]}: ${beforeItem[key]} → ${values[key]}`;
-                    }
-
-                    const categories =
-                        resultOfFetchCategorySort?.data().categories;
-                    const beforeCategoryName = categories?.find(
-                        ({ id }) => id === beforeItem.categoryId,
-                    )?.name;
-                    const newCategoryName = categories?.find(
-                        ({ id }) => id === values.categoryId,
-                    )?.name;
-                    return `${INPUT_KEY_LABELS[key]}: ${beforeCategoryName} → ${newCategoryName}`;
-                })
-                .join('\n');
+    const CHANGED_CONTENT_MAP = {
+        quantity: (beforeItem: DisplayItem, values: FormattedInputValues) => {
+            return `${INPUT_KEY_LABELS.quantity}: ${beforeItem.quantity} → ${values.quantity}`;
         },
-        [],
-    );
+        name: (beforeItem: DisplayItem, values: FormattedInputValues) => {
+            return `${INPUT_KEY_LABELS.name}: ${beforeItem.name} → ${values.name}`;
+        },
+        categoryId: (beforeItem: DisplayItem, values: FormattedInputValues) => {
+            const categories = resultOfFetchCategorySort?.data().categories;
+            const beforeCategoryName = categories?.find(
+                ({ id }) => id === beforeItem.categoryId,
+            )?.name;
+            const newCategoryName = categories?.find(
+                ({ id }) => id === values.categoryId,
+            )?.name;
+            return `${INPUT_KEY_LABELS.categoryId}: ${beforeCategoryName} → ${newCategoryName}`;
+        },
+        shoppingPlatformDetailId: (
+            beforeItem: DisplayItem,
+            values: FormattedInputValues,
+        ) => {
+            return `${INPUT_KEY_LABELS.shoppingPlatformDetailId}: ${SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP[beforeItem.shoppingPlatformDetailId]} → ${SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP[values.shoppingPlatformDetailId]}`;
+        },
+    } as const;
+
+    const getChangedContent = (
+        beforeItem: DisplayItem,
+        values: FormattedInputValues,
+    ) => {
+        return (Object.keys(values) as Array<keyof InputValues>)
+            .filter(key => values[key] !== beforeItem[key])
+            .map(key => CHANGED_CONTENT_MAP[key](beforeItem, values))
+            .join('\n');
+    };
 
     const formatInputValues = (
         beforeItem: DisplayItem,

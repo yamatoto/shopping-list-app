@@ -29,6 +29,7 @@ export default function FrequentShoppingList() {
         openSections,
         tempNewItemName,
         categorySelectItems,
+        shoppingPlatformDetailSelectItems,
         selectedShoppingPlatformId,
     } = useShoppingListQuery();
     const {
@@ -54,6 +55,9 @@ export default function FrequentShoppingList() {
                     screenLabel={SCREEN.FREQUENT}
                     item={item}
                     categorySelectItems={categorySelectItems}
+                    shoppingPlatformDetailSelectItems={
+                        shoppingPlatformDetailSelectItems
+                    }
                     onConfirm={values =>
                         handleUpdateItem(item, values, SCREEN.FREQUENT)
                     }

@@ -12,6 +12,7 @@ type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
     categorySelectItems: { label: string; value: string }[];
+    shoppingPlatformDetailSelectItems: { label: string; value: string }[];
     onConfirm: (values: InputValues) => void;
     onAddToAnother: (item: DisplayItem) => void;
 };
@@ -29,6 +30,7 @@ export default function ShoppingItemContainer({
     screenLabel,
     item,
     categorySelectItems,
+    shoppingPlatformDetailSelectItems,
     onConfirm,
     onAddToAnother,
 }: Props) {
@@ -61,6 +63,9 @@ export default function ShoppingItemContainer({
                         onConfirm={onConfirm}
                         item={item}
                         categorySelectItems={categorySelectItems}
+                        shoppingPlatformDetailSelectItems={
+                            shoppingPlatformDetailSelectItems
+                        }
                         visible={modalVisible}
                         onClose={() => setModalVisible(false)}
                     />
