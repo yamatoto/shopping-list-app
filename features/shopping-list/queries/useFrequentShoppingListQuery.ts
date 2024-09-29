@@ -1,36 +1,39 @@
 import { useMemo } from 'react';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
-import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
+import { useFrequentShoppingItemsStore } from '@/features/shopping-list/store/useFrequentShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
 import {
     SHOPPING_PLATFORM_DETAIL_LIST,
     SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP,
 } from '@/shared/constants/shoppingPlatform';
 
-export const useShoppingListQuery = () => {
+export const useFrequentShoppingListQuery = () => {
     const {
         resultOfFetchCategorySort,
-        resultOfFetchAllItems,
+        resultOfFetchFrequentItems,
         refreshing,
         openSections,
         tempNewItemName,
         selectedShoppingPlatformId,
-    } = useShoppingItemsStore(
+        modalVisibleItem,
+    } = useFrequentShoppingItemsStore(
         ({
             resultOfFetchCategorySort,
-            resultOfFetchAllItems,
+            resultOfFetchFrequentItems,
             refreshing,
             openSections,
             tempNewItemName,
             selectedShoppingPlatformId,
+            modalVisibleItem,
         }) => ({
             resultOfFetchCategorySort,
-            resultOfFetchAllItems,
+            resultOfFetchFrequentItems,
             refreshing,
             openSections,
             tempNewItemName,
             selectedShoppingPlatformId,
+            modalVisibleItem,
         }),
     );
 
@@ -52,39 +55,24 @@ export const useShoppingListQuery = () => {
         };
     };
 
-    const { currentItems, frequentItems } = useMemo(() => {
-        return resultOfFetchAllItems
-            .filter(
-                item =>
-                    item.data().shoppingPlatformId ===
-                    selectedShoppingPlatformId,
-            )
-            .reduce<{
-                currentItems: DisplayItem[];
-                frequentItems: DisplayItem[];
-            }>(
-                (acc, fetchedItem) => {
-                    const converted =
-                        convertToClientItemFromServer(fetchedItem);
-                    return {
-                        ...acc,
-                        currentItems: converted.isCurrent
-                            ? [...acc.currentItems, converted]
-                            : acc.currentItems,
-                        frequentItems: converted.isFrequent
-                            ? [...acc.frequentItems, converted]
-                            : acc.frequentItems,
-                    };
-                },
-                {
-                    currentItems: [],
-                    frequentItems: [],
-                },
-            );
-    }, [selectedShoppingPlatformId, resultOfFetchAllItems]);
+    const frequentAllItems = useMemo(
+        () =>
+            resultOfFetchFrequentItems.map(fetchedItem =>
+                convertToClientItemFromServer(fetchedItem),
+            ),
+        [resultOfFetchFrequentItems],
+    );
 
-    const groupedItems = useMemo(() => {
-        return frequentItems.reduce(
+    const frequentItems = useMemo(
+        () =>
+            frequentAllItems.filter(
+                item => item.shoppingPlatformId === selectedShoppingPlatformId,
+            ),
+        [selectedShoppingPlatformId],
+    );
+
+    const frequentItemSections = useMemo(() => {
+        const groupedItems = frequentItems.reduce(
             (acc, item) => {
                 const categoryId = item.categoryId;
                 if (!acc[categoryId]) {
@@ -95,9 +83,7 @@ export const useShoppingListQuery = () => {
             },
             {} as { [key: string]: DisplayItem[] },
         );
-    }, [frequentItems]);
 
-    const frequentItemSections = useMemo(() => {
         return resultOfFetchCategorySort
             ?.data()
             .categories.map(({ id, name }) => ({
@@ -106,7 +92,7 @@ export const useShoppingListQuery = () => {
                 data: groupedItems[id] || [],
             }))
             .filter(section => section.data.length > 0);
-    }, [groupedItems]);
+    }, [resultOfFetchCategorySort, frequentItems]);
 
     const categorySelectItems = useMemo(() => {
         return (
@@ -130,7 +116,6 @@ export const useShoppingListQuery = () => {
     }, [resultOfFetchCategorySort, openSections]);
 
     return {
-        currentItems,
         frequentItemSections,
         refreshing,
         openSections: formattedOpenSections,
@@ -145,5 +130,6 @@ export const useShoppingListQuery = () => {
             label: platform.label,
         })),
         selectedShoppingPlatformId,
+        modalVisibleItem,
     };
 };

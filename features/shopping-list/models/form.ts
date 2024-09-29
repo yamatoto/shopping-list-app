@@ -10,11 +10,11 @@ export const INPUT_KEY_LABELS: Partial<Record<keyof DisplayItem, string>> = {
 
 export interface InputValues {
     name: string;
-    quantity?: string;
     categoryId: string;
     shoppingPlatformDetailId: ShoppingPlatformDetailId;
+    quantity: string;
 }
 
 export interface FormattedInputValues extends Omit<InputValues, 'quantity'> {
-    quantity?: number;
+    quantity: number;
 }

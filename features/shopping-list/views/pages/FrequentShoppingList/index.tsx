@@ -8,10 +8,9 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import CommonSwipeListView from '../../../../../shared/components/CommonSwipeListView';
-
-import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
-import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
+import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
+import { useFrequentShoppingListQuery } from '@/features/shopping-list/queries/useFrequentShoppingListQuery';
+import { useFrequentShoppingListUsecase } from '@/features/shopping-list/usecases/useFrequentShoppingListUsecase';
 import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
@@ -21,6 +20,7 @@ import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
+import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
 
 export default function FrequentShoppingList() {
     const {
@@ -31,7 +31,8 @@ export default function FrequentShoppingList() {
         categorySelectItems,
         shoppingPlatformDetailSelectItems,
         selectedShoppingPlatformId,
-    } = useShoppingListQuery();
+        modalVisibleItem,
+    } = useFrequentShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -42,10 +43,12 @@ export default function FrequentShoppingList() {
         toggleSection,
         setTempNewItemName,
         handleShoppingPlatformSelect,
-    } = useShoppingListUsecase();
+        handleShowItemModal,
+        handleCloseItemModal,
+    } = useFrequentShoppingListUsecase();
 
     useEffect(() => {
-        initialize().then();
+        initialize();
     }, []);
 
     const renderItem = useCallback(
@@ -54,13 +57,7 @@ export default function FrequentShoppingList() {
                 <ShoppingItemContainer
                     screenLabel={SCREEN.FREQUENT}
                     item={item}
-                    categorySelectItems={categorySelectItems}
-                    shoppingPlatformDetailSelectItems={
-                        shoppingPlatformDetailSelectItems
-                    }
-                    onConfirm={values =>
-                        handleUpdateItem(item, values, SCREEN.FREQUENT)
-                    }
+                    onPress={() => handleShowItemModal(item)}
                     onAddToAnother={handleAddToCurrent}
                 />
             ) : (
@@ -78,9 +75,7 @@ export default function FrequentShoppingList() {
     const renderHiddenItem = useCallback(
         ({ item, section }: SectionListRenderItemInfo<DisplayItem>) => {
             return openSections[section.id] ? (
-                <HiddenDeleteButton
-                    onPress={() => handleDeleteItem(item, SCREEN.FREQUENT)}
-                />
+                <HiddenDeleteButton onPress={() => handleDeleteItem(item)} />
             ) : (
                 <EmptyComponent />
             );
@@ -126,6 +121,20 @@ export default function FrequentShoppingList() {
                     refreshing={refreshing}
                     handleRefresh={handleRefresh}
                 />
+                {modalVisibleItem && (
+                    <ShoppingItemEditModal
+                        screenLabel={SCREEN.FREQUENT}
+                        onConfirm={values =>
+                            handleUpdateItem(modalVisibleItem, values)
+                        }
+                        item={modalVisibleItem}
+                        categorySelectItems={categorySelectItems}
+                        shoppingPlatformDetailSelectItems={
+                            shoppingPlatformDetailSelectItems
+                        }
+                        onClose={handleCloseItemModal}
+                    />
+                )}
             </View>
         </GestureHandlerRootView>
     );

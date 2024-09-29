@@ -15,7 +15,6 @@ type Props = {
     categorySelectItems: { label: string; value: string }[];
     shoppingPlatformDetailSelectItems: { label: string; value: string }[];
     onConfirm: (values: InputValues) => void;
-    visible: boolean;
     onClose: () => void;
 };
 export default function ShoppingItemEditModal({
@@ -24,7 +23,6 @@ export default function ShoppingItemEditModal({
     categorySelectItems,
     shoppingPlatformDetailSelectItems,
     onConfirm,
-    visible,
     onClose,
 }: Props) {
     const isCurrent = screenLabel === SCREEN.CURRENT;
@@ -50,7 +48,7 @@ export default function ShoppingItemEditModal({
     };
 
     return (
-        <Modal visible={visible} onClose={onClose}>
+        <Modal visible={true} onClose={onClose}>
             <ModalTextInput
                 label="商品名"
                 value={tempName}

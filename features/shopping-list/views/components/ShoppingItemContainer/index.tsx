@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
-import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
 import { shoppingItemContainerStyles } from '@/features/shopping-list/views/components/ShoppingItemContainer/styles';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
-import { InputValues } from '@/features/shopping-list/models/form';
+import { SHOPPING_PLATFORM_DETAIL } from '@/shared/constants/shoppingPlatform';
 
 type Props = {
     screenLabel: ScreenLabel;
     item: DisplayItem;
-    categorySelectItems: { label: string; value: string }[];
-    shoppingPlatformDetailSelectItems: { label: string; value: string }[];
-    onConfirm: (values: InputValues) => void;
     onAddToAnother: (item: DisplayItem) => void;
+    onPress: () => void;
 };
 const SCREEN_MAP = {
     [SCREEN.CURRENT]: (item: DisplayItem) => ({
@@ -29,18 +26,15 @@ const SCREEN_MAP = {
 export default function ShoppingItemContainer({
     screenLabel,
     item,
-    categorySelectItems,
-    shoppingPlatformDetailSelectItems,
-    onConfirm,
     onAddToAnother,
+    onPress,
 }: Props) {
     const { isAddedAnother, anotherLabel } = SCREEN_MAP[screenLabel](item);
-    const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <TouchableOpacity
             style={sharedStyles.itemContainer}
-            onPress={() => setModalVisible(true)}
+            onPress={onPress}
             activeOpacity={1}
         >
             <View style={sharedStyles.itemContent}>
@@ -51,25 +45,15 @@ export default function ShoppingItemContainer({
                         </Text>
                     </View>
                 )}
-                {modalVisible && (
-                    <ShoppingItemEditModal
-                        screenLabel={screenLabel}
-                        onConfirm={onConfirm}
-                        item={item}
-                        categorySelectItems={categorySelectItems}
-                        shoppingPlatformDetailSelectItems={
-                            shoppingPlatformDetailSelectItems
-                        }
-                        visible={modalVisible}
-                        onClose={() => setModalVisible(false)}
-                    />
-                )}
                 <Text style={sharedStyles.itemNameText}>{item.name}</Text>
-                <View style={sharedStyles.shopLabelBorder}>
-                    <Text style={sharedStyles.shopLabelText}>
-                        {item.shoppingPlatformDetailLabel}
-                    </Text>
-                </View>
+                {item.shoppingPlatformDetailId !==
+                    SHOPPING_PLATFORM_DETAIL.NOT_SET.id && (
+                    <View style={sharedStyles.shopLabelBorder}>
+                        <Text style={sharedStyles.shopLabelText}>
+                            {item.shoppingPlatformDetailLabel}
+                        </Text>
+                    </View>
+                )}
             </View>
             <TouchableOpacity
                 onPress={e => {

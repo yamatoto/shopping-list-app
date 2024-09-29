@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
-import { useShoppingListQuery } from '@/features/shopping-list/queries/useShoppingListQuery';
-import { useShoppingListUsecase } from '@/features/shopping-list/usecases/useShoppingListUsecase';
+import { useCurrentShoppingListQuery } from '@/features/shopping-list/queries/useCurrentShoppingListQuery';
+import { useCurrentShoppingListUsecase } from '@/features/shopping-list/usecases/useCurrentShoppingListUsecase';
 import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
@@ -12,6 +12,7 @@ import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
+import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
 
 export default function CurrentShoppingList() {
     const {
@@ -21,7 +22,8 @@ export default function CurrentShoppingList() {
         categorySelectItems,
         shoppingPlatformDetailSelectItems,
         selectedShoppingPlatformId,
-    } = useShoppingListQuery();
+        modalVisibleItem,
+    } = useCurrentShoppingListQuery();
     const {
         initialize,
         handleRefresh,
@@ -31,10 +33,12 @@ export default function CurrentShoppingList() {
         handleAddToFrequent,
         setTempNewItemName,
         handleShoppingPlatformSelect,
-    } = useShoppingListUsecase();
+        handleShowItemModal,
+        handleCloseItemModal,
+    } = useCurrentShoppingListUsecase();
 
     useEffect(() => {
-        initialize().then();
+        initialize();
     }, []);
 
     const renderItem = useCallback(
@@ -43,14 +47,8 @@ export default function CurrentShoppingList() {
                 <ShoppingItemContainer
                     screenLabel={SCREEN.CURRENT}
                     item={item}
-                    categorySelectItems={categorySelectItems}
-                    shoppingPlatformDetailSelectItems={
-                        shoppingPlatformDetailSelectItems
-                    }
-                    onConfirm={values =>
-                        handleUpdateItem(item, values, SCREEN.CURRENT)
-                    }
                     onAddToAnother={handleAddToFrequent}
+                    onPress={() => handleShowItemModal(item)}
                 />
             );
         },
@@ -59,9 +57,7 @@ export default function CurrentShoppingList() {
 
     const renderHiddenItem = useCallback(
         ({ item }: { item: DisplayItem }) => (
-            <HiddenDeleteButton
-                onPress={() => handleDeleteItem(item, SCREEN.CURRENT)}
-            />
+            <HiddenDeleteButton onPress={() => handleDeleteItem(item)} />
         ),
         [handleDeleteItem],
     );
@@ -88,6 +84,20 @@ export default function CurrentShoppingList() {
                     refreshing={refreshing}
                     handleRefresh={handleRefresh}
                 />
+                {modalVisibleItem && (
+                    <ShoppingItemEditModal
+                        screenLabel={SCREEN.CURRENT}
+                        onConfirm={values =>
+                            handleUpdateItem(modalVisibleItem, values)
+                        }
+                        item={modalVisibleItem}
+                        categorySelectItems={categorySelectItems}
+                        shoppingPlatformDetailSelectItems={
+                            shoppingPlatformDetailSelectItems
+                        }
+                        onClose={() => handleCloseItemModal()}
+                    />
+                )}
             </View>
         </GestureHandlerRootView>
     );

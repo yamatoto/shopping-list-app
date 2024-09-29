@@ -105,14 +105,16 @@ export class BaseRepository<T, E> {
         return docs[0] as QueryDocumentSnapshot<T>;
     }
 
-    async findByName(name: string): Promise<QueryDocumentSnapshot<T> | null> {
+    async findBy<K extends keyof E>(
+        whereFieldName: K,
+        whereValue: E[K],
+    ): Promise<QueryDocumentSnapshot<T>[]> {
         const q = query(
             collection(db, this.collectionName),
-            where('name', '==', name),
+            where(whereFieldName as string, '==', whereValue),
         );
         const { docs } = await getDocs(q);
-        if (docs.length === 0) return null;
-        return docs[0] as QueryDocumentSnapshot<T>;
+        return docs as QueryDocumentSnapshot<T>[];
     }
 
     async add(newRecord: E, message?: string): Promise<void> {
@@ -159,14 +161,31 @@ export class BaseRepository<T, E> {
         console.log('一括挿入が完了しました');
     }
 
-    async bulkUpdate<K extends keyof E>(
-        targetFieldName: K,
-        newValue: E[K],
-    ): Promise<void> {
+    async bulkUpdate<K extends keyof E>({
+        targetFieldName,
+        newValue,
+        whereFieldName,
+        whereValue,
+    }: {
+        targetFieldName: K;
+        newValue: E[K];
+        whereFieldName?: K;
+        whereValue?: E[K];
+        message: string;
+        updatedUser: string;
+    }): Promise<void> {
         const collectionName = this.collectionName;
 
         const colRef = collection(this.db, collectionName);
-        const snapshot = await getDocs(colRef);
+        const q =
+            whereFieldName && whereValue
+                ? query(
+                      colRef,
+                      where(whereFieldName as string, '==', whereValue),
+                  )
+                : colRef;
+
+        const snapshot = await getDocs(q);
 
         const batch = writeBatch(this.db);
 
