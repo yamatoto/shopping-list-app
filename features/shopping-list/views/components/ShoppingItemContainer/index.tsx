@@ -69,7 +69,7 @@ export default function ShoppingItemContainer({
             </View>
             <TouchableOpacity
                 onPress={e => {
-                    e.stopPropagation(); // 子コンポーネントのタッチイベントが親に伝播しないようにする
+                    e.stopPropagation();
                     onAddToAnother(item);
                 }}
                 disabled={isAddedAnother}

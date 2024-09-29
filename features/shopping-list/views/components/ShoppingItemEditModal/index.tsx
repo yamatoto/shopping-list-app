@@ -1,20 +1,13 @@
-import React, { useCallback, useRef, useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Platform,
-} from 'react-native';
+import React, { useState } from 'react';
 
 import { DisplayItem } from '@/shared/models/itemModel';
 import Modal from '@/shared/components/Modal';
-import { modalStyles } from '@/shared/styles/modalStyles';
 import ModalButtonContainerHorizontal from '@/shared/components/ModalButtonContainerHorizontal';
 import ModalPickerSelect from '@/shared/components/ModalPickerSelect';
 import ModalTextInput from '@/shared/components/ModalTextInput';
 import { SCREEN, ScreenLabel } from '@/features/shopping-list/constants/screen';
 import { InputValues } from '@/features/shopping-list/models/form';
+import QuantityInput from '@/features/shopping-list/views/components/QuantityInput';
 
 type Props = {
     screenLabel: ScreenLabel;
@@ -37,35 +30,6 @@ export default function ShoppingItemEditModal({
 
     const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
     const [tempName, setTempName] = useState(item.name);
-    const inputRef = useRef<TextInput>(null);
-
-    const focusTextInputToEnd = useCallback(() => {
-        if (inputRef.current) {
-            setTimeout(() => {
-                (inputRef.current as TextInput).setSelection(
-                    tempQuantity.length,
-                    tempQuantity.length,
-                );
-            }, 50);
-        }
-    }, [tempQuantity]);
-
-    const handleQuantityChange = (text: string) => {
-        const numericValue = text.replace(/[^0-9]/g, '');
-        setTempQuantity(numericValue || '1'); // 空の場合は '1' にする
-    };
-
-    const incrementQuantity = () => {
-        const currentValue = parseInt(tempQuantity, 10);
-        setTempQuantity((currentValue + 1).toString());
-    };
-
-    const decrementQuantity = () => {
-        const currentValue = parseInt(tempQuantity, 10);
-        if (currentValue > 1) {
-            setTempQuantity((currentValue - 1).toString());
-        }
-    };
 
     const handleConfirm = async () => {
         onConfirm({
@@ -89,47 +53,10 @@ export default function ShoppingItemEditModal({
                 placeholder="商品名を入力"
             />
             {isCurrent && (
-                <View style={modalStyles.itemContainer}>
-                    <Text style={modalStyles.label}>数量</Text>
-                    <View style={modalStyles.quantityInputContainer}>
-                        <TouchableOpacity
-                            style={modalStyles.quantityAdjustButton}
-                            onPress={decrementQuantity}
-                        >
-                            <Text style={modalStyles.quantityAdjustButtonText}>
-                                -
-                            </Text>
-                        </TouchableOpacity>
-                        <TextInput
-                            ref={inputRef}
-                            style={[
-                                modalStyles.textInput,
-                                {
-                                    width: 100,
-                                    marginHorizontal: 10,
-                                    textAlign: 'center',
-                                },
-                            ]}
-                            onChangeText={handleQuantityChange}
-                            value={tempQuantity}
-                            keyboardType={
-                                Platform.OS === 'ios' ? 'number-pad' : 'numeric'
-                            }
-                            textAlign="center"
-                            returnKeyType="done"
-                            onFocus={focusTextInputToEnd}
-                            selectTextOnFocus={true}
-                        />
-                        <TouchableOpacity
-                            style={modalStyles.quantityAdjustButton}
-                            onPress={incrementQuantity}
-                        >
-                            <Text style={modalStyles.quantityAdjustButtonText}>
-                                +
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <QuantityInput
+                    tempQuantity={tempQuantity}
+                    setTempQuantity={setTempQuantity}
+                />
             )}
             <ModalPickerSelect
                 label="カテゴリ"
