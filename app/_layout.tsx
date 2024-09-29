@@ -16,7 +16,7 @@ import useFirebaseAuth from '@/shared/auth/useFirebaseAuth';
 import SignInOrUpWithEmail from '@/shared/auth/SignInOrUpWithEmail';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().then();
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -27,7 +27,7 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (loaded) {
-            SplashScreen.hideAsync();
+            SplashScreen.hideAsync().then();
         }
     }, [loaded]);
 

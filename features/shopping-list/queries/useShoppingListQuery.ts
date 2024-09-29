@@ -3,7 +3,10 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useShoppingItemsStore } from '@/features/shopping-list/store/useShoppingItemsStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
-import { SHOPPING_PLATFORM_DETAIL_LIST } from '@/shared/constants/shoppingPlatform';
+import {
+    SHOPPING_PLATFORM_DETAIL_LIST,
+    SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP,
+} from '@/shared/constants/shoppingPlatform';
 
 export const useShoppingListQuery = () => {
     const {
@@ -38,6 +41,12 @@ export const useShoppingListQuery = () => {
         return {
             ...data,
             id: fetchedItem.id,
+            shoppingPlatformDetailLabel:
+                data.shoppingPlatformDetailId === 'NotSet'
+                    ? ''
+                    : SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP[
+                          data.shoppingPlatformDetailId
+                      ],
             createdAt: data.createdAt.toDate(),
             updatedAt: data.updatedAt.toDate(),
         };

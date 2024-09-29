@@ -30,6 +30,11 @@ export const sharedStyles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#fff',
     },
+    itemContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
     activeItem: {
         backgroundColor: '#e0e0e0',
     },
@@ -64,6 +69,18 @@ export const sharedStyles = StyleSheet.create({
         flexGrow: 1,
         maxWidth: '60%',
         marginLeft: 15,
+    },
+    shopLabelBorder: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 10,
+        padding: 5,
+        minWidth: 55,
+        marginHorizontal: 10,
+    },
+    shopLabelText: {
+        fontSize: dynamicFontSize,
+        textAlign: 'center',
     },
 });
 

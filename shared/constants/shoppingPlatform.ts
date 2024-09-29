@@ -13,18 +13,27 @@ export const SHOPPING_PLATFORM_TO_LABEL_MAP: {
     [SHOPPING_PLATFORM.SUPER.id]: SHOPPING_PLATFORM.SUPER.label,
     [SHOPPING_PLATFORM.NET.id]: SHOPPING_PLATFORM.NET.label,
 } as const;
-export const SHOPPING_PLATFORM_TO_ID_MAP: {
-    [key in ShoppingPlatformLabel]: ShoppingPlatformId;
-} = {
-    [SHOPPING_PLATFORM.SUPER.label]: SHOPPING_PLATFORM.SUPER.id,
-    [SHOPPING_PLATFORM.NET.label]: SHOPPING_PLATFORM.NET.id,
-} as const;
 
 export const SHOPPING_PLATFORM_DETAIL = {
     NOT_SET: { id: 'NotSet', label: '未設定', shoppingPlatformId: 0 },
-    SUPER: {
+    SUMMIT: {
         id: 'S1',
-        label: 'スーパー',
+        label: 'サミット',
+        shoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    },
+    MY_BASKET: {
+        id: 'S2',
+        label: 'まいばすけっと',
+        shoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    },
+    SELECTION: {
+        id: 'S3',
+        label: 'セレクション',
+        shoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
+    },
+    MATSUKIYO: {
+        id: 'S4',
+        label: 'マツキヨ',
         shoppingPlatformId: SHOPPING_PLATFORM.SUPER.id,
     },
     AMAZON: {
@@ -50,18 +59,14 @@ export const SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP: {
 } = {
     [SHOPPING_PLATFORM_DETAIL.NOT_SET.id]:
         SHOPPING_PLATFORM_DETAIL.NOT_SET.label,
-    [SHOPPING_PLATFORM_DETAIL.SUPER.id]: SHOPPING_PLATFORM_DETAIL.SUPER.label,
+    [SHOPPING_PLATFORM_DETAIL.SUMMIT.id]: SHOPPING_PLATFORM_DETAIL.SUMMIT.label,
+    [SHOPPING_PLATFORM_DETAIL.MY_BASKET.id]:
+        SHOPPING_PLATFORM_DETAIL.MY_BASKET.label,
+    [SHOPPING_PLATFORM_DETAIL.SELECTION.id]:
+        SHOPPING_PLATFORM_DETAIL.SELECTION.label,
+    [SHOPPING_PLATFORM_DETAIL.MATSUKIYO.id]:
+        SHOPPING_PLATFORM_DETAIL.MATSUKIYO.label,
     [SHOPPING_PLATFORM_DETAIL.AMAZON.id]: SHOPPING_PLATFORM_DETAIL.AMAZON.label,
     [SHOPPING_PLATFORM_DETAIL.RAKUTEN.id]:
         SHOPPING_PLATFORM_DETAIL.RAKUTEN.label,
-} as const;
-export const SHOPPING_PLATFORM_DETAIL_TO_ID_MAP: {
-    [key in ShoppingPlatformDetailLabel]: ShoppingPlatformDetailId;
-} = {
-    [SHOPPING_PLATFORM_DETAIL.NOT_SET.label]:
-        SHOPPING_PLATFORM_DETAIL.NOT_SET.id,
-    [SHOPPING_PLATFORM_DETAIL.SUPER.label]: SHOPPING_PLATFORM_DETAIL.SUPER.id,
-    [SHOPPING_PLATFORM_DETAIL.AMAZON.label]: SHOPPING_PLATFORM_DETAIL.AMAZON.id,
-    [SHOPPING_PLATFORM_DETAIL.RAKUTEN.label]:
-        SHOPPING_PLATFORM_DETAIL.RAKUTEN.id,
 } as const;

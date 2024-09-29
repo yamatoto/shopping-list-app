@@ -43,17 +43,11 @@ export default function ShoppingItemContainer({
             onPress={() => setModalVisible(true)}
             activeOpacity={1}
         >
-            <View
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    flex: 1,
-                }}
-            >
+            <View style={sharedStyles.itemContent}>
                 {screenLabel === SCREEN.CURRENT && (
                     <View style={shoppingItemContainerStyles.quantityContainer}>
                         <Text style={shoppingItemContainerStyles.quantityText}>
-                            {item.quantity ?? 1}
+                            {item.quantity}
                         </Text>
                     </View>
                 )}
@@ -71,6 +65,11 @@ export default function ShoppingItemContainer({
                     />
                 )}
                 <Text style={sharedStyles.itemNameText}>{item.name}</Text>
+                <View style={sharedStyles.shopLabelBorder}>
+                    <Text style={sharedStyles.shopLabelText}>
+                        {item.shoppingPlatformDetailLabel}
+                    </Text>
+                </View>
             </View>
             <TouchableOpacity
                 onPress={e => {

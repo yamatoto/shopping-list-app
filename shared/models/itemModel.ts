@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 
 import {
     ShoppingPlatformDetailId,
+    ShoppingPlatformDetailLabel,
     ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
 
@@ -27,6 +28,7 @@ export interface ApiResponseItem extends ItemBase {
 
 export interface DisplayItem extends ItemBase {
     id: string;
+    shoppingPlatformDetailLabel: '' | ShoppingPlatformDetailLabel;
     createdAt: Date;
     updatedAt: Date;
 }
