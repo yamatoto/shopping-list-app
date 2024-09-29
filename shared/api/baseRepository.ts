@@ -5,6 +5,7 @@ import {
     deleteField,
     doc,
     DocumentChange,
+    DocumentData,
     getDocs,
     onSnapshot,
     orderBy,
@@ -13,6 +14,7 @@ import {
     Timestamp,
     updateDoc,
     where,
+    WithFieldValue,
     writeBatch,
 } from 'firebase/firestore';
 
@@ -138,6 +140,45 @@ export class BaseRepository<T, E> {
     async delete(id: string): Promise<void> {
         const docRef = doc(db, this.collectionName, id);
         await deleteDoc(docRef);
+    }
+
+    async bulkInsert<E extends WithFieldValue<DocumentData>>(
+        documents: E[],
+    ): Promise<void> {
+        const collectionName = this.collectionName;
+
+        const colRef = collection(this.db, collectionName);
+        const batch = writeBatch(this.db);
+
+        documents.forEach(docData => {
+            const docRef = doc(colRef); // 自動生成されるIDを利用する
+            batch.set(docRef, docData);
+        });
+
+        await batch.commit();
+        console.log('一括挿入が完了しました');
+    }
+
+    async bulkUpdate<K extends keyof E>(
+        targetFieldName: K,
+        newValue: E[K],
+    ): Promise<void> {
+        const collectionName = this.collectionName;
+
+        const colRef = collection(this.db, collectionName);
+        const snapshot = await getDocs(colRef);
+
+        const batch = writeBatch(this.db);
+
+        snapshot.forEach(docSnapshot => {
+            const docRef = doc(db, collectionName, docSnapshot.id);
+            batch.update(docRef, {
+                [targetFieldName]: newValue,
+            });
+        });
+
+        await batch.commit();
+        console.log('一括更新が完了しました');
     }
 
     async changeFieldName(
