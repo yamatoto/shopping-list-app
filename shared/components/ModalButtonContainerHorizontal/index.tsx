@@ -11,7 +11,7 @@ type Props = {
 export default function ModalButtonContainerHorizontal({
     onCancel,
     onSubmit,
-    submitText = '送信',
+    submitText = '更新',
 }: Props) {
     return (
         <View style={modalStyles.buttonContainerHorizontal}>

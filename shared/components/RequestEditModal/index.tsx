@@ -63,6 +63,7 @@ const ForPartnerModal = <
             <ModalButtonContainerHorizontal
                 onCancel={onClose}
                 onSubmit={handleConfirm}
+                submitText={request ? '更新' : '登録'}
             />
         </>
     );
@@ -119,6 +120,7 @@ const ForDeveloperModal = <
             <ModalButtonContainerHorizontal
                 onCancel={onClose}
                 onSubmit={handleConfirm}
+                submitText={request ? '更新' : '登録'}
             />
         </>
     );

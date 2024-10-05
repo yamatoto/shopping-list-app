@@ -30,6 +30,7 @@ const HiddenItemWithModal = React.memo(({ item, onReject }: Props) => {
             <ModalButtonContainerHorizontal
                 onCancel={() => setModalVisible(false)}
                 onSubmit={confirmReject}
+                submitText="登録"
             />
         </Modal>
     );
