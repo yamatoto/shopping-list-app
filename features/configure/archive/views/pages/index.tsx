@@ -11,6 +11,7 @@ import { useArchiveUsecase } from '@/features/configure/archive/usecases/useArch
 import ArchiveItemContainer from '@/features/configure/archive/views/components/ArchiveItemContainer';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
+import Loading from '@/shared/components/Loading';
 
 export default function Archive() {
     const { archiveItems, refreshing, selectedShoppingPlatformId } =
@@ -55,13 +56,17 @@ export default function Archive() {
                     selectedShoppingPlatformId={selectedShoppingPlatformId}
                     onSelect={handleShoppingPlatformSelect}
                 />
-                <CommonSwipeListView
-                    data={archiveItems}
-                    renderItem={renderItem}
-                    renderHiddenItem={renderHiddenItem}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {archiveItems.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        data={archiveItems}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
             </View>
         </GestureHandlerRootView>
     );

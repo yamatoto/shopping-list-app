@@ -11,6 +11,7 @@ import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { categoryStyles } from '@/features/configure/category/views/pages/styles';
 import { CategoryModel } from '@/shared/models/categorySortModel';
 import ButtonAdd from '@/shared/components/ButtonAdd';
+import Loading from '@/shared/components/Loading';
 
 export default function Category() {
     const { categories, refreshing, tempNewCategoryName } = useCategoryQuery();
@@ -63,14 +64,17 @@ export default function Category() {
                         onPress={() => handleAddCategory(tempNewCategoryName)}
                     />
                 </View>
-
-                <CommonSwipeListView
-                    data={categories}
-                    renderItem={renderItem}
-                    renderHiddenItem={renderHiddenItem}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {categories.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        data={categories}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
             </View>
         </GestureHandlerRootView>
     );

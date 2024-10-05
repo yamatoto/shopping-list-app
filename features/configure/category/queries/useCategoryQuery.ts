@@ -20,7 +20,7 @@ export const useCategoryQuery = () => {
         () =>
             resultOfFetchCategorySort
                 ?.data()
-                .categories.map(({ id, name }) => ({ id, name })),
+                .categories.map(({ id, name }) => ({ id, name })) ?? [],
         [resultOfFetchCategorySort],
     );
 

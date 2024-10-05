@@ -14,6 +14,7 @@ import { useNoteQuery } from '@/features/configure/note/queries/useNoteQuery';
 import { useNoteUsecase } from '@/features/configure/note/usecases/useNoteUsecase';
 import NoteForm from '@/features/configure/note/views/components/NoteForm';
 import { noteStyles } from '@/features/configure/note/views/pages/styles';
+import Loading from '@/shared/components/Loading';
 
 type RootStackParamList = {
     index: undefined;
@@ -100,7 +101,9 @@ export default function Note() {
                     />
                 }
             >
-                {loginUsersNote?.content != null && (
+                {!loginUsersNote.content ? (
+                    <Loading />
+                ) : (
                     <NoteForm
                         note={loginUsersNote}
                         textAreaHeight={developerTextAreaHeight}

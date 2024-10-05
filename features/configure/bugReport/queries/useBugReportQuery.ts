@@ -5,7 +5,7 @@ import { useBugReportStore } from '@/features/configure/bugReport/store/useBugRe
 import {
     ApiResponseBugReport,
     DisplayBugReport,
-} from '@/features/configure/bugReport/models/bugReportModel';
+} from '@/shared/models/requestModel';
 
 export const useBugReportQuery = () => {
     const { resultOfFetchBugReports, refreshing } = useBugReportStore(
@@ -27,7 +27,7 @@ export const useBugReportQuery = () => {
         };
     };
 
-    const sections = useMemo(() => {
+    const bugReportsSections = useMemo(() => {
         const bugReports = resultOfFetchBugReports.map(fetchedBugReport =>
             convertToClientBugReportFromServer(fetchedBugReport),
         );
@@ -51,6 +51,6 @@ export const useBugReportQuery = () => {
 
     return {
         refreshing,
-        sections,
+        bugReportsSections,
     };
 };

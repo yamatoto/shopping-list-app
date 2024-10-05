@@ -27,7 +27,7 @@ export const useFeatureRequestQuery = () => {
         };
     };
 
-    const sections = useMemo(() => {
+    const featureRequestSections = useMemo(() => {
         const featureRequests = resultOfFetchFeatureRequests.map(
             fetchedFeatureRequest =>
                 convertToClientFeatureRequestFromServer(fetchedFeatureRequest),
@@ -52,6 +52,6 @@ export const useFeatureRequestQuery = () => {
 
     return {
         refreshing,
-        sections,
+        featureRequestSections,
     };
 };

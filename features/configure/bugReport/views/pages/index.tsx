@@ -18,9 +18,10 @@ import {
 } from '@/shared/models/requestModel';
 import RequestEditModal from '@/shared/components/RequestEditModal';
 import ButtonAdd from '@/shared/components/ButtonAdd';
+import Loading from '@/shared/components/Loading';
 
 export default function BugReport() {
-    const { sections, refreshing } = useBugReportQuery();
+    const { bugReportsSections, refreshing } = useBugReportQuery();
     const {
         initialize,
         handleRefresh,
@@ -102,14 +103,18 @@ export default function BugReport() {
                     />
                 </View>
 
-                <CommonSwipeListView
-                    useSectionList
-                    sections={sections}
-                    renderItem={renderItem}
-                    renderSectionHeader={renderSectionHeader}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {bugReportsSections[0].data.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        useSectionList
+                        sections={bugReportsSections}
+                        renderItem={renderItem}
+                        renderSectionHeader={renderSectionHeader}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
             </View>
 
             {modalVisible && (

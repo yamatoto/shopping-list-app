@@ -13,6 +13,7 @@ import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
+import Loading from '@/shared/components/Loading';
 
 export default function CurrentShoppingList() {
     const {
@@ -77,13 +78,17 @@ export default function CurrentShoppingList() {
                     onSelect={handleShoppingPlatformSelect}
                 />
 
-                <CommonSwipeListView
-                    data={currentItems}
-                    renderItem={renderItem}
-                    renderHiddenItem={renderHiddenItem}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {currentItems.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        data={currentItems}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
                 {modalVisibleItem && (
                     <ShoppingItemEditModal
                         screenLabel={SCREEN.CURRENT}

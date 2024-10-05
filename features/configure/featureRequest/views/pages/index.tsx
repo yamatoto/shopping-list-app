@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { View, Text, TouchableOpacity, SectionListData } from 'react-native';
+import { View, Text, SectionListData } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeRow } from 'react-native-swipe-list-view';
 
@@ -18,9 +18,10 @@ import { featureRequestStyles } from '@/features/configure/featureRequest/views/
 import HiddenItemWithModal from '@/features/configure/featureRequest/views/components/HiddenItemWithModal';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import ButtonAdd from '@/shared/components/ButtonAdd';
+import Loading from '@/shared/components/Loading';
 
 export default function FeatureRequest() {
-    const { sections, refreshing } = useFeatureRequestQuery();
+    const { featureRequestSections, refreshing } = useFeatureRequestQuery();
     const {
         initialize,
         handleRefresh,
@@ -104,14 +105,18 @@ export default function FeatureRequest() {
                     />
                 </View>
 
-                <CommonSwipeListView
-                    useSectionList
-                    sections={sections}
-                    renderItem={renderItem}
-                    renderSectionHeader={renderSectionHeader}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {featureRequestSections[0].data.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        useSectionList
+                        sections={featureRequestSections}
+                        renderItem={renderItem}
+                        renderSectionHeader={renderSectionHeader}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
             </View>
 
             {modalVisible && (
