@@ -37,12 +37,13 @@ export const useFrequentShoppingListQuery = () => {
         }),
     );
 
-    const convertToClientItemFromServer = (
+    const convertToFrequentItemFromServer = (
         fetchedItem: QueryDocumentSnapshot<ApiResponseItem>,
     ): DisplayItem => {
         const data = fetchedItem.data();
+        const { message: _, ...rest } = data;
         return {
-            ...data,
+            ...rest,
             id: fetchedItem.id,
             shoppingPlatformDetailLabel:
                 data.shoppingPlatformDetailId === 'NotSet'
@@ -58,7 +59,7 @@ export const useFrequentShoppingListQuery = () => {
     const frequentAllItems = useMemo(
         () =>
             resultOfFetchFrequentItems.map(fetchedItem =>
-                convertToClientItemFromServer(fetchedItem),
+                convertToFrequentItemFromServer(fetchedItem),
             ),
         [resultOfFetchFrequentItems],
     );
@@ -68,7 +69,7 @@ export const useFrequentShoppingListQuery = () => {
             frequentAllItems.filter(
                 item => item.shoppingPlatformId === selectedShoppingPlatformId,
             ),
-        [selectedShoppingPlatformId],
+        [frequentAllItems, selectedShoppingPlatformId],
     );
 
     const frequentItemSections = useMemo(() => {
@@ -84,14 +85,16 @@ export const useFrequentShoppingListQuery = () => {
             {} as { [key: string]: DisplayItem[] },
         );
 
-        return resultOfFetchCategorySort
-            ?.data()
-            .categories.map(({ id, name }) => ({
-                title: name,
-                id,
-                data: groupedItems[id] || [],
-            }))
-            .filter(section => section.data.length > 0);
+        return (
+            resultOfFetchCategorySort
+                ?.data()
+                .categories.map(({ id, name }) => ({
+                    title: name,
+                    id,
+                    data: groupedItems[id] || [],
+                }))
+                .filter(section => section.data.length > 0) ?? []
+        );
     }, [resultOfFetchCategorySort, frequentItems]);
 
     const categorySelectItems = useMemo(() => {

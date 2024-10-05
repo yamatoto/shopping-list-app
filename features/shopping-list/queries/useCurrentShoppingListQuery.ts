@@ -38,8 +38,9 @@ export const useCurrentShoppingListQuery = () => {
         fetchedItem: QueryDocumentSnapshot<ApiResponseItem>,
     ): DisplayItem => {
         const data = fetchedItem.data();
+        const { message: _, ...rest } = data;
         return {
-            ...data,
+            ...rest,
             id: fetchedItem.id,
             shoppingPlatformDetailLabel:
                 data.shoppingPlatformDetailId === 'NotSet'

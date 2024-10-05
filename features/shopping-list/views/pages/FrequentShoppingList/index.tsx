@@ -21,6 +21,7 @@ import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
+import Loading from '@/shared/components/Loading';
 
 export default function FrequentShoppingList() {
     const {
@@ -112,15 +113,19 @@ export default function FrequentShoppingList() {
                     onSelect={handleShoppingPlatformSelect}
                 />
 
-                <CommonSwipeListView
-                    useSectionList
-                    sections={frequentItemSections}
-                    renderItem={renderItem}
-                    renderHiddenItem={renderHiddenItem}
-                    renderSectionHeader={renderSectionHeader}
-                    refreshing={refreshing}
-                    handleRefresh={handleRefresh}
-                />
+                {frequentItemSections.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <CommonSwipeListView
+                        useSectionList
+                        sections={frequentItemSections}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        renderSectionHeader={renderSectionHeader}
+                        refreshing={refreshing}
+                        handleRefresh={handleRefresh}
+                    />
+                )}
                 {modalVisibleItem && (
                     <ShoppingItemEditModal
                         screenLabel={SCREEN.FREQUENT}
