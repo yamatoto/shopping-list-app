@@ -63,7 +63,7 @@ export const useCurrentShoppingListQuery = () => {
             currentAllItems.filter(
                 item => item.shoppingPlatformId === selectedShoppingPlatformId,
             ),
-        [selectedShoppingPlatformId],
+        [currentAllItems, selectedShoppingPlatformId],
     );
 
     const categorySelectItems = useMemo(() => {
