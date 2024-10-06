@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import AddForm from '@/shared/components/AddForm';
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { useFrequentShoppingListQuery } from '@/features/shopping-list/queries/useFrequentShoppingListQuery';
 import { useFrequentShoppingListUsecase } from '@/features/shopping-list/usecases/useFrequentShoppingListUsecase';
@@ -17,7 +18,6 @@ import { sharedStyles } from '@/shared/styles/sharedStyles';
 import { frequentShoppingListStyles } from '@/features/shopping-list/views/pages/FrequentShoppingList/styles';
 import { EmptyComponent } from '@/shared/components/EmptyComponent';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
-import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
@@ -101,11 +101,11 @@ export default function FrequentShoppingList() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <ItemAddForm
-                    screenLabel={SCREEN.FREQUENT}
+                <AddForm
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
-                    onAdd={handleAddItem}
+                    onAdd={() => handleAddItem(tempNewItemName)}
+                    placeholder={`新しい${SCREEN.FREQUENT}の買い物を追加`}
                 />
 
                 <ShoppingPlatformButtons
@@ -113,7 +113,7 @@ export default function FrequentShoppingList() {
                     onSelect={handleShoppingPlatformSelect}
                 />
 
-                {frequentItemSections.length === 0 ? (
+                {!frequentItemSections ? (
                     <Loading />
                 ) : (
                     <CommonSwipeListView

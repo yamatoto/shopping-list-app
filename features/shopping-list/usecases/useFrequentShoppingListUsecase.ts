@@ -119,7 +119,12 @@ export const useFrequentShoppingListUsecase = () => {
             }
             await fetchAllItems();
         },
-        [currentUser, fetchAllItems, selectedShoppingPlatformId],
+        [
+            currentUser,
+            fetchAllItems,
+            selectedShoppingPlatformId,
+            resultOfFetchCategorySort,
+        ],
     );
 
     const handleDeleteItem = useCallback(

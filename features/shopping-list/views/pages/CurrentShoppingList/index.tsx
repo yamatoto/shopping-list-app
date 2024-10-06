@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import AddForm from '@/shared/components/AddForm';
 import CommonSwipeListView from '@/shared/components/CommonSwipeListView';
 import { useCurrentShoppingListQuery } from '@/features/shopping-list/queries/useCurrentShoppingListQuery';
 import { useCurrentShoppingListUsecase } from '@/features/shopping-list/usecases/useCurrentShoppingListUsecase';
@@ -9,7 +10,6 @@ import { DisplayItem } from '@/shared/models/itemModel';
 import ShoppingItemContainer from '@/features/shopping-list/views/components/ShoppingItemContainer';
 import { sharedStyles } from '@/shared/styles/sharedStyles';
 import HiddenDeleteButton from '@/shared/components/HiddenDeleteButton';
-import ItemAddForm from '@/features/shopping-list/views/components/ItemAddForm';
 import { SCREEN } from '@/features/shopping-list/constants/screen';
 import ShoppingPlatformButtons from '@/features/shopping-list/views/components/ShoppingPlatformButtons';
 import ShoppingItemEditModal from '@/features/shopping-list/views/components/ShoppingItemEditModal';
@@ -66,11 +66,11 @@ export default function CurrentShoppingList() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={sharedStyles.container}>
-                <ItemAddForm
-                    screenLabel={SCREEN.CURRENT}
+                <AddForm
                     tempNewItemName={tempNewItemName}
                     setTempNewItemName={setTempNewItemName}
-                    onAdd={handleAddItem}
+                    onAdd={() => handleAddItem(tempNewItemName)}
+                    placeholder={`新しい${SCREEN.CURRENT}の買い物を追加`}
                 />
 
                 <ShoppingPlatformButtons

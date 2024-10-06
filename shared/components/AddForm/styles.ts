@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const itemAddFormStyles = StyleSheet.create({
+export const addFormStyles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
     },
