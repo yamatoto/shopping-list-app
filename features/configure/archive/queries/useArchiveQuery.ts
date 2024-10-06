@@ -3,6 +3,7 @@ import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { useArchiveItemStore } from '@/features/configure/archive/store/useArchiveStore';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
+import { SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP } from '@/shared/constants/shoppingPlatform';
 
 export const useArchiveQuery = () => {
     const {
@@ -28,6 +29,10 @@ export const useArchiveQuery = () => {
         return {
             ...data,
             id: fetchedItem.id,
+            shoppingPlatformDetailLabel:
+                SHOPPING_PLATFORM_DETAIL_TO_LABEL_MAP[
+                    data.shoppingPlatformDetailId
+                ] ?? '',
             createdAt: data.createdAt.toDate(),
             updatedAt: data.updatedAt.toDate(),
         };

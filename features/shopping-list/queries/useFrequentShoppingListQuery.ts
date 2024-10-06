@@ -73,6 +73,8 @@ export const useFrequentShoppingListQuery = () => {
     );
 
     const frequentItemSections = useMemo(() => {
+        if (!resultOfFetchCategorySort || !frequentItems) return null;
+
         const groupedItems = frequentItems.reduce(
             (acc, item) => {
                 const categoryId = item.categoryId;

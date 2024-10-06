@@ -8,10 +8,7 @@ import {
     ShoppingPlatformId,
 } from '@/shared/constants/shoppingPlatform';
 import { ScreenLabel } from '@/features/shopping-list/constants/screen';
-import {
-    ApiResponseCategorySort,
-    DEFAULT_CATEGORY,
-} from '@/shared/models/categorySortModel';
+import { ApiResponseCategorySort } from '@/shared/models/categorySortModel';
 import { ApiResponseItem, DisplayItem } from '@/shared/models/itemModel';
 import {
     FormattedInputValues,
@@ -109,7 +106,7 @@ export abstract class ShoppingList {
             {
                 name: trimmedItemName,
                 quantity: 1,
-                categoryId: DEFAULT_CATEGORY.id,
+                categoryId: '',
                 shoppingPlatformId: selectedShoppingPlatformId,
                 shoppingPlatformDetailId: SHOPPING_PLATFORM_DETAIL.NOT_SET.id,
                 createdUser,
@@ -141,12 +138,12 @@ export abstract class ShoppingList {
             resultOfFetchCategorySort: QueryDocumentSnapshot<ApiResponseCategorySort> | null,
         ) => {
             const categories = resultOfFetchCategorySort?.data().categories;
-            const beforeCategoryName = categories?.find(
-                ({ id }) => id === beforeItem.categoryId,
-            )?.name;
-            const newCategoryName = categories?.find(
-                ({ id }) => id === values.categoryId,
-            )?.name;
+            const beforeCategoryName =
+                categories?.find(({ id }) => id === beforeItem.categoryId)
+                    ?.name ?? '未設定';
+            const newCategoryName =
+                categories?.find(({ id }) => id === values.categoryId)?.name ??
+                '未設定';
             return `${INPUT_KEY_LABELS.categoryId}: ${beforeCategoryName} → ${newCategoryName}`;
         },
         shoppingPlatformDetailId: (
