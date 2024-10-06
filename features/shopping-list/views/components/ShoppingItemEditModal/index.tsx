@@ -26,7 +26,9 @@ export default function ShoppingItemEditModal({
     onClose,
 }: Props) {
     const isCurrent = screenLabel === SCREEN.CURRENT;
-    const [selectedCategory, setSelectedCategory] = useState(item.categoryId);
+    const [selectedCategory, setSelectedCategory] = useState(
+        item.categoryId ?? '',
+    );
     const [selectedShoppingPlatformDetail, setSelectedShoppingPlatformDetail] =
         useState(item.shoppingPlatformDetailId);
 
@@ -64,7 +66,7 @@ export default function ShoppingItemEditModal({
             <ModalPickerSelect
                 label="カテゴリ"
                 value={selectedCategory}
-                items={categorySelectItems}
+                items={[{ value: '', label: '未設定' }, ...categorySelectItems]}
                 onValueChange={setSelectedCategory}
             />
             <ModalPickerSelect
