@@ -4,6 +4,14 @@
 身内にしかアプリ配布していません。  
 Google認証は高価なAppleデベロッパーに登録しないといけないのでやめました。
 
+# 技術スタック
+
+- React Native
+- Expo
+- Firebase
+  - firestore
+  - auth
+
 # demo
 
 https://github.com/user-attachments/assets/c48b38bf-e92a-44fa-8c18-e6ec8573d65c
