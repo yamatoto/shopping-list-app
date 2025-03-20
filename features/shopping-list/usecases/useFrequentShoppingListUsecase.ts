@@ -177,9 +177,11 @@ export const useFrequentShoppingListUsecase = () => {
 
     const initialize = () => {
         fetchAllItems().then(categorySortApi => {
-            setOpenSections(
-                categorySortApi?.data().categories.map(({ id }) => id) ?? [],
-            );
+            if (categorySortApi) {
+                setOpenSections(
+                    categorySortApi.data().categories.map(({ id }) => id),
+                );
+            }
         });
     };
 
@@ -202,7 +204,12 @@ export const useFrequentShoppingListUsecase = () => {
     }, [fetchAllItems]);
 
     const toggleSection = (category: string) => {
-        setOpenSections([category]);
+        setOpenSections((prevSections: string[]) => {
+            if (prevSections.includes(category)) {
+                return prevSections.filter((c: string) => c !== category);
+            }
+            return [...prevSections, category];
+        });
     };
 
     const handleShoppingPlatformSelect = (

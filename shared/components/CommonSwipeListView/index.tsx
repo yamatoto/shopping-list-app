@@ -3,6 +3,7 @@ import {
     ListRenderItem,
     ListRenderItemInfo,
     RefreshControl,
+    SectionList,
     SectionListData,
     SectionListRenderItemInfo,
     View,
@@ -27,9 +28,11 @@ type Section<T> = SectionListData<T>;
 
 export type Props<T> = {
     data?: T[];
-    sections?: Section<T>[];
+    sections?: readonly Section<T>[];
     renderItem: RenderItemInfo<T>;
-    renderSectionHeader?: (info: {
+    renderSectionHeader?: ({
+        section,
+    }: {
         section: Section<T>;
     }) => React.ReactElement | null;
     renderHiddenItem?: RenderHiddenItemInfo<T>;
@@ -45,7 +48,7 @@ export type Props<T> = {
 
 function CommonSwipeListView<T extends { id: string }>({
     data,
-    sections,
+    sections = [],
     renderItem,
     renderSectionHeader,
     renderHiddenItem,
@@ -79,15 +82,25 @@ function CommonSwipeListView<T extends { id: string }>({
           }
         : {};
 
-    const listProps = useSectionList
-        ? { useSectionList, sections, renderSectionHeader }
-        : { data };
+    if (useSectionList) {
+        return (
+            <SectionList
+                {...commonProps}
+                sections={sections}
+                renderSectionHeader={renderSectionHeader}
+                stickySectionHeadersEnabled={false}
+                ItemSeparatorComponent={() => (
+                    <View style={{ height: 1, backgroundColor: '#f0f0f0' }} />
+                )}
+            />
+        );
+    }
 
     return (
         <SwipeListView
             {...commonProps}
             {...swipeProps}
-            {...listProps}
+            data={data}
             ItemSeparatorComponent={() => (
                 <View style={{ height: 1, backgroundColor: '#f0f0f0' }} />
             )}

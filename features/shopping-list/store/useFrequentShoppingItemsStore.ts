@@ -20,7 +20,9 @@ type FrequentShoppingItemsStore = {
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
     openSections: string[];
-    setOpenSections: (sections: string[]) => void;
+    setOpenSections: (
+        sections: string[] | ((prev: string[]) => string[]),
+    ) => void;
     tempNewItemName: string;
     setTempNewItemName: (newItemName: string) => void;
     selectedShoppingPlatformId: ShoppingPlatformId;
@@ -46,8 +48,13 @@ export const useFrequentShoppingItemsStore = create<FrequentShoppingItemsStore>(
             set({ refreshing });
         },
         openSections: [],
-        setOpenSections: (sections: string[]) => {
+        setOpenSections: (
+            sections: string[] | ((prev: string[]) => string[]),
+        ) => {
             set(state => {
+                if (typeof sections === 'function') {
+                    return { openSections: sections(state.openSections) };
+                }
                 // 初期化時だけ全部セット
                 if (sections.length > 1) return { openSections: sections };
 
