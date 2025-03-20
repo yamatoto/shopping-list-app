@@ -4,6 +4,10 @@
 身内しか公開していません。  
 Google認証は高価なAppleデベロッパーに登録しないといけないのでやめました。
 
+# demo
+
+https://github.com/user-attachments/assets/c48b38bf-e92a-44fa-8c18-e6ec8573d65c
+
 # 実機確認
 
 実機で開発者モードを有効にしておく。
