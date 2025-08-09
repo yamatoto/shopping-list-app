@@ -6,7 +6,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut as signOutFromFirebase,
-} from '@/shared/config/firabase';
+} from '@/shared/config/firebase';
 import { DEVELOPER_EMAIL } from '@/shared/config/user';
 
 const useFirebaseAuth = () => {

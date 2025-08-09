@@ -18,7 +18,7 @@ import {
     writeBatch,
 } from 'firebase/firestore';
 
-import { db } from '@/shared/config/firabase';
+import { db } from '@/shared/config/firebase';
 
 type ChangeMessageContent = {
     updatedUser: string;
