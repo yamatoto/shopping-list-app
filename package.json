@@ -2,6 +2,19 @@
     "name": "shopping-list-app",
     "main": "expo-router/entry",
     "version": "1.0.0",
+    "expo": {
+        "doctor": {
+            "reactNativeDirectoryCheck": {
+                "exclude": [
+                    "firebase",
+                    "uuid",
+                    "expo-random",
+                    "react-native-swipe-list-view"
+                ],
+                "listUnknownPackages": false
+            }
+        }
+    },
     "scripts": {
         "dev": "expo start",
         "pub": "eas update --branch preview",
@@ -14,7 +27,6 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "tsc": "tsc --noEmit",
         "typecheck": "tsc -b -w"
     },
     "jest": {
